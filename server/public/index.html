@@ -45,9 +45,15 @@
           <span>Newsletters</span>
           <span class="gm-count" id="rowCount"></span>
         </div>
-        <div class="gm-search">
-          <span class="material-symbols-outlined">search</span>
-          <input id="filter" type="search" placeholder="Filter by name" />
+        <div class="gm-head-actions">
+          <div class="gm-search">
+            <span class="material-symbols-outlined">search</span>
+            <input id="filter" type="search" placeholder="Filter by name" />
+          </div>
+          <button id="editList" class="gm-btn-primary" type="button" hidden>
+            <span class="material-symbols-outlined">edit</span>
+            Edit list
+          </button>
         </div>
       </div>
       <table>
@@ -104,6 +110,58 @@
 
     <footer id="footer" class="gm-footer"></footer>
   </main>
+
+  <!-- Editor modal — opens from "Edit list". -->
+  <div class="gm-modal" id="editor" hidden>
+    <div class="gm-modal-card" role="dialog" aria-modal="true" aria-labelledby="editorTitle">
+      <div class="gm-modal-head">
+        <div class="gm-list-title">
+          <span class="material-symbols-outlined">edit_note</span>
+          <span id="editorTitle">Edit newsletter list</span>
+        </div>
+        <button id="editorClose" class="gm-icon-btn" type="button" aria-label="Close">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="gm-modal-body">
+        <label class="gm-field">
+          <span class="gm-field-label">Admin token</span>
+          <input id="adminToken" type="password" autocomplete="off"
+            placeholder="Required to save — set via ADMIN_TOKEN" />
+        </label>
+
+        <div class="gm-editor-scroll">
+          <table class="gm-editor-table">
+            <thead>
+              <tr>
+                <th>Name</th><th class="t-type">Type</th>
+                <th>Target <span class="gm-subtle">slug · host · url</span></th>
+                <th class="t-del"></th>
+              </tr>
+            </thead>
+            <tbody id="editorRows"></tbody>
+          </table>
+        </div>
+
+        <button id="addRow" class="gm-btn-secondary" type="button">
+          <span class="material-symbols-outlined">add</span>
+          Add newsletter
+        </button>
+      </div>
+
+      <div class="gm-modal-foot">
+        <span id="editorMsg" class="gm-editor-msg"></span>
+        <div class="gm-modal-actions">
+          <button id="editorCancel" class="gm-btn-secondary" type="button">Cancel</button>
+          <button id="editorSave" class="gm-btn-primary" type="button">
+            <span class="material-symbols-outlined">save</span>
+            Save &amp; publish
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>

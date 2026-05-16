@@ -9,6 +9,10 @@ services:
       - "80:80"
     # PORT defaults to 80 in the Dockerfile; the node binary has
     # cap_net_bind_service so it can bind the privileged port as non-root.
+    environment:
+      # Set a token to enable the dashboard list editor. Leave unset and the
+      # API stays read-only (editing disabled).
+      - ADMIN_TOKEN=change-me
     volumes:
       # Persists the analytics SQLite DB across rebuilds/redeploys.
       - analytics-db:/app/db

@@ -11,9 +11,20 @@ const el = {
   analyticsCards: document.getElementById('analyticsCards'),
   analyticsRows: document.getElementById('analyticsRows'),
   pulseRows: document.getElementById('pulseRows'),
+  // Editor
+  editList: document.getElementById('editList'),
+  editor: document.getElementById('editor'),
+  editorClose: document.getElementById('editorClose'),
+  editorCancel: document.getElementById('editorCancel'),
+  editorSave: document.getElementById('editorSave'),
+  editorRows: document.getElementById('editorRows'),
+  addRow: document.getElementById('addRow'),
+  adminToken: document.getElementById('adminToken'),
+  editorMsg: document.getElementById('editorMsg'),
 };
 
 let allNewsletters = []; // cached for client-side filtering
+const TOKEN_KEY = 'mw_admin_token'; // admin token cached in localStorage
 
 // Human-readable "time ago" for ISO timestamps.
 function ago(iso) {
@@ -69,6 +80,8 @@ function renderStatus(s) {
     card('timer', 'Uptime', fmtUptime(s.uptimeSeconds), true),
     card('fingerprint', 'ETag', s.etag.replace(/"/g, '').slice(0, 10) + '…', true),
   ].join('');
+  // Show the editor button only when the server has editing enabled.
+  el.editList.hidden = !s.editable;
 }
 
 function renderRows(list) {
@@ -185,6 +198,140 @@ async function load() {
       </div>`;
   }
 }
+
+// --- Editor ------------------------------------------------------------------
+
+// Each row has one "mode" that fixes both the type and which target field is
+// used, so the single target input is never ambiguous.
+const MODES = {
+  'substack-slug': { type: 'substack', field: 'slug', hint: 'e.g. lennysnewsletter' },
+  'substack-host': { type: 'substack', field: 'host', hint: 'e.g. www.slowboring.com' },
+  'form-url': { type: 'form', field: 'url', hint: 'e.g. https://tldr.tech/signup' },
+};
+
+function modeOf(n) {
+  if (n.type === 'form') return 'form-url';
+  return n.host ? 'substack-host' : 'substack-slug';
+}
+
+// Builds one editable <tr>. `n` is an existing entry, or {} for a blank row.
+function buildEditorRow(n = {}) {
+  const tr = document.createElement('tr');
+
+  const nameTd = document.createElement('td');
+  const name = document.createElement('input');
+  name.className = 'js-name';
+  name.placeholder = 'Newsletter name';
+  name.value = n.name || '';
+  nameTd.appendChild(name);
+
+  const typeTd = document.createElement('td');
+  typeTd.className = 't-type';
+  const sel = document.createElement('select');
+  sel.className = 'js-mode';
+  for (const [val, m] of Object.entries(MODES)) {
+    const opt = document.createElement('option');
+    opt.value = val;
+    opt.textContent = m.type === 'form' ? 'Form (url)' : `Substack (${m.field})`;
+    sel.appendChild(opt);
+  }
+  sel.value = modeOf(n);
+  typeTd.appendChild(sel);
+
+  const targetTd = document.createElement('td');
+  const target = document.createElement('input');
+  target.className = 'js-target';
+  target.value = n.slug || n.host || n.url || '';
+  targetTd.appendChild(target);
+
+  const delTd = document.createElement('td');
+  delTd.className = 't-del';
+  const del = document.createElement('button');
+  del.type = 'button';
+  del.className = 'gm-row-del';
+  del.title = 'Remove';
+  del.innerHTML = '<span class="material-symbols-outlined">delete</span>';
+  del.addEventListener('click', () => tr.remove());
+  delTd.appendChild(del);
+
+  const syncHint = () => { target.placeholder = MODES[sel.value].hint; };
+  sel.addEventListener('change', syncHint);
+  syncHint();
+
+  tr.append(nameTd, typeTd, targetTd, delTd);
+  return tr;
+}
+
+function setEditorMsg(text, kind = '') {
+  el.editorMsg.textContent = text;
+  el.editorMsg.className = `gm-editor-msg ${kind}`;
+}
+
+function openEditor() {
+  el.editorRows.innerHTML = '';
+  allNewsletters.forEach((n) => el.editorRows.appendChild(buildEditorRow(n)));
+  el.adminToken.value = localStorage.getItem(TOKEN_KEY) || '';
+  setEditorMsg(`${allNewsletters.length} newsletters`);
+  el.editor.hidden = false;
+}
+
+function closeEditor() {
+  el.editor.hidden = true;
+}
+
+// Reads the editor rows back into an array of newsletter entries.
+function collectRows() {
+  return [...el.editorRows.children].map((tr) => {
+    const name = tr.querySelector('.js-name').value.trim();
+    const mode = MODES[tr.querySelector('.js-mode').value];
+    const target = tr.querySelector('.js-target').value.trim();
+    return { name, type: mode.type, [mode.field]: target };
+  });
+}
+
+async function saveList() {
+  const token = el.adminToken.value.trim();
+  if (!token) return setEditorMsg('Enter the admin token to save.', 'error');
+
+  const newsletters = collectRows();
+  if (newsletters.some((n) => !n.name)) {
+    return setEditorMsg('Every row needs a name.', 'error');
+  }
+
+  el.editorSave.disabled = true;
+  setEditorMsg('Saving…');
+  try {
+    const res = await fetch('/api/newsletters', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token },
+      body: JSON.stringify({ newsletters }),
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      setEditorMsg(body.error || `Save failed (${res.status})`, 'error');
+      return;
+    }
+    localStorage.setItem(TOKEN_KEY, token); // remember a token that worked
+    setEditorMsg(`Saved — list is now version ${body.version}.`, 'success');
+    await load();
+    setTimeout(closeEditor, 900);
+  } catch (err) {
+    setEditorMsg(`Save failed: ${err.message}`, 'error');
+  } finally {
+    el.editorSave.disabled = false;
+  }
+}
+
+el.editList.addEventListener('click', openEditor);
+el.editorClose.addEventListener('click', closeEditor);
+el.editorCancel.addEventListener('click', closeEditor);
+el.addRow.addEventListener('click', () => {
+  el.editorRows.appendChild(buildEditorRow());
+});
+el.editorSave.addEventListener('click', saveList);
+el.editor.addEventListener('click', (e) => {
+  if (e.target === el.editor) closeEditor(); // click backdrop to dismiss
+});
 
 el.refresh.addEventListener('click', load);
 el.filter.addEventListener('input', applyFilter);

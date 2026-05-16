@@ -89,9 +89,11 @@ If the server is unreachable, the extension falls back to the bundled
 A small Express server in **`server/`** that:
 
 - serves the curated list at `GET /api/newsletters` (24h `Cache-Control` + ETag),
+- lets you edit the list at `PUT /api/newsletters` (token-gated) or from the
+  dashboard's **Edit list** editor — persisted to a volume,
 - collects anonymous run analytics at `POST /api/pulse` into a SQLite DB,
 - exposes `GET /api/status`, `GET /api/analytics`, and a **dashboard** at `/`,
-- reloads `data/newsletters.json` automatically when it changes.
+- reloads the data file automatically when it changes.
 
 ### Run locally
 
@@ -113,11 +115,15 @@ Full deploy + update instructions: **[`server/README.md`](server/README.md)**.
 
 ### Updating the newsletter list
 
-1. Edit `server/data/newsletters.json` (bump `version` + `updatedAt`).
-2. Redeploy: `docker compose up -d --build`.
-3. Extensions pick up the change within 24h, or instantly on browser restart.
+Two ways, no extension rebuild and no Google review either way:
 
-No extension rebuild, no Google review.
+- **Dashboard editor (recommended)** — open the server dashboard at `/`, click
+  **Edit list**, add/edit/delete newsletters, **Save & publish**. Token-gated
+  (`ADMIN_TOKEN`) and persisted to the volume, so it survives redeploys.
+- **Edit the seed file** — change `server/data/newsletters.json` and redeploy
+  with `docker compose up -d --build`.
+
+Extensions pick up the change within 24h, or instantly on browser restart.
 
 ---
 

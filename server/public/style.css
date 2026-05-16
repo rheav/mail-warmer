@@ -381,6 +381,171 @@ td.mono {
   font-size: 13px;
 }
 
+/* ── Primary / icon buttons ────────────────────────────────── */
+.gm-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 18px;
+  background: var(--gm-blue);
+  border: 1px solid var(--gm-blue);
+  border-radius: 19px;
+  color: #fff;
+  font-family: var(--gm-font);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s, box-shadow .15s;
+}
+.gm-btn-primary:hover { background: var(--gm-blue-hover); box-shadow: var(--gm-shadow-1); }
+.gm-btn-primary:active { transform: translateY(1px); }
+.gm-btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+.gm-btn-primary .material-symbols-outlined { font-size: 18px; }
+
+.gm-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--gm-text-muted);
+  cursor: pointer;
+  transition: background .15s;
+}
+.gm-icon-btn:hover { background: var(--gm-hover); }
+
+.gm-head-actions { display: flex; align-items: center; gap: 10px; }
+
+/* ── Modal ─────────────────────────────────────────────────── */
+.gm-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(32,33,36,.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 100;
+}
+.gm-modal[hidden] { display: none; }
+
+.gm-modal-card {
+  background: var(--gm-surface);
+  border-radius: 16px;
+  box-shadow: var(--gm-shadow-2);
+  width: 100%;
+  max-width: 760px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.gm-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 14px 14px 20px;
+  border-bottom: 1px solid var(--gm-divider);
+}
+
+.gm-modal-body {
+  padding: 18px 20px;
+  overflow-y: auto;
+}
+
+.gm-modal-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--gm-divider);
+  background: var(--gm-bg);
+}
+.gm-modal-actions { display: flex; gap: 10px; }
+
+/* ── Form fields ───────────────────────────────────────────── */
+.gm-field { display: block; margin-bottom: 18px; }
+.gm-field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--gm-text-muted);
+  margin-bottom: 6px;
+}
+
+.gm-input,
+.gm-field input,
+.gm-editor-table input,
+.gm-editor-table select {
+  width: 100%;
+  height: 36px;
+  padding: 0 10px;
+  font-family: var(--gm-font);
+  font-size: 13px;
+  color: var(--gm-text);
+  background: var(--gm-surface);
+  border: 1px solid var(--gm-border);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.gm-field input:focus,
+.gm-editor-table input:focus,
+.gm-editor-table select:focus {
+  border-color: var(--gm-blue);
+  box-shadow: 0 0 0 1px var(--gm-blue);
+}
+
+/* ── Editor table ──────────────────────────────────────────── */
+.gm-editor-scroll {
+  max-height: 46vh;
+  overflow-y: auto;
+  border: 1px solid var(--gm-divider);
+  border-radius: 10px;
+  margin-bottom: 14px;
+}
+.gm-editor-table { width: 100%; }
+.gm-editor-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.gm-editor-table th, .gm-editor-table td {
+  padding: 8px 10px;
+  vertical-align: middle;
+}
+.gm-editor-table th.t-type, .gm-editor-table td.t-type { width: 130px; }
+.gm-editor-table th.t-del, .gm-editor-table td.t-del { width: 44px; }
+.gm-editor-table .gm-subtle { margin-left: 4px; }
+
+.gm-row-del {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--gm-text-faint);
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.gm-row-del:hover { background: var(--gm-red-bg); color: var(--gm-red); }
+.gm-row-del .material-symbols-outlined { font-size: 18px; }
+
+.gm-editor-msg { font-size: 13px; color: var(--gm-text-muted); }
+.gm-editor-msg.error { color: var(--gm-red); }
+.gm-editor-msg.success { color: var(--gm-green); }
+
 /* ── Scrollbar ─────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb { background: rgba(0,0,0,.15); border-radius: 5px; }

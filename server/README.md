@@ -28,6 +28,7 @@ Response:
 |----------------------|---------|
 | `GET /`              | Status + analytics dashboard (HTML/CSS/JS, no build step) |
 | `GET /api/status`    | List metadata as JSON — version, count, type breakdown, etag, uptime |
+| `PUT /api/newsletters` | Replace the whole list (token-gated, persisted to the volume) |
 | `POST /api/pulse`    | Receives an anonymous run analytics pulse from the extension |
 | `GET /api/analytics` | Aggregated analytics (totals, per-newsletter, recent pulses) |
 | `GET /health`        | `{ "ok": true }` for liveness checks |
@@ -35,6 +36,28 @@ Response:
 The dashboard at `/` shows the current list version, newsletter count, type
 breakdown, server uptime, a filterable table of every newsletter, and a
 **run analytics** section. Open it in a browser after deploying.
+
+## Editing the list from the dashboard
+
+The dashboard at `/` has an **Edit list** button — add, edit, reorder, and
+delete newsletters in a modal, then **Save & publish**. No rebuild, no Google
+review; extensions pick up the change within 24h.
+
+The editor is **token-gated**. Set `ADMIN_TOKEN` in the environment to enable
+it:
+
+- Editor button only appears when `ADMIN_TOKEN` is set.
+- `PUT /api/newsletters` requires an `X-Admin-Token` header matching it.
+- Unset ⇒ the API is read-only and `PUT` returns `503`.
+
+A saved edit is written to `$DB_DIR/newsletters.json` — the same persistent
+volume the analytics DB uses. Once written, that copy is served on every boot,
+so dashboard edits **survive redeploys**. The baked-in `data/newsletters.json`
+is only the seed (and the extension's offline fallback).
+
+Each entry's "mode" in the editor fixes both the type and the target field:
+*Substack (slug)*, *Substack (host)*, or *Form (url)* — so the single target
+field is never ambiguous.
 
 ## Analytics
 
@@ -104,8 +127,9 @@ Easypanel runs this as a Docker app and handles HTTPS for you.
    - **Mount path:** `/app/db`
 
    This is what persists the SQLite database across redeploys.
-4. **Environment** → none required; the image binds port `80` by default
-   (set `PORT` only if you need another port).
+4. **Environment** → the image binds port `80` by default (set `PORT` only if
+   you need another). Set `ADMIN_TOKEN` to a secret to enable the dashboard
+   list editor; leave it unset to keep the API read-only.
 5. **Domain** → add your domain; Easypanel issues a TLS cert automatically.
 6. **Deploy.**
 
@@ -118,20 +142,18 @@ redeploying from Easypanel — analytics in the volume are untouched.
 
 ## Update the newsletter list
 
-1. Edit `server/data/newsletters.json` — keep the `{ version, updatedAt, newsletters }` shape.
-   Bump `version` and `updatedAt`.
-2. Redeploy:
+**Easiest — the dashboard editor.** Open `/`, click **Edit list**, make
+changes, **Save & publish**. Requires `ADMIN_TOKEN` set (see above). The edit
+persists in the volume across redeploys. This is the recommended way.
 
-   ```sh
-   docker compose up -d --build
-   ```
+**By editing the seed file.** Edit `server/data/newsletters.json` — keep the
+`{ version, updatedAt, newsletters }` shape — then redeploy with
+`docker compose up -d --build`. Note: once a dashboard edit exists in the
+volume, the volume copy wins and seed changes are ignored until the volume is
+reset (`docker compose down -v`).
 
-The extension picks up the change within 24h (its cache TTL), or immediately
-on browser restart.
-
-> Alternative: uncomment the `volumes:` block in `docker-compose.yml` to mount
-> `data/` into the container. Then editing the file on the host is enough —
-> the server watches it and reloads within ~5s, no rebuild needed.
+Either way the extension picks up the change within 24h (its cache TTL), or
+immediately on browser restart.
 
 ## HTTPS
 
