@@ -36,6 +36,10 @@
 
   <!-- Gmail-style left rail nav (horizontal pills in narrow sidepanel) -->
   <nav class="gm-nav">
+    <button class="gm-nav-item" data-tab="cookies">
+      <span class="material-symbols-outlined">cookie</span>
+      <span>Cookies</span>
+    </button>
     <button class="gm-nav-item active" data-tab="run">
       <span class="material-symbols-outlined">inbox</span>
       <span>Run</span>
@@ -59,6 +63,39 @@
   </nav>
 
   <main class="gm-main">
+    <!-- COOKIES TAB -->
+    <section id="tab-cookies" class="tab-panel">
+      <p class="gm-hint">Open popular US websites and auto-accept their cookie
+        banners. Builds a normal-looking cookie profile in this browser before
+        you run signups. Tabs open in the background and close themselves.</p>
+
+      <div class="gm-toolbar spaced" style="margin-bottom: 14px;">
+        <button id="cookieRunBtn" class="gm-btn-primary">
+          <span class="material-symbols-outlined">cookie</span>
+          Build cookie profile
+        </button>
+        <button id="cookieStopBtn" class="gm-btn-link" disabled>Stop</button>
+      </div>
+
+      <div class="gm-toolbar">
+        <button id="cookieSelectAll" class="gm-chip">Select all</button>
+        <button id="cookieSelectNone" class="gm-chip">Clear</button>
+      </div>
+
+      <div class="gm-list-header">
+        <span class="gm-label">US websites</span>
+        <span class="gm-count" id="cookieSelCount">0 selected</span>
+      </div>
+      <ul id="cookieList" class="gm-list checklist"></ul>
+
+      <div id="cookieProgress" class="gm-progress" hidden>
+        <div class="gm-bar"><div id="cookieProgressBar"></div></div>
+        <span id="cookieProgressText" class="gm-count">0 / 0</span>
+      </div>
+
+      <p class="gm-hint" id="cookieLastRun" style="margin-top: 12px;"></p>
+    </section>
+
     <!-- RUN TAB -->
     <section id="tab-run" class="tab-panel active">
       <div class="gm-section">

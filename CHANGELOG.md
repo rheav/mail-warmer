@@ -13,6 +13,23 @@ Bump `version` in `manifest.json` (and `version_name`) on every release.
 
 ---
 
+## [0.4.0] — 2026-05-16
+
+### Added
+- **Cookies tab** (first tab) — cookie-profile warm-up. Opens a curated set of
+  popular US websites in background tabs, auto-accepts each cookie-consent
+  banner, then closes the tab. Builds a normal-looking cookie profile before
+  newsletter signups run.
+- `lib/cookie-sites.js` — curated 12-site US list (news, business, sports,
+  tech, health), each picked for a dismissible consent dialog.
+- `background/cookie-warmer.js` — orchestrator: paced background tabs, an
+  injected accept-clicker covering OneTrust / Cookiebot / Quantcast / Didomi /
+  generic consent platforms (selector + text-match, ~7s poll), all frames.
+- Per-site checklist, progress bar, and last-warm-up summary in the sidepanel;
+  result stored in `chrome.storage.local` as `cookieRun`.
+
+---
+
 ## [0.3.0] — 2026-05-15
 
 ### Added

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Mail Warmer",
-  "version": "0.3.0",
-  "version_name": "0.3.0 — Gmail UI + smart fill",
+  "version": "0.4.0",
+  "version_name": "0.4.0 — Cookie warm-up",
   "description": "Auto-subscribe configured emails to curated newsletters so inboxes stay active.",
   "permissions": [
     "storage",

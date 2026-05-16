@@ -1,6 +1,11 @@
 import { MSG, RUN_STATUS } from '../lib/messages.js';
 import * as store from '../lib/storage.js';
 import { runSignups, getRunState, stopRun } from './runner.js';
+import {
+  runCookieWarmup,
+  getCookieState,
+  stopCookieWarmup,
+} from './cookie-warmer.js';
 
 // Open sidepanel when action icon clicked.
 chrome.sidePanel
@@ -53,6 +58,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case MSG.RUN_STATUS_QUERY:
       sendResponse(getRunState());
+      return false;
+
+    case MSG.COOKIE_START:
+      runCookieWarmup(msg.data).catch((err) => {
+        store.appendLog('error', `Cookie warm-up failed: ${err.message}`);
+      });
+      sendResponse({ ok: true });
+      return false;
+
+    case MSG.COOKIE_STOP:
+      stopCookieWarmup();
+      sendResponse({ ok: true });
+      return false;
+
+    case MSG.COOKIE_STATUS_QUERY:
+      sendResponse(getCookieState());
       return false;
 
     default:

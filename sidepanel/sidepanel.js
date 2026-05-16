@@ -1,6 +1,7 @@
 import * as store from '../lib/storage.js';
 import { generateFakeProfile } from '../lib/fake-profile.js';
 import { MSG, RUN_STATUS } from '../lib/messages.js';
+import { COOKIE_SITES, siteId } from '../lib/cookie-sites.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -10,6 +11,9 @@ const selectedIds = new Set();
 let cachedNewsletters = [];
 let cachedEmails = [];
 let cachedHistory = {};
+// Cookie warm-up: every site selected by default so it's a one-click action.
+const cookieSelectedIds = new Set(COOKIE_SITES.map(siteId));
+let cachedCookieRun = null;
 
 // --- Init ---
 init();
@@ -24,6 +28,7 @@ async function init() {
   bindNewsletterDialog();
   bindOverrideDialog();
   bindRunControls();
+  bindCookieControls();
   bindLogControls();
   bindStorageChanges();
   bindMessages();
@@ -31,6 +36,7 @@ async function init() {
   await refreshAll();
   await loadProfile();
   await queryRunStatus();
+  await queryCookieStatus();
 }
 
 // --- Version tag ---
@@ -59,10 +65,12 @@ async function refreshAll() {
   cachedEmails = data.emails;
   cachedNewsletters = data.newsletters;
   cachedHistory = data.history;
+  cachedCookieRun = data.cookieRun;
   renderEmails();
   renderEmailSelect();
   renderNewsletters();
   renderRunList();
+  renderCookieList();
   renderLog(data.log);
 }
 
@@ -83,6 +91,10 @@ function bindStorageChanges() {
     }
     if (changes.profile) {
       await loadProfile();
+    }
+    if (changes.cookieRun) {
+      cachedCookieRun = changes.cookieRun.newValue;
+      renderCookieList();
     }
   });
 }
@@ -325,6 +337,109 @@ function bindRunControls() {
   });
 }
 
+// --- Cookie warm-up ---
+function renderCookieList() {
+  const list = $('#cookieList');
+  const byId = new Map(
+    (cachedCookieRun?.results || []).map((r) => [r.id, r.status])
+  );
+  list.innerHTML = '';
+  COOKIE_SITES.forEach((site) => {
+    const id = siteId(site);
+    const li = document.createElement('li');
+    const checked = cookieSelectedIds.has(id) ? 'checked' : '';
+    const status = byId.get(id);
+    li.innerHTML = `
+      <input type="checkbox" data-id="${id}" ${checked}>
+      <div>
+        <div class="nl-name">${escapeHtml(site.name)}</div>
+        <div class="nl-meta">${escapeHtml(site.category)}</div>
+      </div>
+      <span class="tag">${escapeHtml(new URL(site.url).hostname.replace(/^www\./, ''))}</span>
+      <span class="status ${status || 'pending'}">${status || 'new'}</span>
+    `;
+    list.appendChild(li);
+  });
+  list.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+    cb.addEventListener('change', () => {
+      if (cb.checked) cookieSelectedIds.add(cb.dataset.id);
+      else cookieSelectedIds.delete(cb.dataset.id);
+      updateCookieSelCount();
+    });
+  });
+  updateCookieSelCount();
+  renderCookieLastRun();
+}
+
+function updateCookieSelCount() {
+  $('#cookieSelCount').textContent = `${cookieSelectedIds.size} selected`;
+}
+
+function renderCookieLastRun() {
+  const el = $('#cookieLastRun');
+  if (!cachedCookieRun) {
+    el.textContent = 'No cookie profile built yet.';
+    return;
+  }
+  const results = cachedCookieRun.results || [];
+  const accepted = results.filter((r) => r.status === 'success').length;
+  el.textContent =
+    `Last warm-up ${timeAgo(cachedCookieRun.at)} — ` +
+    `${accepted}/${results.length} sites accepted cookies.`;
+}
+
+function bindCookieControls() {
+  $('#cookieSelectAll').addEventListener('click', () => {
+    COOKIE_SITES.forEach((s) => cookieSelectedIds.add(siteId(s)));
+    renderCookieList();
+  });
+  $('#cookieSelectNone').addEventListener('click', () => {
+    cookieSelectedIds.clear();
+    renderCookieList();
+  });
+
+  $('#cookieRunBtn').addEventListener('click', () => {
+    if (cookieSelectedIds.size === 0) {
+      alert('Pick at least one website.');
+      return;
+    }
+    chrome.runtime.sendMessage({
+      type: MSG.COOKIE_START,
+      data: { siteIds: Array.from(cookieSelectedIds) },
+    });
+    setCookieRunning(true);
+  });
+
+  $('#cookieStopBtn').addEventListener('click', () => {
+    chrome.runtime.sendMessage({ type: MSG.COOKIE_STOP });
+  });
+}
+
+function setCookieRunning(running) {
+  $('#cookieRunBtn').disabled = running;
+  $('#cookieStopBtn').disabled = !running;
+  $('#cookieProgress').hidden = !running;
+  setStatus(running ? 'running' : 'idle', running ? 'Warming cookies' : 'Idle');
+}
+
+function updateCookieProgress(p) {
+  if (!p) return;
+  const pct = p.total > 0 ? (p.done / p.total) * 100 : 0;
+  $('#cookieProgressBar').style.width = `${pct}%`;
+  $('#cookieProgressText').textContent =
+    `${p.done} / ${p.total}${p.current ? ` · ${p.current}` : ''}`;
+}
+
+async function queryCookieStatus() {
+  const resp = await chrome.runtime.sendMessage({
+    type: MSG.COOKIE_STATUS_QUERY,
+  });
+  if (resp?.status === RUN_STATUS.RUNNING) {
+    setCookieRunning(true);
+    updateCookieProgress(resp.progress);
+  }
+}
+
 // --- Run status / progress ---
 function bindMessages() {
   chrome.runtime.onMessage.addListener((msg) => {
@@ -333,6 +448,12 @@ function bindMessages() {
       updateProgress(msg.data);
     } else if (msg.type === MSG.RUN_COMPLETE) {
       setRunning(false);
+      setStatus('done', 'Done');
+    } else if (msg.type === MSG.COOKIE_PROGRESS) {
+      setCookieRunning(true);
+      updateCookieProgress(msg.data);
+    } else if (msg.type === MSG.COOKIE_COMPLETE) {
+      setCookieRunning(false);
       setStatus('done', 'Done');
     }
   });
@@ -489,6 +610,16 @@ function openOverrideDialog(newsletterId) {
 }
 
 // --- Utils ---
+function timeAgo(ts) {
+  if (!ts) return 'never';
+  const m = Math.round((Date.now() - ts) / 60000);
+  if (m < 1) return 'just now';
+  if (m < 60) return `${m}m ago`;
+  const h = Math.round(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.round(h / 24)}d ago`;
+}
+
 function escapeHtml(s) {
   return String(s ?? '')
     .replaceAll('&', '&amp;')

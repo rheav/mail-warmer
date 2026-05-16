@@ -24,6 +24,9 @@ would require Google review each time).
    Substack / generic signup forms
 ```
 
+0. *(Optional)* The **Cookies** tab warms up the browser: it opens popular US
+   websites in background tabs, auto-accepts their cookie banners, and closes
+   them — so the profile has a normal cookie set before signups.
 1. You add email addresses and pick newsletters in the sidepanel.
 2. **Run** opens each newsletter's signup page in a tab.
 3. An adapter detects the signup form, fills it, and submits.
@@ -42,18 +45,20 @@ mail-warmer/
 ├── background/            Service worker
 │   ├── index.js           Message routing, install + daily-refresh alarm
 │   ├── runner.js           Orchestrates a signup run
+│   ├── cookie-warmer.js   Opens US sites + auto-accepts cookie banners
 │   └── adapters/          Per-source signup logic
 │       ├── substack.js
 │       └── form.js        Generic HTML form fallback
 ├── content/
 │   └── form-filler.js     Injected: detects + fills + submits signup forms
-├── sidepanel/             UI — Run / Emails / Profile / Lists / Log tabs
+├── sidepanel/             UI — Cookies / Run / Emails / Profile / Lists / Log
 │   ├── sidepanel.html / .css / .js
 ├── lib/
 │   ├── config.js          Backend URL config
 │   ├── storage.js         Typed wrapper over chrome.storage.local
 │   ├── remote.js          Fetches the newsletter list, 24h cache + fallback
 │   ├── analytics.js       Sends an anonymous run pulse to the backend
+│   ├── cookie-sites.js    Curated US site list for cookie warm-up
 │   ├── messages.js        Message-type constants
 │   └── fake-profile.js    Generates a fake person for signup fields
 ├── public/                Extension icons
@@ -162,6 +167,7 @@ All extension state lives in `chrome.storage.local` (see schema in
 | `profile`       | Fake person used to fill non-email fields |
 | `newslettersCache` | Cached API response + fetch timestamp |
 | `installId`     | Random anonymous UUID for analytics pulses |
+| `cookieRun`     | Last cookie warm-up — timestamp + per-site result |
 
 The only data leaving the browser is the read-only `GET` for the newsletter
 list and, after each run, an **anonymous analytics pulse** — per-newsletter
