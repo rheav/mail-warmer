@@ -26,8 +26,9 @@ Bump `version` in `manifest.json` (and `version_name`) on every release.
 - `background/cookie-warmer.js` — orchestrator: paced background tabs, an
   injected accept-clicker run in all frames, then closes the tab.
 - Cookie-accept clicker: known platform selectors (OneTrust, Cookiebot,
-  Quantcast, Didomi, Usercentrics, Osano, CookieYes, Complianz, HubSpot)
-  then a short accept-text fallback, ~5s poll.
+  Quantcast, Didomi, Usercentrics, Osano, CookieYes, Complianz, HubSpot,
+  tarteaucitron, Axeptio, WP Cookie Notice, Iubenda, Cookie Information)
+  then a short accept-text fallback, ~7s poll, 1.5s post-load settle.
 - A quick scroll + benign body click before the accept step nudges lazy
   consent banners into showing. The click goes to `<body>` so it can never
   navigate the tab away.

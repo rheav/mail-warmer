@@ -152,7 +152,7 @@ async function warmSite(site) {
     // Some sites (ads, trackers) never reach status 'complete' — tolerate a
     // timeout rather than failing the whole site.
     await waitForTabComplete(tab.id, TAB_LOAD_TIMEOUT_MS).catch(() => {});
-    await delay(800);
+    await delay(1500); // heavy luxury sites need a beat before the banner shows
 
     setPhase('accepting');
     // A quick scroll + click nudges lazy consent banners into showing. Top
@@ -236,6 +236,20 @@ async function acceptCookiesInPage() {
     '.osano-cm-accept-all',
     '.cmplz-accept',
     '#hs-eu-confirmation-button',
+    // tarteaucitron
+    '#tarteaucitronAllAllowed',
+    '#tarteaucitronPersonalize2',
+    '.tarteaucitronAllow',
+    // Axeptio
+    '#axeptio_btn_acceptAll',
+    'button[aria-label="Accept all and close"]',
+    // WordPress Cookie Notice
+    '#cn-accept-cookie',
+    // Iubenda
+    '.iubenda-cs-accept-btn',
+    // Cookie Information
+    '.coi-banner__accept',
+    '#coiPage-1 .coi-banner__accept',
   ];
   // Fallback: a short clickable element whose text reads as an accept.
   const TEXT_RX =
@@ -265,7 +279,7 @@ async function acceptCookiesInPage() {
     return null;
   };
 
-  const deadline = Date.now() + 5000;
+  const deadline = Date.now() + 7000;
   while (Date.now() < deadline) {
     const via = tryOnce();
     if (via) return { clicked: true, via };
