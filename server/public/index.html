@@ -28,10 +28,16 @@
   <main class="gm-main">
     <div class="gm-section-head">
       <h1>Newsletter list status</h1>
-      <button id="refresh" class="gm-btn-secondary" type="button">
-        <span class="material-symbols-outlined">refresh</span>
-        Refresh
-      </button>
+      <div class="gm-head-actions">
+        <button id="editList" class="gm-btn-primary" type="button" hidden>
+          <span class="material-symbols-outlined">edit</span>
+          Edit newsletters
+        </button>
+        <button id="refresh" class="gm-btn-secondary" type="button">
+          <span class="material-symbols-outlined">refresh</span>
+          Refresh
+        </button>
+      </div>
     </div>
 
     <!-- Stat cards -->
@@ -45,15 +51,9 @@
           <span>Newsletters</span>
           <span class="gm-count" id="rowCount"></span>
         </div>
-        <div class="gm-head-actions">
-          <div class="gm-search">
-            <span class="material-symbols-outlined">search</span>
-            <input id="filter" type="search" placeholder="Filter by name" />
-          </div>
-          <button id="editList" class="gm-btn-primary" type="button" hidden>
-            <span class="material-symbols-outlined">edit</span>
-            Edit list
-          </button>
+        <div class="gm-search">
+          <span class="material-symbols-outlined">search</span>
+          <input id="filter" type="search" placeholder="Filter by name" />
         </div>
       </div>
       <table>

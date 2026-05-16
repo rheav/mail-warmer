@@ -273,6 +273,9 @@ function openEditor() {
   el.adminToken.value = localStorage.getItem(TOKEN_KEY) || '';
   setEditorMsg(`${allNewsletters.length} newsletters`);
   el.editor.hidden = false;
+  // First visit has no cached token — focus the gate field so it's obvious
+  // a token is needed before saving.
+  if (!el.adminToken.value) el.adminToken.focus();
 }
 
 function closeEditor() {
