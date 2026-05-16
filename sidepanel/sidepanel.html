@@ -65,9 +65,13 @@
   <main class="gm-main">
     <!-- COOKIES TAB -->
     <section id="tab-cookies" class="tab-panel">
-      <p class="gm-hint">Open popular US websites and auto-accept their cookie
-        banners. Builds a normal-looking cookie profile in this browser before
-        you run signups. Tabs open in the background and close themselves.</p>
+      <p class="gm-hint">Builds a normal-looking cookie profile in this browser
+        before you run signups. For each selected site Mail Warmer:</p>
+      <ol class="gm-steps">
+        <li><span class="step-n">1</span> opens it in a background tab</li>
+        <li><span class="step-n">2</span> auto-accepts the cookie banner</li>
+        <li><span class="step-n">3</span> closes the tab</li>
+      </ol>
 
       <div class="gm-toolbar spaced" style="margin-bottom: 14px;">
         <button id="cookieRunBtn" class="gm-btn-primary">
@@ -75,6 +79,12 @@
           Build cookie profile
         </button>
         <button id="cookieStopBtn" class="gm-btn-link" disabled>Stop</button>
+      </div>
+
+      <!-- Live step banner while a warm-up is running -->
+      <div id="cookieStep" class="cookie-step" hidden>
+        <span class="material-symbols-outlined spin">progress_activity</span>
+        <span id="cookieStepText">Starting…</span>
       </div>
 
       <div class="gm-toolbar">

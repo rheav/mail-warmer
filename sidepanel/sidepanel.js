@@ -14,6 +14,9 @@ let cachedHistory = {};
 // Cookie warm-up: every site selected by default so it's a one-click action.
 const cookieSelectedIds = new Set(COOKIE_SITES.map(siteId));
 let cachedCookieRun = null;
+// Live progress while a warm-up runs: { done, total, current, currentId,
+// phase, results }. null when idle — then the list shows the stored run.
+let cookieLive = null;
 
 // --- Init ---
 init();
@@ -338,24 +341,35 @@ function bindRunControls() {
 }
 
 // --- Cookie warm-up ---
+
+// Per-site status pill: live run wins, else the last stored run.
+function cookieSiteStatus(id) {
+  if (cookieLive) {
+    const r = (cookieLive.results || []).find((x) => x.id === id);
+    if (r) return r.status;
+    if (cookieLive.currentId === id) return 'running';
+    return 'pending';
+  }
+  const r = (cachedCookieRun?.results || []).find((x) => x.id === id);
+  return r ? r.status : null;
+}
+
 function renderCookieList() {
   const list = $('#cookieList');
-  const byId = new Map(
-    (cachedCookieRun?.results || []).map((r) => [r.id, r.status])
-  );
   list.innerHTML = '';
   COOKIE_SITES.forEach((site) => {
     const id = siteId(site);
     const li = document.createElement('li');
     const checked = cookieSelectedIds.has(id) ? 'checked' : '';
-    const status = byId.get(id);
+    const status = cookieSiteStatus(id);
+    const host = new URL(site.url).hostname.replace(/^www\./, '');
     li.innerHTML = `
       <input type="checkbox" data-id="${id}" ${checked}>
       <div>
         <div class="nl-name">${escapeHtml(site.name)}</div>
         <div class="nl-meta">${escapeHtml(site.category)}</div>
       </div>
-      <span class="tag">${escapeHtml(new URL(site.url).hostname.replace(/^www\./, ''))}</span>
+      <span class="tag">${escapeHtml(host)}</span>
       <span class="status ${status || 'pending'}">${status || 'new'}</span>
     `;
     list.appendChild(li);
@@ -369,6 +383,25 @@ function renderCookieList() {
   });
   updateCookieSelCount();
   renderCookieLastRun();
+}
+
+// Plain-language line describing what the warm-up is doing right now.
+function updateCookieStep() {
+  const box = $('#cookieStep');
+  const text = $('#cookieStepText');
+  if (!cookieLive || cookieLive.phase === 'done') {
+    box.hidden = true;
+    return;
+  }
+  const site = cookieLive.current || 'a site';
+  const msgByPhase = {
+    opening: `Opening ${site} in a background tab…`,
+    scanning: `Looking for the cookie banner on ${site}…`,
+    settling: `Accepting cookies on ${site}…`,
+  };
+  text.textContent =
+    msgByPhase[cookieLive.phase] || `Warming up ${site}…`;
+  box.hidden = false;
 }
 
 function updateCookieSelCount() {
@@ -420,6 +453,11 @@ function setCookieRunning(running) {
   $('#cookieStopBtn').disabled = !running;
   $('#cookieProgress').hidden = !running;
   setStatus(running ? 'running' : 'idle', running ? 'Warming cookies' : 'Idle');
+  if (!running) {
+    cookieLive = null;
+    $('#cookieStep').hidden = true;
+    renderCookieList();
+  }
 }
 
 function updateCookieProgress(p) {
@@ -435,8 +473,11 @@ async function queryCookieStatus() {
     type: MSG.COOKIE_STATUS_QUERY,
   });
   if (resp?.status === RUN_STATUS.RUNNING) {
+    cookieLive = { ...resp.progress, results: resp.results || [] };
     setCookieRunning(true);
     updateCookieProgress(resp.progress);
+    renderCookieList();
+    updateCookieStep();
   }
 }
 
@@ -450,8 +491,14 @@ function bindMessages() {
       setRunning(false);
       setStatus('done', 'Done');
     } else if (msg.type === MSG.COOKIE_PROGRESS) {
-      setCookieRunning(true);
+      cookieLive = msg.data;
+      $('#cookieRunBtn').disabled = true;
+      $('#cookieStopBtn').disabled = false;
+      $('#cookieProgress').hidden = false;
+      setStatus('running', 'Warming cookies');
       updateCookieProgress(msg.data);
+      renderCookieList();
+      updateCookieStep();
     } else if (msg.type === MSG.COOKIE_COMPLETE) {
       setCookieRunning(false);
       setStatus('done', 'Done');

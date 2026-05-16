@@ -4,7 +4,9 @@
 // newsletter signups run.
 //
 // Mirrors background/runner.js: one module-level `state`, progress broadcast
-// to the sidepanel, cooperative abort via stopCookieWarmup().
+// to the sidepanel, cooperative abort via stopCookieWarmup(). Progress
+// carries a `phase` and a live `results` array so the sidepanel can show
+// per-site status and a plain-language step while the run is in flight.
 
 import { MSG, RUN_STATUS } from '../lib/messages.js';
 import * as store from '../lib/storage.js';
@@ -12,14 +14,15 @@ import { COOKIE_SITES, siteId } from '../lib/cookie-sites.js';
 
 let state = {
   status: RUN_STATUS.IDLE,
-  progress: { done: 0, total: 0, current: null },
+  progress: { done: 0, total: 0, current: null, currentId: null, phase: null },
+  results: [],
   abort: false,
 };
 
 const TAB_LOAD_TIMEOUT_MS = 25_000;
 
 export function getCookieState() {
-  return { status: state.status, progress: state.progress };
+  return { status: state.status, progress: state.progress, results: state.results };
 }
 
 export function stopCookieWarmup() {
@@ -37,20 +40,21 @@ export async function runCookieWarmup({ siteIds } = {}) {
 
   state = {
     status: RUN_STATUS.RUNNING,
-    progress: { done: 0, total: sites.length, current: null },
+    progress: { done: 0, total: sites.length, current: null, currentId: null, phase: null },
+    results: [],
     abort: false,
   };
   broadcastProgress();
   await store.appendLog('info', `Cookie warm-up start: ${sites.length} sites`);
 
-  const results = [];
   for (const site of sites) {
     if (state.abort) {
       await store.appendLog('warn', 'Cookie warm-up aborted by user');
       break;
     }
     state.progress.current = site.name;
-    broadcastProgress();
+    state.progress.currentId = siteId(site);
+    setPhase('opening');
 
     let status;
     try {
@@ -66,19 +70,22 @@ export async function runCookieWarmup({ siteIds } = {}) {
       status = 'error';
       await store.appendLog('error', `[${site.name}] ${err.message}`);
     }
-    results.push({ id: siteId(site), name: site.name, status });
+    state.results.push({ id: siteId(site), name: site.name, status });
 
     state.progress.done += 1;
+    state.progress.phase = null;
     broadcastProgress();
 
     // Small gap between sites so this doesn't look like a tab-spam burst.
     await delay(jitter(800, 1800));
   }
 
-  await store.setCookieRun({ at: Date.now(), results });
+  await store.setCookieRun({ at: Date.now(), results: state.results });
 
   state.status = RUN_STATUS.DONE;
   state.progress.current = null;
+  state.progress.currentId = null;
+  state.progress.phase = 'done';
   broadcastProgress();
   chrome.runtime.sendMessage({ type: MSG.COOKIE_COMPLETE }).catch(() => {});
   await store.appendLog('info', 'Cookie warm-up complete');
@@ -95,8 +102,10 @@ async function warmSite(site) {
     await waitForTabComplete(tab.id, TAB_LOAD_TIMEOUT_MS).catch(() => {});
     await delay(1500); // give late-loading consent dialogs time to render
 
+    setPhase('scanning');
     // acceptCookiesInPage runs in every frame (consent dialogs are often in
-    // an iframe). It polls internally, so one injection is enough.
+    // an iframe). It polls and walks shadow DOM internally, so one injection
+    // per frame is enough.
     const injections = await chrome.scripting.executeScript({
       target: { tabId: tab.id, allFrames: true },
       func: acceptCookiesInPage,
@@ -105,6 +114,7 @@ async function warmSite(site) {
       .map((i) => i.result)
       .find((r) => r && r.clicked);
 
+    setPhase('settling');
     // Linger so the consent click's cookie writes land before the tab closes.
     await delay(jitter(1500, 3000));
     return hit || { clicked: false };
@@ -114,63 +124,150 @@ async function warmSite(site) {
 }
 
 // Injected INTO the page (every frame). Self-contained — no outer references.
-// Polls for a cookie-consent "accept" control for ~7s, clicks it, and reports.
+// Polls for ~9s for a cookie-consent "accept" control, clicks it, reports.
+// Three escalating tiers: known platform selectors, accept-text match, then
+// an attribute heuristic — so it accepts even on banners it doesn't know.
 async function acceptCookiesInPage() {
-  // Known accept-button selectors for the major consent platforms.
-  const SELECTORS = [
+  // Tier 1 — exact selectors for the major consent platforms.
+  const KNOWN = [
     '#onetrust-accept-btn-handler',
+    '.onetrust-close-btn-handler',
     '#truste-consent-button',
     '#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll',
     '#CybotCookiebotDialogBodyButtonAccept',
+    '#CybotCookiebotDialogBodyButtonAcceptAll',
     '#didomi-notice-agree-button',
     '.qc-cmp2-summary-buttons button[mode="primary"]',
     '.fc-cta-consent',
-    'button[aria-label="Accept all"]',
-    'button[aria-label="Accept All"]',
+    'button[data-testid="uc-accept-all-button"]',
     'button[data-testid="accept-all"]',
     'button[data-testid="GDPR-accept"]',
+    '#hs-eu-confirmation-button',
+    '.cmplz-accept',
+    '.cky-btn-accept',
+    '#cookiescript_accept',
+    '.osano-cm-accept-all',
+    '.termly-styles-button-accept',
+    'button[aria-label="Accept all"]',
+    'button[aria-label="Accept All"]',
+    'button[aria-label="Accept all cookies"]',
   ];
-  // Fallback: short clickable elements whose text reads as a consent accept.
-  const TEXT_RX =
-    /^(accept all cookies|accept all|accept cookies|i accept|i agree|agree|allow all cookies|allow all|got it)$/i;
+  // Tier 2 — element text / aria-label reads as an "accept" action.
+  const ACCEPT_TEXT_RX =
+    /^(accept all cookies|accept all|accept cookies|accept & continue|accept and continue|accept|i accept|i agree|agree|agree & continue|allow all cookies|allow all|allow cookies|yes,? i agree|got it|ok,? got it)$/i;
+  // Tier 3 — id/class/testid says accept AND the context says cookies.
+  const ACCEPT_ATTR_RX = /(accept|agree|allow)/i;
+  const CONSENT_CTX_RX = /(cookie|consent|gdpr|ccpa|privacy|cmp)/i;
 
   const visible = (el) => {
     if (!el) return false;
-    const r = el.getBoundingClientRect();
-    return r.width > 0 && r.height > 0;
+    try {
+      const r = el.getBoundingClientRect();
+      return r.width > 0 && r.height > 0;
+    } catch {
+      return false;
+    }
+  };
+  const classOf = (el) =>
+    typeof el.className === 'string' ? el.className : '';
+  const isClickable = (el) => {
+    const tag = el.tagName;
+    return (
+      tag === 'BUTTON' ||
+      tag === 'A' ||
+      tag === 'INPUT' ||
+      (el.getAttribute && el.getAttribute('role') === 'button')
+    );
+  };
+
+  // Collect every element, descending into open shadow roots — some consent
+  // widgets (Usercentrics, etc.) render entirely inside a shadow tree.
+  const collect = (root, bag) => {
+    let els;
+    try {
+      els = root.querySelectorAll('*');
+    } catch {
+      return;
+    }
+    for (const el of els) {
+      bag.push(el);
+      if (el.shadowRoot) collect(el.shadowRoot, bag);
+    }
   };
 
   const tryOnce = () => {
-    for (const s of SELECTORS) {
-      const el = document.querySelector(s);
-      if (visible(el)) {
-        el.click();
-        return 'selector ' + s;
+    const bag = [];
+    collect(document, bag);
+
+    // Tier 1: known selectors.
+    for (const el of bag) {
+      for (const sel of KNOWN) {
+        let m = false;
+        try {
+          m = el.matches(sel);
+        } catch {
+          m = false;
+        }
+        if (m && visible(el)) {
+          el.click();
+          return 'selector ' + sel;
+        }
       }
     }
-    const clickables = document.querySelectorAll('button,[role="button"],a');
-    for (const el of clickables) {
-      const t = (el.textContent || '').trim();
-      if (t.length <= 26 && TEXT_RX.test(t) && visible(el)) {
+    // Tier 2: accept-text / aria-label.
+    for (const el of bag) {
+      if (!isClickable(el) || !visible(el)) continue;
+      const text = (el.textContent || el.value || '').trim();
+      if (text.length <= 30 && ACCEPT_TEXT_RX.test(text)) {
         el.click();
-        return 'text "' + t + '"';
+        return 'text "' + text + '"';
+      }
+      const aria = (el.getAttribute('aria-label') || '').trim();
+      if (aria.length <= 30 && ACCEPT_TEXT_RX.test(aria)) {
+        el.click();
+        return 'aria "' + aria + '"';
+      }
+    }
+    // Tier 3: attribute heuristic, scoped to a cookie/consent context.
+    for (const el of bag) {
+      if (!isClickable(el) || !visible(el)) continue;
+      const attrs = (
+        (el.id || '') +
+        ' ' +
+        classOf(el) +
+        ' ' +
+        (el.getAttribute('data-testid') || '')
+      ).toLowerCase();
+      if (!ACCEPT_ATTR_RX.test(attrs)) continue;
+      const ctx = attrs + ' ' + (el.textContent || '').trim().toLowerCase();
+      if (CONSENT_CTX_RX.test(ctx)) {
+        el.click();
+        return 'attr ' + attrs.trim().slice(0, 40);
       }
     }
     return null;
   };
 
-  const deadline = Date.now() + 7000;
+  const deadline = Date.now() + 9000;
   while (Date.now() < deadline) {
     const via = tryOnce();
     if (via) return { clicked: true, via };
-    await new Promise((r) => setTimeout(r, 400));
+    await new Promise((r) => setTimeout(r, 350));
   }
   return { clicked: false };
 }
 
+function setPhase(phase) {
+  state.progress.phase = phase;
+  broadcastProgress();
+}
+
 function broadcastProgress() {
   chrome.runtime
-    .sendMessage({ type: MSG.COOKIE_PROGRESS, data: state.progress })
+    .sendMessage({
+      type: MSG.COOKIE_PROGRESS,
+      data: { ...state.progress, results: state.results },
+    })
     .catch(() => {});
 }
 

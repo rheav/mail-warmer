@@ -23,10 +23,16 @@ Bump `version` in `manifest.json` (and `version_name`) on every release.
 - `lib/cookie-sites.js` — curated 12-site US list (news, business, sports,
   tech, health), each picked for a dismissible consent dialog.
 - `background/cookie-warmer.js` — orchestrator: paced background tabs, an
-  injected accept-clicker covering OneTrust / Cookiebot / Quantcast / Didomi /
-  generic consent platforms (selector + text-match, ~7s poll), all frames.
-- Per-site checklist, progress bar, and last-warm-up summary in the sidepanel;
-  result stored in `chrome.storage.local` as `cookieRun`.
+  injected accept-clicker run in all frames, then closes the tab.
+- 3-tier cookie-accept clicker, shadow-DOM aware, ~9s poll: (1) exact
+  selectors (OneTrust, Cookiebot, Quantcast, Didomi, Usercentrics, Osano,
+  CookieYes, Termly, HubSpot, Complianz, …), (2) accept-text / aria-label
+  match, (3) attribute heuristic scoped to a cookie/consent context.
+- Sidepanel: per-site checklist, a numbered "how it works" guide, a live
+  step banner (Opening… / Looking for the cookie banner… / Accepting
+  cookies…), progress bar, and last-warm-up summary. Per-site status pills
+  update live during the run.
+- Result stored in `chrome.storage.local` as `cookieRun`.
 
 ---
 

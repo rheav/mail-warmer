@@ -562,6 +562,63 @@ input[type=email], input[type=text], input[type=url], select {
   transition: width 0.3s ease;
 }
 
+/* ── Cookie warm-up ────────────────────────────────────────── */
+.gm-steps {
+  margin: 8px 0 14px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gm-steps li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--gm-text-muted);
+}
+
+.gm-steps .step-n {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--gm-blue-bg);
+  color: var(--gm-blue);
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.cookie-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  background: var(--gm-blue-bg);
+  border-radius: 12px;
+  color: var(--gm-blue);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--gm-shadow-card);
+}
+
+.cookie-step[hidden] { display: none; }
+
+.cookie-step .spin {
+  font-size: 18px;
+  animation: cookie-spin 1s linear infinite;
+}
+
+@keyframes cookie-spin {
+  to { transform: rotate(360deg); }
+}
+
 /* ── Profile form grid ─────────────────────────────────────── */
 .gm-form-grid {
   display: grid;
