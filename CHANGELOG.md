@@ -17,24 +17,23 @@ Bump `version` in `manifest.json` (and `version_name`) on every release.
 
 ### Added
 - **Cookies tab** (first tab) — cookie-profile warm-up. Opens a curated set of
-  popular US websites in background tabs, auto-accepts each cookie-consent
-  banner, then closes the tab. Builds a normal-looking cookie profile before
-  newsletter signups run.
-- `lib/cookie-sites.js` — curated 12-site US list (news, business, sports,
-  tech, health), each picked for a dismissible consent dialog.
+  sites in background tabs, accepts each cookie-consent banner, then closes
+  the tab. Builds a normal-looking cookie profile before newsletter signups
+  run.
+- `lib/cookie-sites.js` — curated 14-site list: luxury real-estate,
+  automotive, and fashion brands that either auto-accept cookies or show a
+  clear, dismissible consent popup.
 - `background/cookie-warmer.js` — orchestrator: paced background tabs, an
   injected accept-clicker run in all frames, then closes the tab.
-- 3-tier cookie-accept clicker, shadow-DOM aware, ~9s poll: (1) exact
-  selectors (OneTrust, Cookiebot, Quantcast, Didomi, Usercentrics, Osano,
-  CookieYes, Termly, HubSpot, Complianz, …), (2) accept-text / aria-label
-  match, (3) attribute heuristic scoped to a cookie/consent context.
-- Organic browsing before the accept step: mouse movement, gradual
-  scrolling, and a benign body click — nudges lazy/ad-driven consent
-  banners into showing and leaves a normal interaction trail. Clicks are
-  dispatched on `<body>` so they never navigate the tab.
+- Cookie-accept clicker: known platform selectors (OneTrust, Cookiebot,
+  Quantcast, Didomi, Usercentrics, Osano, CookieYes, Complianz, HubSpot)
+  then a short accept-text fallback, ~5s poll.
+- A quick scroll + benign body click before the accept step nudges lazy
+  consent banners into showing. The click goes to `<body>` so it can never
+  navigate the tab away.
 - Sidepanel: per-site checklist, a numbered "how it works" guide, a live
-  step banner (Opening… / Browsing… / Looking for the cookie banner… /
-  Accepting cookies…), progress bar, and last-warm-up summary. Per-site
+  step banner (Opening… / Accepting cookies…), progress bar, and
+  last-warm-up summary. Per-site
   status pills update live during the run.
 - Result stored in `chrome.storage.local` as `cookieRun`.
 

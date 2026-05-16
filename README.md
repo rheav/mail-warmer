@@ -24,8 +24,8 @@ would require Google review each time).
    Substack / generic signup forms
 ```
 
-0. *(Optional)* The **Cookies** tab warms up the browser: it opens popular US
-   websites in background tabs, auto-accepts their cookie banners, and closes
+0. *(Optional)* The **Cookies** tab warms up the browser: it opens a curated
+   set of sites in background tabs, accepts their cookie banners, and closes
    them — so the profile has a normal cookie set before signups.
 1. You add email addresses and pick newsletters in the sidepanel.
 2. **Run** opens each newsletter's signup page in a tab.
@@ -45,7 +45,7 @@ mail-warmer/
 ├── background/            Service worker
 │   ├── index.js           Message routing, install + daily-refresh alarm
 │   ├── runner.js           Orchestrates a signup run
-│   ├── cookie-warmer.js   Opens US sites + auto-accepts cookie banners
+│   ├── cookie-warmer.js   Opens sites + auto-accepts cookie banners
 │   └── adapters/          Per-source signup logic
 │       ├── substack.js
 │       └── form.js        Generic HTML form fallback
@@ -58,7 +58,7 @@ mail-warmer/
 │   ├── storage.js         Typed wrapper over chrome.storage.local
 │   ├── remote.js          Fetches the newsletter list, 24h cache + fallback
 │   ├── analytics.js       Sends an anonymous run pulse to the backend
-│   ├── cookie-sites.js    Curated US site list for cookie warm-up
+│   ├── cookie-sites.js    Curated site list for cookie warm-up
 │   ├── messages.js        Message-type constants
 │   └── fake-profile.js    Generates a fake person for signup fields
 ├── public/                Extension icons

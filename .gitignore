@@ -7,3 +7,6 @@ npm-debug.log*
 # Local analytics DB (created at runtime; persisted via Docker volume in prod)
 server/db/
 .playwright-mcp/
+
+# Third-party extension kept locally for reference only — not part of this repo
+Accept-all-cookies-Chrome-Web-Store/
