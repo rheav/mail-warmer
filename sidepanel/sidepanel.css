@@ -32,6 +32,7 @@
 
   --gm-shadow-1: 0 1px 2px 0 rgba(60,64,67,.30), 0 1px 3px 1px rgba(60,64,67,.15);
   --gm-shadow-2: 0 1px 3px 0 rgba(60,64,67,.30), 0 4px 8px 3px rgba(60,64,67,.15);
+  --gm-shadow-card: 0 1px 2px rgba(60,64,67,.10), 0 2px 6px 2px rgba(60,64,67,.08);
 
   --gm-font: 'Google Sans', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
@@ -73,6 +74,10 @@ body {
   background: var(--gm-surface);
   border-bottom: 1px solid var(--gm-border);
   height: 56px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 1px 2px rgba(60,64,67,.08);
 }
 
 .gm-brand {
@@ -222,7 +227,10 @@ body {
   background: var(--gm-row-selected);
   color: #044289;
   font-weight: 700;
+  box-shadow: inset 0 0 0 1px rgba(4,66,137,.10);
 }
+
+.gm-nav-item:active { transform: scale(0.96); }
 
 .gm-nav-item .material-symbols-outlined {
   font-size: 22px;
@@ -404,10 +412,11 @@ input[type=email], input[type=text], input[type=url], select {
   padding: 0;
   background: var(--gm-surface);
   border: 1px solid var(--gm-border);
-  border-radius: 8px;
+  border-radius: 12px;
   max-height: 420px;
   overflow-y: auto;
   overflow-x: hidden;
+  box-shadow: var(--gm-shadow-card);
 }
 
 .gm-list li, .checklist li {
@@ -456,8 +465,8 @@ input[type=email], input[type=text], input[type=url], select {
   display: inline-block;
   font-size: 11px;
   font-weight: 500;
-  padding: 2px 8px;
-  border-radius: 4px;
+  padding: 3px 9px;
+  border-radius: 6px;
   background: var(--gm-surface-alt);
   color: var(--gm-text-muted);
 }
@@ -530,11 +539,12 @@ input[type=email], input[type=text], input[type=url], select {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 12px;
+  padding: 12px 14px;
   margin-top: 12px;
   background: var(--gm-blue-bg);
-  border-radius: 8px;
+  border-radius: 12px;
   color: var(--gm-blue);
+  box-shadow: var(--gm-shadow-card);
 }
 
 .gm-bar {
@@ -581,7 +591,7 @@ input[type=email], input[type=text], input[type=url], select {
 /* ── Dialog ────────────────────────────────────────────────── */
 .gm-dialog {
   border: none;
-  border-radius: 8px;
+  border-radius: 16px;
   padding: 24px;
   width: 360px;
   background: var(--gm-surface);
@@ -592,6 +602,7 @@ input[type=email], input[type=text], input[type=url], select {
 
 .gm-dialog::backdrop {
   background: rgba(32, 33, 36, 0.5);
+  backdrop-filter: blur(1.5px);
 }
 
 .gm-dialog h3 {
@@ -656,7 +667,9 @@ details label { margin-top: 10px; }
   color: var(--gm-text-faint);
   font-size: 13px;
   background: var(--gm-surface);
-  border-radius: 8px;
+  border: 1px solid var(--gm-border);
+  border-radius: 12px;
+  box-shadow: var(--gm-shadow-card);
 }
 
 /* Scrollbar (Gmail-like thin scrollbar) */

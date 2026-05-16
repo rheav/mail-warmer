@@ -3,9 +3,11 @@
 const el = {
   cards: document.getElementById('cards'),
   rows: document.getElementById('rows'),
+  rowCount: document.getElementById('rowCount'),
   filter: document.getElementById('filter'),
   footer: document.getElementById('footer'),
   refresh: document.getElementById('refresh'),
+  status: document.getElementById('serverStatus'),
 };
 
 let allNewsletters = []; // cached for client-side filtering
@@ -29,50 +31,60 @@ function fmtUptime(s) {
   return `${Math.round(s / 86400)}d`;
 }
 
-function card(label, value, small = false) {
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[c]));
+}
+
+// One stat card: icon + label on top, big value below.
+function card(icon, label, value, small = false) {
   return `<div class="card">
-    <div class="label">${label}</div>
+    <div class="card-top">
+      <span class="material-symbols-outlined">${icon}</span>
+      <span class="label">${label}</span>
+    </div>
     <div class="value${small ? ' small' : ''}">${value}</div>
   </div>`;
 }
 
+function setStatus(state, text) {
+  el.status.className = `gm-status ${state}`;
+  el.status.querySelector('.status-text').textContent = text;
+}
+
 function renderStatus(s) {
   const types = Object.entries(s.types)
-    .map(([t, n]) => `${t}: ${n}`)
+    .map(([t, n]) => `${t} ${n}`)
     .join(' · ');
   el.cards.innerHTML = [
-    card('Version', s.version),
-    card('Newsletters', s.count),
-    card('By type', types || '—', true),
-    card('List updated', ago(s.updatedAt), true),
-    card('Server reloaded', ago(s.loadedAt), true),
-    card('Uptime', fmtUptime(s.uptimeSeconds), true),
-    card('ETag', s.etag.replace(/"/g, '').slice(0, 12) + '…', true),
+    card('tag', 'List version', s.version),
+    card('mail', 'Newsletters', s.count),
+    card('category', 'By type', types || '—', true),
+    card('edit_calendar', 'List updated', ago(s.updatedAt), true),
+    card('sync', 'Server reloaded', ago(s.loadedAt), true),
+    card('timer', 'Uptime', fmtUptime(s.uptimeSeconds), true),
+    card('fingerprint', 'ETag', s.etag.replace(/"/g, '').slice(0, 10) + '…', true),
   ].join('');
 }
 
 function renderRows(list) {
+  el.rowCount.textContent = `${list.length} shown`;
   if (list.length === 0) {
-    el.rows.innerHTML = '<tr><td colspan="4" class="muted">No matches.</td></tr>';
+    el.rows.innerHTML = '<tr class="empty-row"><td colspan="4">No matches.</td></tr>';
     return;
   }
   el.rows.innerHTML = list
     .map((n, i) => {
       const target = n.slug || n.host || n.url || '—';
       return `<tr>
-        <td>${i + 1}</td>
-        <td>${escapeHtml(n.name)}</td>
-        <td><span class="badge ${n.type}">${n.type}</span></td>
+        <td class="num">${i + 1}</td>
+        <td class="name">${escapeHtml(n.name)}</td>
+        <td><span class="tag ${n.type}">${escapeHtml(n.type)}</span></td>
         <td class="target">${escapeHtml(target)}</td>
       </tr>`;
     })
     .join('');
-}
-
-function escapeHtml(str) {
-  return String(str).replace(/[&<>"']/g, (c) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-  }[c]));
 }
 
 function applyFilter() {
@@ -84,6 +96,7 @@ function applyFilter() {
 }
 
 async function load() {
+  setStatus('', 'Loading…');
   try {
     const [status, list] = await Promise.all([
       fetch('/api/status').then((r) => r.json()),
@@ -92,9 +105,15 @@ async function load() {
     renderStatus(status);
     allNewsletters = list.newsletters;
     applyFilter();
-    el.footer.textContent = `Loaded ${new Date().toLocaleString()}`;
+    setStatus('online', 'Online');
+    el.footer.textContent = `Last loaded ${new Date().toLocaleString()}`;
   } catch (err) {
-    el.cards.innerHTML = `<div class="error">Failed to load: ${escapeHtml(err.message)}</div>`;
+    setStatus('offline', 'Offline');
+    el.cards.innerHTML =
+      `<div class="error">
+        <span class="material-symbols-outlined">error</span>
+        Failed to load: ${escapeHtml(err.message)}
+      </div>`;
   }
 }
 

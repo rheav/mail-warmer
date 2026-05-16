@@ -3,34 +3,62 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mail Warmer — Newsletter API Status</title>
+  <title>Mail Warmer — Newsletter API</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23c5221f'/%3E%3Cpath d='M5 8.5l7 4.5 7-4.5M5 8h14v8H5z' fill='none' stroke='white' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&family=Roboto+Mono:wght@400;500&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main>
-    <header>
-      <h1>Mail Warmer <span class="muted">/ Newsletter API</span></h1>
-      <button id="refresh" type="button">Refresh</button>
-    </header>
+  <!-- Gmail-style top bar -->
+  <header class="gm-topbar">
+    <div class="gm-brand">
+      <span class="gm-logo material-symbols-outlined">mark_email_read</span>
+      <span class="gm-brand-text">Mail Warmer</span>
+      <span class="gm-version" id="versionTag">API</span>
+    </div>
+    <div class="gm-status" id="serverStatus">
+      <span class="material-symbols-outlined dot">circle</span>
+      <span class="status-text">Connecting…</span>
+    </div>
+  </header>
 
-    <section class="cards" id="cards" aria-live="polite">
-      <!-- stat cards injected by app.js -->
-    </section>
+  <main class="gm-main">
+    <div class="gm-section-head">
+      <h1>Newsletter list status</h1>
+      <button id="refresh" class="gm-btn-secondary" type="button">
+        <span class="material-symbols-outlined">refresh</span>
+        Refresh
+      </button>
+    </div>
 
-    <section>
-      <div class="row">
-        <h2>Newsletters</h2>
-        <input id="filter" type="search" placeholder="Filter by name…" />
+    <!-- Stat cards -->
+    <section class="cards" id="cards" aria-live="polite"></section>
+
+    <!-- Newsletter table -->
+    <section class="gm-panel">
+      <div class="gm-panel-head">
+        <div class="gm-list-title">
+          <span class="material-symbols-outlined">list_alt</span>
+          <span>Newsletters</span>
+          <span class="gm-count" id="rowCount"></span>
+        </div>
+        <div class="gm-search">
+          <span class="material-symbols-outlined">search</span>
+          <input id="filter" type="search" placeholder="Filter by name" />
+        </div>
       </div>
       <table>
         <thead>
-          <tr><th>#</th><th>Name</th><th>Type</th><th>Target</th></tr>
+          <tr><th class="num">#</th><th>Name</th><th>Type</th><th>Target</th></tr>
         </thead>
         <tbody id="rows"></tbody>
       </table>
     </section>
 
-    <footer id="footer" class="muted"></footer>
+    <footer id="footer" class="gm-footer"></footer>
   </main>
 
   <script src="app.js"></script>
