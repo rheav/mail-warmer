@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "updatedAt": "2026-05-15T00:00:00.000Z",
+  "newsletters": [
+    { "name": "Stratechery (free posts)", "type": "substack", "slug": "stratechery" },
+    { "name": "Lenny's Newsletter", "type": "substack", "slug": "lennysnewsletter" },
+    { "name": "Platformer", "type": "substack", "slug": "platformer" },
+    { "name": "Why is this interesting?", "type": "substack", "slug": "whyisthisinteresting" },
+    { "name": "Garbage Day", "type": "substack", "slug": "garbageday" },
+    { "name": "kyla's newsletter", "type": "substack", "slug": "kyla" },
+    { "name": "Napkin Math (Sirupsen)", "type": "substack", "slug": "napkinmath" },
+
+    { "name": "Slow Boring (Matt Yglesias)", "type": "substack", "host": "www.slowboring.com" },
+    { "name": "Noahpinion (Noah Smith)", "type": "substack", "host": "www.noahpinion.blog" },
+    { "name": "One Useful Thing (Ethan Mollick)", "type": "substack", "host": "www.oneusefulthing.org" },
+    { "name": "The Pragmatic Engineer", "type": "substack", "host": "newsletter.pragmaticengineer.com" },
+    { "name": "Experimental History (Adam Mastroianni)", "type": "substack", "host": "www.experimental-history.com" },
+    { "name": "Big Technology (Alex Kantrowitz)", "type": "substack", "host": "www.bigtechnology.com" },
+    { "name": "Dwarkesh Patel", "type": "substack", "host": "www.dwarkeshpatel.com" },
+    { "name": "Astral Codex Ten (Scott Alexander)", "type": "substack", "host": "www.astralcodexten.com" },
+    { "name": "The Honest Broker (Ted Gioia)", "type": "substack", "host": "www.honest-broker.com" },
+    { "name": "Letters from an American (Heather Cox Richardson)", "type": "substack", "host": "heathercoxrichardson.substack.com" },
+    { "name": "The Free Press (Bari Weiss)", "type": "substack", "host": "www.thefp.com" },
+    { "name": "Construction Physics", "type": "substack", "host": "www.construction-physics.com" },
+
+    { "name": "TLDR Newsletter", "type": "form", "url": "https://tldr.tech/signup" }
+  ]
+}

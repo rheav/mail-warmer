@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mail Warmer — Newsletter API Status</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Mail Warmer <span class="muted">/ Newsletter API</span></h1>
+      <button id="refresh" type="button">Refresh</button>
+    </header>
+
+    <section class="cards" id="cards" aria-live="polite">
+      <!-- stat cards injected by app.js -->
+    </section>
+
+    <section>
+      <div class="row">
+        <h2>Newsletters</h2>
+        <input id="filter" type="search" placeholder="Filter by name…" />
+      </div>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Name</th><th>Type</th><th>Target</th></tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </section>
+
+    <footer id="footer" class="muted"></footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

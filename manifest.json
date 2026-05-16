@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "Mail Warmer",
+  "version": "0.3.0",
+  "version_name": "0.3.0 — Gmail UI + smart fill",
+  "description": "Auto-subscribe configured emails to curated newsletters so inboxes stay active.",
+  "permissions": [
+    "storage",
+    "alarms",
+    "tabs",
+    "scripting",
+    "sidePanel",
+    "activeTab",
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
+  "icons": {
+    "16": "public/logo.png",
+    "32": "public/logo.png",
+    "48": "public/logo.png",
+    "128": "public/logo.png"
+  },
+  "action": {
+    "default_title": "Open Mail Warmer",
+    "default_icon": {
+      "16": "public/logo.png",
+      "32": "public/logo.png",
+      "48": "public/logo.png",
+      "128": "public/logo.png"
+    }
+  },
+  "side_panel": {
+    "default_path": "sidepanel/sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background/index.js",
+    "type": "module"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["newsletters.json"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

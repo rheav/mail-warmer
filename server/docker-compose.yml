@@ -1,0 +1,15 @@
+services:
+  newsletters:
+    build: .
+    image: mail-warmer-server
+    container_name: mail-warmer-server
+    restart: unless-stopped
+    ports:
+      # host:container — change host port if 3000 is taken on the VPS.
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    # Optional: edit data/newsletters.json on the host and skip rebuilds.
+    # The server watches the file and reloads within ~5s. Uncomment to use:
+    # volumes:
+    #   - ./data:/app/data:ro
