@@ -5,10 +5,10 @@ services:
     container_name: mail-warmer-server
     restart: unless-stopped
     ports:
-      # host:container — change host port if 3000 is taken on the VPS.
-      - "3000:3000"
-    environment:
-      - PORT=3000
+      # host:container — change host port if 80 is taken on the VPS.
+      - "80:80"
+    # PORT defaults to 80 in the Dockerfile; the node binary has
+    # cap_net_bind_service so it can bind the privileged port as non-root.
     volumes:
       # Persists the analytics SQLite DB across rebuilds/redeploys.
       - analytics-db:/app/db

@@ -104,7 +104,8 @@ Easypanel runs this as a Docker app and handles HTTPS for you.
    - **Mount path:** `/app/db`
 
    This is what persists the SQLite database across redeploys.
-4. **Environment** → `PORT=3000` (optional; it is the default).
+4. **Environment** → none required; the image binds port `80` by default
+   (set `PORT` only if you need another port).
 5. **Domain** → add your domain; Easypanel issues a TLS cert automatically.
 6. **Deploy.**
 
@@ -144,7 +145,7 @@ Easypanel issues and renews the certificate. Nothing else to do.
 
 ```
 api.yourdomain.com {
-    reverse_proxy localhost:3000
+    reverse_proxy localhost:80
 }
 ```
 

@@ -4,11 +4,16 @@ FROM node:20-slim
 
 WORKDIR /app
 
-# gosu lets the entrypoint drop from root to the `node` user after fixing
-# volume permissions (see entrypoint.sh).
+# gosu  — entrypoint drops from root to the `node` user after fixing volume
+#         permissions (see entrypoint.sh).
+# libcap2-bin — provides setcap, used below to let `node` bind port 80.
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends gosu \
+  && apt-get install -y --no-install-recommends gosu libcap2-bin \
   && rm -rf /var/lib/apt/lists/*
+
+# Port 80 is privileged; grant the node binary the capability to bind it so
+# the server can listen on 80 without running as root.
+RUN setcap 'cap_net_bind_service=+ep' "$(command -v node)"
 
 # Install deps first so the layer caches when only source changes.
 COPY package.json ./
@@ -22,13 +27,13 @@ RUN chmod +x entrypoint.sh
 
 # Analytics DB lives here. Mount a volume at this path to persist it
 # (docker-compose volume, or an Easypanel "Volume Mount" — see README).
-ENV PORT=3000
+ENV PORT=80
 ENV DB_DIR=/app/db
-EXPOSE 3000
+EXPOSE 80
 
 # Lightweight liveness check (no wget/curl needed on slim).
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s \
-  CMD node -e "fetch('http://localhost:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+  CMD node -e "fetch('http://localhost:'+(process.env.PORT||80)+'/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
 # Runs as root only long enough to chown the volume; entrypoint execs as node.
 ENTRYPOINT ["/app/entrypoint.sh"]
