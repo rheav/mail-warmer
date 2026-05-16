@@ -396,6 +396,7 @@ function updateCookieStep() {
   const site = cookieLive.current || 'a site';
   const msgByPhase = {
     opening: `Opening ${site} in a background tab…`,
+    browsing: `Browsing ${site} like a person — scrolling and clicking…`,
     scanning: `Looking for the cookie banner on ${site}…`,
     settling: `Accepting cookies on ${site}…`,
   };

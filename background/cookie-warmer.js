@@ -100,7 +100,21 @@ async function warmSite(site) {
     // Some sites (ads, trackers) never reach status 'complete' — tolerate a
     // timeout rather than failing the whole site.
     await waitForTabComplete(tab.id, TAB_LOAD_TIMEOUT_MS).catch(() => {});
-    await delay(1500); // give late-loading consent dialogs time to render
+    await delay(1200); // give the page a moment to settle
+
+    // Browse the page like a person first — scroll, move the mouse, click.
+    // Many consent banners (especially ad-driven CMPs) only load after the
+    // first scroll or interaction, and the activity makes the visit look
+    // organic rather than a headless drive-by. Top frame only.
+    setPhase('browsing');
+    try {
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: simulateOrganicBrowsing,
+      });
+    } catch {
+      /* page may block injection — accept step still runs */
+    }
 
     setPhase('scanning');
     // acceptCookiesInPage runs in every frame (consent dialogs are often in
@@ -120,6 +134,78 @@ async function warmSite(site) {
     return hit || { clicked: false };
   } finally {
     await chrome.tabs.remove(tab.id).catch(() => {});
+  }
+}
+
+// Injected INTO the top frame. Self-contained — no outer references.
+// Simulates a person reading the page: mouse movement, gradual scrolling,
+// and a benign click. This nudges lazy-loading consent banners into showing
+// and leaves a normal interaction trail. Clicks are dispatched on <body> at
+// random coordinates so they never follow a link or navigate the tab away.
+async function simulateOrganicBrowsing() {
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const w = () => window.innerWidth || 1000;
+  const h = () => window.innerHeight || 800;
+
+  const fireMouse = (type, x, y) => {
+    try {
+      const target =
+        type === 'click' || type.startsWith('mousedown') || type === 'mouseup'
+          ? document.body || document.documentElement
+          : document.elementFromPoint(x, y) ||
+            document.body ||
+            document.documentElement;
+      target.dispatchEvent(
+        new MouseEvent(type, {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+          clientX: x,
+          clientY: y,
+        })
+      );
+    } catch {
+      /* ignore — some elements reject synthetic events */
+    }
+  };
+
+  const scrollBy = (dy) => {
+    try {
+      window.scrollBy({ top: dy, left: 0, behavior: 'smooth' });
+    } catch {
+      window.scrollBy(0, dy);
+    }
+  };
+
+  // Wander the mouse around for a beat.
+  for (let i = 0; i < 6; i++) {
+    fireMouse('mousemove', rand(0, w()), rand(0, h()));
+    await sleep(rand(80, 220));
+  }
+
+  // Gradual scroll down the page, with mouse movement between steps.
+  const downSteps = 5 + Math.floor(Math.random() * 4);
+  for (let i = 0; i < downSteps; i++) {
+    scrollBy(rand(250, 600));
+    fireMouse('mousemove', rand(0, w()), rand(0, h()));
+    await sleep(rand(350, 900));
+  }
+
+  // A benign click on the body — registers an interaction without navigating.
+  const cx = rand(w() * 0.3, w() * 0.7);
+  const cy = rand(h() * 0.3, h() * 0.6);
+  fireMouse('mousemove', cx, cy);
+  fireMouse('mousedown', cx, cy);
+  fireMouse('mouseup', cx, cy);
+  fireMouse('click', cx, cy);
+  await sleep(rand(300, 700));
+
+  // Scroll partway back up, the way someone re-reads a page.
+  const upSteps = 2 + Math.floor(Math.random() * 3);
+  for (let i = 0; i < upSteps; i++) {
+    scrollBy(-rand(200, 500));
+    await sleep(rand(300, 700));
   }
 }
 

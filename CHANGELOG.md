@@ -28,10 +28,14 @@ Bump `version` in `manifest.json` (and `version_name`) on every release.
   selectors (OneTrust, Cookiebot, Quantcast, Didomi, Usercentrics, Osano,
   CookieYes, Termly, HubSpot, Complianz, …), (2) accept-text / aria-label
   match, (3) attribute heuristic scoped to a cookie/consent context.
+- Organic browsing before the accept step: mouse movement, gradual
+  scrolling, and a benign body click — nudges lazy/ad-driven consent
+  banners into showing and leaves a normal interaction trail. Clicks are
+  dispatched on `<body>` so they never navigate the tab.
 - Sidepanel: per-site checklist, a numbered "how it works" guide, a live
-  step banner (Opening… / Looking for the cookie banner… / Accepting
-  cookies…), progress bar, and last-warm-up summary. Per-site status pills
-  update live during the run.
+  step banner (Opening… / Browsing… / Looking for the cookie banner… /
+  Accepting cookies…), progress bar, and last-warm-up summary. Per-site
+  status pills update live during the run.
 - Result stored in `chrome.storage.local` as `cookieRun`.
 
 ---
