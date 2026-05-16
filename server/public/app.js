@@ -8,6 +8,9 @@ const el = {
   footer: document.getElementById('footer'),
   refresh: document.getElementById('refresh'),
   status: document.getElementById('serverStatus'),
+  analyticsCards: document.getElementById('analyticsCards'),
+  analyticsRows: document.getElementById('analyticsRows'),
+  pulseRows: document.getElementById('pulseRows'),
 };
 
 let allNewsletters = []; // cached for client-side filtering
@@ -87,6 +90,70 @@ function renderRows(list) {
     .join('');
 }
 
+// --- Analytics ---------------------------------------------------------------
+
+function rateClass(pct) {
+  if (pct >= 70) return '';
+  if (pct >= 40) return 'mid';
+  return 'low';
+}
+
+function rateCell(pct) {
+  return `<td><div class="rate">
+    <div class="track"><div class="fill ${rateClass(pct)}" style="width:${pct}%"></div></div>
+    <span class="pct">${pct}%</span>
+  </div></td>`;
+}
+
+function renderAnalytics(a) {
+  const t = a.totals;
+  const attempted = t.success + t.failure + t.skipped;
+  const overall = attempted ? Math.round((t.success / attempted) * 100) : 0;
+  el.analyticsCards.innerHTML = [
+    card('play_circle', 'Runs', t.runs),
+    card('devices', 'Installs', t.installs),
+    card('check_circle', 'Successes', t.success),
+    card('cancel', 'Failures', t.failure),
+    card('percent', 'Success rate', `${overall}%`),
+    card('podcasts', 'Last pulse', ago(t.lastPulseAt), true),
+  ].join('');
+
+  // Per-newsletter table.
+  if (a.perNewsletter.length === 0) {
+    el.analyticsRows.innerHTML =
+      '<tr class="empty-row"><td colspan="7">No pulses received yet.</td></tr>';
+  } else {
+    el.analyticsRows.innerHTML = a.perNewsletter
+      .map((r) => `<tr>
+        <td class="name">${escapeHtml(r.newsletter)}</td>
+        <td><span class="tag ${r.type || ''}">${escapeHtml(r.type || '—')}</span></td>
+        <td class="num">${r.attempts}</td>
+        <td class="num ok">${r.success}</td>
+        <td class="num fail">${r.failure}</td>
+        <td class="num skip">${r.skipped}</td>
+        ${rateCell(r.successRate)}
+      </tr>`)
+      .join('');
+  }
+
+  // Recent pulses.
+  if (a.recent.length === 0) {
+    el.pulseRows.innerHTML =
+      '<tr class="empty-row"><td colspan="6">No pulses received yet.</td></tr>';
+  } else {
+    el.pulseRows.innerHTML = a.recent
+      .map((p) => `<tr>
+        <td class="mono">${escapeHtml(p.install)}</td>
+        <td>${escapeHtml(p.extVersion || '—')}</td>
+        <td>${escapeHtml(ago(new Date(p.runAt).toISOString()))}</td>
+        <td class="num ok">${p.success}</td>
+        <td class="num fail">${p.failure}</td>
+        <td class="num skip">${p.skipped}</td>
+      </tr>`)
+      .join('');
+  }
+}
+
 function applyFilter() {
   const q = el.filter.value.trim().toLowerCase();
   const list = q
@@ -98,13 +165,15 @@ function applyFilter() {
 async function load() {
   setStatus('', 'Loading…');
   try {
-    const [status, list] = await Promise.all([
+    const [status, list, analytics] = await Promise.all([
       fetch('/api/status').then((r) => r.json()),
       fetch('/api/newsletters').then((r) => r.json()),
+      fetch('/api/analytics').then((r) => r.json()),
     ]);
     renderStatus(status);
     allNewsletters = list.newsletters;
     applyFilter();
+    renderAnalytics(analytics);
     setStatus('online', 'Online');
     el.footer.textContent = `Last loaded ${new Date().toLocaleString()}`;
   } catch (err) {

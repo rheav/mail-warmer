@@ -1,5 +1,6 @@
 import { MSG, RUN_STATUS } from '../lib/messages.js';
 import * as store from '../lib/storage.js';
+import { sendPulse } from '../lib/analytics.js';
 import { signupSubstack } from './adapters/substack.js';
 import { signupViaForm } from './adapters/form.js';
 
@@ -38,6 +39,9 @@ export async function runSignups({ emailId, newsletterIds }) {
   broadcastProgress();
   await store.appendLog('info', `Run start: ${items.length} newsletters for ${email.address}`);
 
+  // Per-newsletter outcomes, collected for the anonymous analytics pulse.
+  const pulseResults = [];
+
   for (const n of items) {
     if (state.abort) {
       await store.appendLog('warn', 'Run aborted by user');
@@ -46,17 +50,21 @@ export async function runSignups({ emailId, newsletterIds }) {
     state.progress.current = n.name;
     broadcastProgress();
 
+    let status;
     try {
       const result = await signupOne(email.address, n, { profile });
+      status = result.status;
       await store.recordResult(emailId, n.id, result.status, result.message);
       await store.appendLog(
         result.status === 'success' ? 'success' : 'warn',
         `[${n.name}] ${result.status}${result.message ? ` — ${result.message}` : ''}`
       );
     } catch (err) {
+      status = 'error';
       await store.recordResult(emailId, n.id, 'error', err.message);
       await store.appendLog('error', `[${n.name}] error — ${err.message}`);
     }
+    pulseResults.push({ newsletter: n.name, type: n.type, status });
 
     state.progress.done += 1;
     broadcastProgress();
@@ -70,6 +78,9 @@ export async function runSignups({ emailId, newsletterIds }) {
   broadcastProgress();
   chrome.runtime.sendMessage({ type: MSG.RUN_COMPLETE }).catch(() => {});
   await store.appendLog('info', 'Run complete');
+
+  // Fire-and-forget anonymous analytics pulse (never blocks the run).
+  sendPulse(pulseResults);
 
   state.status = RUN_STATUS.IDLE;
 }

@@ -3,3 +3,7 @@ npm-debug.log*
 .DS_Store
 *.log
 .env
+
+# Local analytics DB (created at runtime; persisted via Docker volume in prod)
+server/db/
+.playwright-mcp/

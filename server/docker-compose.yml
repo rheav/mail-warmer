@@ -9,7 +9,12 @@ services:
       - "3000:3000"
     environment:
       - PORT=3000
+    volumes:
+      # Persists the analytics SQLite DB across rebuilds/redeploys.
+      - analytics-db:/app/db
     # Optional: edit data/newsletters.json on the host and skip rebuilds.
     # The server watches the file and reloads within ~5s. Uncomment to use:
-    # volumes:
     #   - ./data:/app/data:ro
+
+volumes:
+  analytics-db:

@@ -3,6 +3,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { savePulse, getAnalytics } from './db.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_FILE = path.join(__dirname, 'data', 'newsletters.json');
@@ -12,6 +13,7 @@ const CACHE_SECONDS = 24 * 60 * 60; // extension caches 24h; tell proxies the sa
 
 const app = express();
 app.disable('x-powered-by');
+app.use(express.json({ limit: '64kb' }));
 
 // Read + validate the data file once at boot, then re-read on file change so
 // editing data/newsletters.json + restart (or live edit) is picked up.
@@ -54,10 +56,12 @@ function typeBreakdown() {
   return out;
 }
 
-// Allow any extension origin to read the list. The list is public, non-secret.
+// Allow any extension origin to read the list and post a pulse. The list is
+// public and pulses carry only anonymous data — no per-origin restriction.
 app.use((req, res, next) => {
   res.set('Access-Control-Allow-Origin', '*');
-  res.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.set('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
 });
@@ -84,6 +88,47 @@ app.get('/api/newsletters', (req, res) => {
     return res.status(304).end();
   }
   res.type('application/json').send(payload);
+});
+
+const MAX_RESULTS = 500; // sanity cap on a single pulse
+
+// Validates an incoming pulse. Returns an error string, or null if valid.
+function validatePulse(body) {
+  if (!body || typeof body !== 'object') return 'body must be an object';
+  if (typeof body.installId !== 'string' || !body.installId) {
+    return 'installId required';
+  }
+  if (typeof body.runAt !== 'number' || !Number.isFinite(body.runAt)) {
+    return 'runAt must be a number';
+  }
+  if (!Array.isArray(body.results) || body.results.length === 0) {
+    return 'results must be a non-empty array';
+  }
+  if (body.results.length > MAX_RESULTS) return 'too many results';
+  for (const r of body.results) {
+    if (!r || typeof r.newsletter !== 'string' || typeof r.status !== 'string') {
+      return 'each result needs newsletter + status strings';
+    }
+  }
+  return null;
+}
+
+// Anonymous run analytics. The extension POSTs one pulse per completed run.
+app.post('/api/pulse', (req, res) => {
+  const err = validatePulse(req.body);
+  if (err) return res.status(400).json({ ok: false, error: err });
+  try {
+    const result = savePulse(req.body);
+    res.status(result.stored ? 201 : 200).json({ ok: true, ...result });
+  } catch (e) {
+    console.error('savePulse failed:', e.message);
+    res.status(500).json({ ok: false, error: 'storage error' });
+  }
+});
+
+// Aggregated analytics for the dashboard.
+app.get('/api/analytics', (req, res) => {
+  res.json(getAnalytics());
 });
 
 // Status dashboard at /.

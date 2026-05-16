@@ -58,6 +58,50 @@
       </table>
     </section>
 
+    <!-- Analytics -->
+    <div class="gm-section-head" style="margin-top:36px">
+      <h1>Run analytics <span class="gm-subtle">anonymous</span></h1>
+    </div>
+
+    <section class="cards" id="analyticsCards" aria-live="polite"></section>
+
+    <section class="gm-panel">
+      <div class="gm-panel-head">
+        <div class="gm-list-title">
+          <span class="material-symbols-outlined">leaderboard</span>
+          <span>Per-newsletter outcomes</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Newsletter</th><th>Type</th><th class="num">Tries</th>
+            <th class="num">OK</th><th class="num">Fail</th>
+            <th class="num">Skip</th><th>Success rate</th>
+          </tr>
+        </thead>
+        <tbody id="analyticsRows"></tbody>
+      </table>
+    </section>
+
+    <section class="gm-panel" style="margin-top:18px">
+      <div class="gm-panel-head">
+        <div class="gm-list-title">
+          <span class="material-symbols-outlined">monitor_heart</span>
+          <span>Recent pulses</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Install</th><th>Version</th><th>Run at</th>
+            <th class="num">OK</th><th class="num">Fail</th><th class="num">Skip</th>
+          </tr>
+        </thead>
+        <tbody id="pulseRows"></tbody>
+      </table>
+    </section>
+
     <footer id="footer" class="gm-footer"></footer>
   </main>
 

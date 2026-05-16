@@ -50,8 +50,10 @@ mail-warmer/
 ├── sidepanel/             UI — Run / Emails / Profile / Lists / Log tabs
 │   ├── sidepanel.html / .css / .js
 ├── lib/
+│   ├── config.js          Backend URL config
 │   ├── storage.js         Typed wrapper over chrome.storage.local
 │   ├── remote.js          Fetches the newsletter list, 24h cache + fallback
+│   ├── analytics.js       Sends an anonymous run pulse to the backend
 │   ├── messages.js        Message-type constants
 │   └── fake-profile.js    Generates a fake person for signup fields
 ├── public/                Extension icons
@@ -69,10 +71,10 @@ mail-warmer/
 
 ### Configure the backend URL
 
-Before loading, set the API endpoint in **`lib/remote.js`**:
+Before loading, set the API base in **`lib/config.js`**:
 
 ```js
-const API_URL = 'https://api.yourdomain.com/api/newsletters';
+export const API_BASE = 'https://api.yourdomain.com';
 ```
 
 Use HTTPS — Chrome may block plain-HTTP fetches from the extension.
@@ -87,7 +89,8 @@ If the server is unreachable, the extension falls back to the bundled
 A small Express server in **`server/`** that:
 
 - serves the curated list at `GET /api/newsletters` (24h `Cache-Control` + ETag),
-- exposes `GET /api/status` and a **status dashboard** at `/`,
+- collects anonymous run analytics at `POST /api/pulse` into a SQLite DB,
+- exposes `GET /api/status`, `GET /api/analytics`, and a **dashboard** at `/`,
 - reloads `data/newsletters.json` automatically when it changes.
 
 ### Run locally
@@ -98,15 +101,15 @@ npm install
 npm start          # http://localhost:3000
 ```
 
-### Deploy on a VPS (Docker)
+### Deploy
 
-```sh
-cd server
-docker compose up -d --build
-```
+- **Easypanel** — App service from this repo, build path `server`, Volume
+  Mount `analytics-db` → `/app/db`, auto HTTPS.
+- **Plain Docker / VPS** — `cd server && docker compose up -d --build`, then
+  a reverse proxy for HTTPS.
 
-Put it behind a reverse proxy for HTTPS (Caddy / nginx). Full deploy and
-update instructions: **[`server/README.md`](server/README.md)**.
+The analytics SQLite DB persists in the `/app/db` volume across redeploys.
+Full deploy + update instructions: **[`server/README.md`](server/README.md)**.
 
 ### Updating the newsletter list
 
@@ -152,8 +155,12 @@ All extension state lives in `chrome.storage.local` (see schema in
 | `log`           | Capped activity log |
 | `profile`       | Fake person used to fill non-email fields |
 | `newslettersCache` | Cached API response + fetch timestamp |
+| `installId`     | Random anonymous UUID for analytics pulses |
 
-No data leaves the browser except the read-only `GET` to your own API.
+The only data leaving the browser is the read-only `GET` for the newsletter
+list and, after each run, an **anonymous analytics pulse** — per-newsletter
+success/failure counts plus a random `installId`. No email addresses or
+profile data are ever sent. See `lib/analytics.js` and `server/README.md`.
 
 ---
 
