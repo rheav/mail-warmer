@@ -619,6 +619,49 @@ input[type=email], input[type=text], input[type=url], select {
   to { transform: rotate(360deg); }
 }
 
+.cookie-main.clickable { cursor: pointer; }
+
+.cookie-toggle {
+  color: var(--gm-blue);
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+/* Captured-cookie detail — full-width row under a site in the checklist. */
+.cookie-detail {
+  grid-column: 1 / -1;
+  margin-top: 6px;
+  padding: 8px 10px;
+  background: var(--gm-bg);
+  border-radius: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cookie-line {
+  display: flex;
+  gap: 6px;
+  font-family: 'Roboto Mono', 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.cookie-line code {
+  color: var(--gm-blue);
+  flex-shrink: 0;
+  font-weight: 500;
+}
+
+.cookie-val {
+  color: var(--gm-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* ── Profile form grid ─────────────────────────────────────── */
 .gm-form-grid {
   display: grid;

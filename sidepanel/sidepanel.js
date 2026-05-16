@@ -342,6 +342,15 @@ function bindRunControls() {
 
 // --- Cookie warm-up ---
 
+// Site rows whose captured-cookie detail is expanded.
+const expandedCookieSites = new Set();
+
+// The result record for a site: live run wins, else the last stored run.
+function cookieSiteResult(id) {
+  const src = cookieLive ? cookieLive.results : cachedCookieRun?.results;
+  return (src || []).find((r) => r.id === id) || null;
+}
+
 // Per-site status pill: live run wins, else the last stored run.
 function cookieSiteStatus(id) {
   if (cookieLive) {
@@ -350,7 +359,7 @@ function cookieSiteStatus(id) {
     if (cookieLive.currentId === id) return 'running';
     return 'pending';
   }
-  const r = (cachedCookieRun?.results || []).find((x) => x.id === id);
+  const r = cookieSiteResult(id);
   return r ? r.status : null;
 }
 
@@ -362,16 +371,38 @@ function renderCookieList() {
     const li = document.createElement('li');
     const checked = cookieSelectedIds.has(id) ? 'checked' : '';
     const status = cookieSiteStatus(id);
-    const host = new URL(site.url).hostname.replace(/^www\./, '');
+    const host = new URL(site.url).hostname.replace(/^www\d?\./, '');
+    const res = cookieSiteResult(id);
+    const count = res && typeof res.cookieCount === 'number' ? res.cookieCount : null;
+    const hasDetail = !!(res && res.cookies && res.cookies.length);
+    const meta = site.category + (count != null ? ` · ${count} cookies` : '');
     li.innerHTML = `
       <input type="checkbox" data-id="${id}" ${checked}>
-      <div>
+      <div class="cookie-main${hasDetail ? ' clickable' : ''}" data-id="${id}">
         <div class="nl-name">${escapeHtml(site.name)}</div>
-        <div class="nl-meta">${escapeHtml(site.category)}</div>
+        <div class="nl-meta">${escapeHtml(meta)}${
+          hasDetail
+            ? ` <span class="cookie-toggle">${
+                expandedCookieSites.has(id) ? '▾ hide' : '▸ view'
+              }</span>`
+            : ''
+        }</div>
       </div>
       <span class="tag">${escapeHtml(host)}</span>
       <span class="status ${status || 'pending'}">${status || 'new'}</span>
     `;
+    if (hasDetail && expandedCookieSites.has(id)) {
+      const detail = document.createElement('div');
+      detail.className = 'cookie-detail';
+      detail.innerHTML = res.cookies
+        .map(
+          (c) =>
+            `<div class="cookie-line"><code>${escapeHtml(c.name)}</code>` +
+            `<span class="cookie-val">${escapeHtml(c.value)}</span></div>`
+        )
+        .join('');
+      li.appendChild(detail);
+    }
     list.appendChild(li);
   });
   list.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
@@ -379,6 +410,14 @@ function renderCookieList() {
       if (cb.checked) cookieSelectedIds.add(cb.dataset.id);
       else cookieSelectedIds.delete(cb.dataset.id);
       updateCookieSelCount();
+    });
+  });
+  list.querySelectorAll('.cookie-main.clickable').forEach((el) => {
+    el.addEventListener('click', () => {
+      const id = el.dataset.id;
+      if (expandedCookieSites.has(id)) expandedCookieSites.delete(id);
+      else expandedCookieSites.add(id);
+      renderCookieList();
     });
   });
   updateCookieSelCount();

@@ -54,6 +54,7 @@ export async function runCookieWarmup({ siteIds } = {}) {
     setPhase('opening');
 
     let status;
+    let cookies = [];
     try {
       const r = await warmSite(site);
       status = r.clicked ? 'success' : 'skipped';
@@ -63,11 +64,24 @@ export async function runCookieWarmup({ siteIds } = {}) {
           ? `[${site.name}] cookies accepted (${r.via})`
           : `[${site.name}] visited — no cookie banner found`
       );
+      // Read back the cookies the visit actually left in the browser.
+      cookies = await readSiteCookies(site);
+      await logCookies(site, cookies);
     } catch (err) {
       status = 'error';
       await store.appendLog('error', `[${site.name}] ${err.message}`);
     }
-    state.results.push({ id: siteId(site), name: site.name, status });
+    state.results.push({
+      id: siteId(site),
+      name: site.name,
+      status,
+      cookieCount: cookies.length,
+      // Small sample kept for the sidebar view — name + clipped value.
+      cookies: cookies.slice(0, 20).map((c) => ({
+        name: c.name,
+        value: clip(c.value, 60),
+      })),
+    });
 
     state.progress.done += 1;
     state.progress.phase = null;
@@ -84,9 +98,51 @@ export async function runCookieWarmup({ siteIds } = {}) {
   state.progress.phase = 'done';
   broadcastProgress();
   chrome.runtime.sendMessage({ type: MSG.COOKIE_COMPLETE }).catch(() => {});
-  await store.appendLog('info', 'Cookie warm-up complete');
+
+  const totalCookies = state.results.reduce(
+    (sum, r) => sum + (r.cookieCount || 0),
+    0
+  );
+  await store.appendLog(
+    'info',
+    `Cookie warm-up complete — ${totalCookies} cookies across ${state.results.length} sites`
+  );
 
   state.status = RUN_STATUS.IDLE;
+}
+
+// Reads the cookies currently stored for a site's URL (set or kept by the
+// visit). Requires the "cookies" permission. Returns [{ name, value }].
+async function readSiteCookies(site) {
+  try {
+    const cookies = await chrome.cookies.getAll({ url: site.url });
+    return cookies || [];
+  } catch (err) {
+    console.warn('readSiteCookies failed', err);
+    return [];
+  }
+}
+
+// Logs the real cookie name=value pairs a site left behind, so they show up
+// in the sidepanel Log tab. Values are clipped — consent strings are long.
+async function logCookies(site, cookies) {
+  if (cookies.length === 0) {
+    await store.appendLog('info', `[${site.name}] no cookies stored`);
+    return;
+  }
+  await store.appendLog('info', `[${site.name}] ${cookies.length} cookies stored`);
+  const SHOWN = 8;
+  for (const c of cookies.slice(0, SHOWN)) {
+    await store.appendLog('info', `  ${c.name} = ${clip(c.value, 80)}`);
+  }
+  if (cookies.length > SHOWN) {
+    await store.appendLog('info', `  …and ${cookies.length - SHOWN} more`);
+  }
+}
+
+function clip(str, max) {
+  const s = String(str || '');
+  return s.length > max ? s.slice(0, max) + '…' : s;
 }
 
 // Opens one site in a background tab, accepts its cookie banner, closes it.

@@ -31,6 +31,10 @@ Bump `version` in `manifest.json` (and `version_name`) on every release.
 - A quick scroll + benign body click before the accept step nudges lazy
   consent banners into showing. The click goes to `<body>` so it can never
   navigate the tab away.
+- After each site, reads back the real cookies it left (`chrome.cookies`,
+  new `cookies` permission): logs `name = value` pairs to the Log tab and
+  shows a per-site cookie count + an expandable cookie view in the Cookies
+  tab. Run ends with a total-cookies summary.
 - Sidepanel: per-site checklist, a numbered "how it works" guide, a live
   step banner (Opening… / Accepting cookies…), progress bar, and
   last-warm-up summary. Per-site
