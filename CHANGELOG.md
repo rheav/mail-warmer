@@ -13,6 +13,30 @@ Bump `version` in `manifest.json` (and `version_name`) on every release.
 
 ---
 
+## [0.5.0] — 2026-05-16
+
+### Added
+- **Cookie capture & inspection.** After visiting each site the warm-up
+  reads back the real cookies it left (`chrome.cookies` — new `cookies`
+  permission) and logs the actual `name = value` pairs to the Log tab.
+- Cookies tab shows a per-site cookie count; rows with captured cookies
+  expand to a scrollable name/value view. A sample (name + clipped value,
+  capped 20/site) is persisted in the `cookieRun` record.
+- Run ends with a total-cookies summary line.
+
+### Changed
+- Cookie-accept clicker selector list widened to also cover tarteaucitron,
+  Axeptio, WordPress Cookie Notice, Iubenda, and Cookie Information.
+- Accept poll 5s → 7s and post-load settle 0.8s → 1.5s — heavy sites
+  render the consent banner late.
+- Site list swapped from US news/general sites to a 14-site set of luxury
+  real-estate, automotive, and fashion brands.
+- Cookie-accept clicker simplified to two flat tiers (known selectors, then
+  a short accept-text fallback); the long organic-browsing simulation
+  replaced with a quick scroll + benign body click.
+
+---
+
 ## [0.4.0] — 2026-05-16
 
 ### Added
@@ -20,26 +44,12 @@ Bump `version` in `manifest.json` (and `version_name`) on every release.
   sites in background tabs, accepts each cookie-consent banner, then closes
   the tab. Builds a normal-looking cookie profile before newsletter signups
   run.
-- `lib/cookie-sites.js` — curated 14-site list: luxury real-estate,
-  automotive, and fashion brands that either auto-accept cookies or show a
-  clear, dismissible consent popup.
+- `lib/cookie-sites.js` — curated site list.
 - `background/cookie-warmer.js` — orchestrator: paced background tabs, an
   injected accept-clicker run in all frames, then closes the tab.
-- Cookie-accept clicker: known platform selectors (OneTrust, Cookiebot,
-  Quantcast, Didomi, Usercentrics, Osano, CookieYes, Complianz, HubSpot,
-  tarteaucitron, Axeptio, WP Cookie Notice, Iubenda, Cookie Information)
-  then a short accept-text fallback, ~7s poll, 1.5s post-load settle.
-- A quick scroll + benign body click before the accept step nudges lazy
-  consent banners into showing. The click goes to `<body>` so it can never
-  navigate the tab away.
-- After each site, reads back the real cookies it left (`chrome.cookies`,
-  new `cookies` permission): logs `name = value` pairs to the Log tab and
-  shows a per-site cookie count + an expandable cookie view in the Cookies
-  tab. Run ends with a total-cookies summary.
 - Sidepanel: per-site checklist, a numbered "how it works" guide, a live
   step banner (Opening… / Accepting cookies…), progress bar, and
-  last-warm-up summary. Per-site
-  status pills update live during the run.
+  last-warm-up summary. Per-site status pills update live during the run.
 - Result stored in `chrome.storage.local` as `cookieRun`.
 
 ---

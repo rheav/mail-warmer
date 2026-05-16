@@ -89,6 +89,39 @@ If the server is unreachable, the extension falls back to the bundled
 
 ---
 
+## Cookie warm-up (the Cookies tab)
+
+The first sidepanel tab builds a normal-looking cookie profile in the browser
+before any signups run — a fresh profile with no cookies looks unusual.
+
+For each selected site Mail Warmer:
+
+1. opens it in a background tab,
+2. does a quick scroll + a benign click to nudge lazy consent banners,
+3. accepts the cookie-consent banner,
+4. closes the tab,
+5. reads back the cookies the visit left and logs them.
+
+**Accepting** is a two-tier in-page clicker, run in every frame: known
+consent-platform selectors (OneTrust, Cookiebot, Quantcast, Didomi,
+Usercentrics, Osano, CookieYes, Complianz, HubSpot, tarteaucitron, Axeptio,
+WordPress Cookie Notice, Iubenda, Cookie Information), then a short
+accept-text fallback (`Accept all`, `I agree`, …). It polls ~7s per site.
+
+**The site list** lives in `lib/cookie-sites.js` — a curated set of luxury
+real-estate, automotive, and fashion sites. Edit that file to change it.
+
+**Captured cookies** — after each site the run logs the real `name = value`
+pairs to the **Log** tab (values clipped), and the Cookies tab shows a
+per-site cookie count with an expandable name/value view. The last run is
+stored in `chrome.storage.local` as `cookieRun`.
+
+Requires the `cookies` and `tabs` permissions (already in `manifest.json`).
+Background-tab visits to sites behind aggressive bot management (e.g. Akamai)
+may be blocked before the banner renders — those just collect fewer cookies.
+
+---
+
 ## Backend — the newsletter API
 
 A small Express server in **`server/`** that:
