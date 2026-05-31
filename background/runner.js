@@ -3,6 +3,7 @@ import * as store from '../lib/storage.js';
 import { sendPulse } from '../lib/analytics.js';
 import { signupSubstack } from './adapters/substack.js';
 import { signupViaForm } from './adapters/form.js';
+import { setRunningBadge, setResultBadge, clearBadge } from '../lib/badge.js';
 
 let state = {
   status: RUN_STATUS.IDLE,
@@ -37,10 +38,13 @@ export async function runSignups({ emailId, newsletterIds }) {
     abort: false,
   };
   broadcastProgress();
+  clearBadge();
   await store.appendLog('info', `Run start: ${items.length} newsletters for ${email.address}`);
 
   // Per-newsletter outcomes, collected for the anonymous analytics pulse.
   const pulseResults = [];
+  let successCount = 0;
+  let errorCount = 0;
 
   for (const n of items) {
     if (state.abort) {
@@ -65,9 +69,12 @@ export async function runSignups({ emailId, newsletterIds }) {
       await store.appendLog('error', `[${n.name}] error — ${err.message}`);
     }
     pulseResults.push({ newsletter: n.name, type: n.type, status });
+    if (status === 'success') successCount += 1;
+    else if (status === 'error') errorCount += 1;
 
     state.progress.done += 1;
     broadcastProgress();
+    setRunningBadge(successCount);
 
     // Pace requests so we don't look like a bot or trip rate limits.
     await delay(jitter(2500, 5500));
@@ -76,6 +83,7 @@ export async function runSignups({ emailId, newsletterIds }) {
   state.status = RUN_STATUS.DONE;
   state.progress.current = null;
   broadcastProgress();
+  setResultBadge({ success: successCount, error: errorCount });
   chrome.runtime.sendMessage({ type: MSG.RUN_COMPLETE }).catch(() => {});
   await store.appendLog('info', 'Run complete');
 

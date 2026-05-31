@@ -274,8 +274,8 @@ function renderRunList() {
     const checked = selectedIds.has(n.id) ? 'checked' : '';
     li.innerHTML = `
       <input type="checkbox" data-id="${n.id}" ${checked}>
-      <div>
-        <div class="nl-name">${escapeHtml(n.name)}</div>
+      <div class="nl-main">
+        <div class="nl-name" title="${escapeHtml(n.name)}">${escapeHtml(n.name)}</div>
         <div class="nl-meta">${escapeHtml(n.slug || n.url || '')}</div>
       </div>
       <span class="tag ${n.type}">${n.type}</span>
@@ -379,7 +379,7 @@ function renderCookieList() {
     li.innerHTML = `
       <input type="checkbox" data-id="${id}" ${checked}>
       <div class="cookie-main${hasDetail ? ' clickable' : ''}" data-id="${id}">
-        <div class="nl-name">${escapeHtml(site.name)}</div>
+        <div class="nl-name" title="${escapeHtml(site.name)}">${escapeHtml(site.name)}</div>
         <div class="nl-meta">${escapeHtml(meta)}${
           hasDetail
             ? ` <span class="cookie-toggle">${

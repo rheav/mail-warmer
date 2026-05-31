@@ -13,6 +13,28 @@ Bump `version` in `manifest.json` (and `version_name`) on every release.
 
 ---
 
+## [0.6.0] — 2026-06-01
+
+### Added
+- **Toolbar action badges** (`lib/badge.js`). The extension icon now shows
+  at-a-glance state: orange running count while signups run, then a green
+  success count (or red error count) when the run finishes. Cookie warm-up
+  ends with a green badge of sites whose consent was accepted.
+- Newsletter / cookie rows show the full name in a hover tooltip (`title`),
+  so truncated titles stay readable.
+
+### Changed
+- Single logo source of truth: `public/logo.svg` (the former `new-logo.svg`).
+  Old `logo-failure/running/success.svg` removed; `logo.png` regenerated from
+  the SVG for the manifest icon. Side panel now renders the crisp SVG.
+
+### Fixed
+- Status / type pills no longer clip off the right edge in a narrow side
+  panel. The newsletter name now ellipsis-truncates (grid `min-width: 0`)
+  instead of pushing the pills out of view; pills are `nowrap` + no-shrink.
+
+---
+
 ## [0.5.0] — 2026-05-16
 
 ### Added

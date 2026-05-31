@@ -421,14 +421,20 @@ input[type=email], input[type=text], input[type=url], select {
 
 .gm-list li, .checklist li {
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   padding: 8px 12px;
   border-bottom: 1px solid var(--gm-divider);
   min-height: 44px;
   transition: background 0.1s;
   cursor: default;
+}
+
+/* Text cell: min-width:0 lets the name ellipsis instead of pushing the
+   tag/status pills off the right edge in a narrow side panel. */
+.nl-main, .cookie-main {
+  min-width: 0;
 }
 
 .gm-list li:last-child, .checklist li:last-child { border-bottom: none; }
@@ -469,6 +475,8 @@ input[type=email], input[type=text], input[type=url], select {
   border-radius: 6px;
   background: var(--gm-surface-alt);
   color: var(--gm-text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .tag.substack { background: #fce4ec; color: #ad1457; }
@@ -481,6 +489,8 @@ input[type=email], input[type=text], input[type=url], select {
   font-weight: 500;
   padding: 3px 10px;
   border-radius: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .status.pending { color: var(--gm-text-faint); background: var(--gm-surface-alt); }

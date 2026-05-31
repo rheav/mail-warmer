@@ -34,6 +34,10 @@ would require Google review each time).
 5. The newsletter list refreshes from the backend daily (24h cache, with an
    offline fallback to the bundled `newsletters.json`).
 
+The **toolbar icon badge** mirrors progress while you work: an orange running
+count during a run, then a green success count (or a red error count) when it
+finishes. Cookie warm-up ends with a green badge of sites accepted.
+
 ---
 
 ## Repository layout
@@ -60,8 +64,9 @@ mail-warmer/
 │   ├── analytics.js       Sends an anonymous run pulse to the backend
 │   ├── cookie-sites.js    Curated site list for cookie warm-up
 │   ├── messages.js        Message-type constants
+│   ├── badge.js           Toolbar action-badge helper (run/cookie counts)
 │   └── fake-profile.js    Generates a fake person for signup fields
-├── public/                Extension icons
+├── public/                Extension icons — logo.svg (source) + logo.png
 └── server/                Backend API + status dashboard  (see server/README.md)
 ```
 
@@ -86,6 +91,28 @@ Use HTTPS — Chrome may block plain-HTTP fetches from the extension.
 
 If the server is unreachable, the extension falls back to the bundled
 `newsletters.json`, so signups keep working offline.
+
+---
+
+## Icons
+
+`public/logo.svg` is the source of truth and is what the side panel renders.
+Chrome's manifest `icons` / `action.default_icon` only accept raster images,
+so `public/logo.png` is a 128×128 export of that SVG. Regenerate it after
+editing the SVG (headless Chrome rasterizes the gradient + strokes correctly,
+where ImageMagick does not):
+
+```sh
+cd public
+cat > _r.html <<'H'
+<!doctype html><style>*{margin:0}html,body{background:transparent}
+img{width:128px;height:128px;display:block}</style><img src="logo.svg">
+H
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --headless=new --disable-gpu --default-background-color=00000000 \
+  --window-size=128,128 --hide-scrollbars \
+  --screenshot=logo.png "file://$PWD/_r.html"; rm _r.html
+```
 
 ---
 

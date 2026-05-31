@@ -8,6 +8,7 @@
 import { MSG, RUN_STATUS } from '../lib/messages.js';
 import * as store from '../lib/storage.js';
 import { COOKIE_SITES, siteId } from '../lib/cookie-sites.js';
+import { setResultBadge } from '../lib/badge.js';
 
 let state = {
   status: RUN_STATUS.IDLE,
@@ -107,6 +108,10 @@ export async function runCookieWarmup({ siteIds } = {}) {
     'info',
     `Cookie warm-up complete — ${totalCookies} cookies across ${state.results.length} sites`
   );
+
+  const accepted = state.results.filter((r) => r.status === 'success').length;
+  const failed = state.results.filter((r) => r.status === 'error').length;
+  setResultBadge({ success: accepted, error: failed });
 
   state.status = RUN_STATUS.IDLE;
 }
