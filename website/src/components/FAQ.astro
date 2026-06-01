@@ -7,8 +7,8 @@ const faqs = [
     a: "No. It never opens, reads, or sends from your inbox. It only fills out public newsletter signup forms with the addresses you give it. Everything runs locally in your browser; results live in chrome.storage.local. Every line is on GitHub.",
   },
   {
-    q: "Why does it need a backend?",
-    a: "The curated newsletter list is hosted on a tiny Node/Express server you run (a $5 VPS is plenty). That way the list can change without shipping a new extension build — which would otherwise mean a Google review every time. If the backend is unreachable, the extension falls back to the bundled list.",
+    q: "Do I need to set anything up?",
+    a: "No. Install it, add your emails, and run. The curated newsletter list ships inside the extension and refreshes automatically in the background — there's no account to create and no server for you to host. If it ever can't reach the update server, it just keeps using the list it already has.",
   },
   {
     q: "How does it actually keep an inbox warm?",
@@ -16,11 +16,11 @@ const faqs = [
   },
   {
     q: "Is it going to cost money?",
-    a: "The extension is free and open source. Your only cost is the small server you host the list on. No paywalls, no pro tier.",
+    a: "It's free and open source — no paywalls, no pro tier, nothing to host.",
   },
   {
     q: "Which sites does it support?",
-    a: "Substack newsletters and generic HTML signup forms out of the box, via per-source adapters. The bundled fallback list ships with the extension; you curate your own list on the backend.",
+    a: "Substack newsletters and generic HTML signup forms out of the box, via per-source adapters. The curated list ships with the extension, and we keep it updated for you.",
   },
   {
     q: "Won't the signups look like spam?",

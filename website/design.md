@@ -100,7 +100,7 @@ Layout (grain + steam + burst script)
 - Eyebrow pill: blue dot + "Keep every inbox alive".
 - Headline: `Inbox that stays` **`warm`** `, not forgotten.` (cursive on "warm").
 - Sub: one line on auto-subscribing emails to curated newsletters so inboxes
-  stay active. Trust line: `Free · your own backend · no inbox access · open source`.
+  stay active. Trust line: `Free · no account · no inbox access · open source`.
 
 ### Scenarios (the cold-inbox story)
 6 timestamped cards (reuse youZen's sticky-heading + card-grid layout), e.g.
@@ -182,7 +182,7 @@ colors from `sidepanel.css`. Loop 10s, freeze on the filled grid.
   left→right underline wipe in blue; logo chip = the envelope SVG.
 - **FAQ:** native `<details>` with JS-driven smooth height animation (open AND
   close), `+`→`×` icon rotate. Questions: data/privacy (no inbox access, local
-  storage), backend requirement, Web Store cost, YouTube-style "why".
+  storage), no-setup/auto-updating list, Web Store cost, supported sites.
 - **Secondary CTA:** "See it work" ghost button → scrolls to `#preview`.
 
 ---
