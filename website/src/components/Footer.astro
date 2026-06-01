@@ -1,0 +1,54 @@
+---
+import LogoMark from "./LogoMark.astro";
+const year = new Date().getFullYear();
+---
+
+<footer class="relative px-6 pt-16 pb-10 text-sm text-stone-500">
+  <div
+    class="mx-auto flex max-w-5xl flex-col items-start justify-between gap-6 border-t border-stone-200/80 pt-10 md:flex-row md:items-center"
+  >
+    <div class="flex items-center gap-3">
+      <LogoMark size={26} />
+      <span class="text-ink font-medium">Mail Warmer</span>
+      <span class="text-stone-400">·</span>
+      <span>© {year}</span>
+    </div>
+
+    <nav
+      class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs tracking-widest text-stone-400 uppercase"
+    >
+      <a href="/#install" class="footer-link">Install</a>
+      <a href="/#features" class="footer-link">Features</a>
+      <a href="/#faq" class="footer-link">FAQ</a>
+      <a
+        href="https://github.com/rheav/mail-warmer"
+        class="footer-link"
+        rel="noopener">Source</a
+      >
+    </nav>
+  </div>
+
+  <p class="mx-auto mt-8 max-w-5xl text-xs text-stone-400">
+    Made to keep things warm.
+  </p>
+</footer>
+
+<style>
+  .footer-link {
+    position: relative;
+    padding-bottom: 3px;
+    background-image: linear-gradient(to right, var(--color-blue), #4285f4);
+    background-repeat: no-repeat;
+    background-size: 0% 1.5px;
+    background-position: 0 100%;
+    transition:
+      color 300ms ease,
+      background-size 350ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .footer-link:hover,
+  .footer-link:focus-visible {
+    color: var(--color-ink);
+    background-size: 100% 1.5px;
+    outline: none;
+  }
+</style>

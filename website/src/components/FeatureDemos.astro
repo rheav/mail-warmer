@@ -1,0 +1,635 @@
+---
+import { Cookie, Inbox, LayoutGrid } from "@lucide/astro";
+
+/* ─── Three compact html-gifs (pure CSS, zero JS) ───────────────────────────
+ *
+ *   A. "Warm up the browser" — 4 sites open, cookie banners auto-accepted,
+ *                              a counter ticks up. (cookie-warmer feature)
+ *   B. "Inboxes stay warm"   — a cold, empty inbox slowly fills with arriving
+ *                              newsletters; a thermometer shifts cool→warm.
+ *   C. "See every result"    — an email × newsletter grid fills pending →
+ *                              running → success (with one error) in a wave.
+ *
+ * All loops are 10s, staggered so they never beat in unison; each pauses in
+ * its resolved state ~40% of the loop. Reduced-motion freezes each at the
+ * resolved state. All classes prefixed `.fd-*` so they can't leak.
+ */
+---
+
+<section id="features" class="relative overflow-x-clip px-6 py-16 md:py-24">
+  <div
+    class="blob"
+    aria-hidden="true"
+    style="top: 8%; right: -12%; width: 420px; height: 420px; background: #ffe0c2; opacity: 0.4;"
+  >
+  </div>
+
+  <div class="reveal-group mx-auto max-w-3xl text-center">
+    <span
+      class="reveal text-xs font-medium tracking-widest text-stone-400 uppercase"
+    >
+      Three things it does
+    </span>
+    <h2 class="reveal mt-3 text-3xl font-medium tracking-tight md:text-5xl">
+      Quiet work that keeps inboxes
+      <span
+        class="accent-word text-[1.1em] leading-none"
+      >
+        alive
+      </span>.
+    </h2>
+    <p class="reveal text-muted mx-auto mt-5 max-w-xl text-base md:text-lg">
+      Each demo below loops live — nothing is a video. They're the real states
+      the extension moves through, staged on a mock.
+    </p>
+  </div>
+
+  <div class="reveal mx-auto mt-16 grid max-w-5xl gap-5 md:grid-cols-3 md:gap-6">
+    <!-- ───── Demo A: Cookie warm-up ───── -->
+    <article
+      class="group relative flex flex-col overflow-hidden rounded-[2rem] border border-stone-100 bg-white p-5 shadow-soft transition-transform duration-500 hover:-translate-y-1 hover:shadow-soft-lg"
+    >
+      <div class="fd-stage">
+        <span class="fd-counter">
+          <span class="fd-counter-n fd-cn-0">0</span>
+          <span class="fd-counter-n fd-cn-1">1</span>
+          <span class="fd-counter-n fd-cn-2">2</span>
+          <span class="fd-counter-n fd-cn-3">3</span>
+          <span class="fd-counter-n fd-cn-4">4</span>
+          <span class="fd-counter-label">warmed</span>
+        </span>
+        <div class="fd-sites">
+          <div class="fd-site">
+            <span class="fd-site-fav" style="background:#ff6719"></span>
+            <span class="fd-site-bar" style="width:60%"></span>
+            <span class="fd-site-check fd-sc-1">✓</span>
+            <span class="fd-banner fd-bn-1"><span class="fd-accept">Accept</span></span>
+          </div>
+          <div class="fd-site">
+            <span class="fd-site-fav" style="background:#1a73e8"></span>
+            <span class="fd-site-bar" style="width:75%"></span>
+            <span class="fd-site-check fd-sc-2">✓</span>
+            <span class="fd-banner fd-bn-2"><span class="fd-accept">Accept</span></span>
+          </div>
+          <div class="fd-site">
+            <span class="fd-site-fav" style="background:#137333"></span>
+            <span class="fd-site-bar" style="width:50%"></span>
+            <span class="fd-site-check fd-sc-3">✓</span>
+            <span class="fd-banner fd-bn-3"><span class="fd-accept">Accept</span></span>
+          </div>
+          <div class="fd-site">
+            <span class="fd-site-fav" style="background:#6d4aff"></span>
+            <span class="fd-site-bar" style="width:68%"></span>
+            <span class="fd-site-check fd-sc-4">✓</span>
+            <span class="fd-banner fd-bn-4"><span class="fd-accept">Accept</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 flex items-start gap-3">
+        <span
+          class="mt-0.5 inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full"
+          style="background-color: rgba(26,115,232,0.12);"
+          aria-hidden="true"
+        >
+          <Cookie size={14} color="#1a73e8" strokeWidth={2} />
+        </span>
+        <div>
+          <p class="text-xs font-medium tracking-widest text-stone-400 uppercase">
+            Cookie warm-up
+          </p>
+          <h3 class="mt-1 text-xl font-medium tracking-tight md:text-2xl">
+            Warm up the
+            <span
+              class="accent-word text-[1.15em]"
+              style="line-height: 1;"
+            >
+              browser
+            </span>.
+          </h3>
+          <p class="mt-2 text-sm leading-relaxed text-stone-600 md:text-[15px]">
+            Opens a set of sites in the background, accepts their cookie
+            banners, and closes them — so the profile looks lived-in before
+            any signup.
+          </p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ───── Demo B: Inboxes stay warm ───── -->
+    <article
+      class="group relative flex flex-col overflow-hidden rounded-[2rem] border border-stone-100 bg-white p-5 shadow-soft transition-transform duration-500 hover:-translate-y-1 hover:shadow-soft-lg"
+    >
+      <div class="fd-stage">
+        <div class="fd-inbox">
+          <div class="fd-inbox-head">
+            <span class="fd-thermo" aria-hidden="true">
+              <span class="fd-thermo-fill"></span>
+            </span>
+            <span class="fd-inbox-title">Inbox</span>
+            <span class="fd-inbox-temp">
+              <span class="fd-temp-cold">cold</span>
+              <span class="fd-temp-warm">warm</span>
+            </span>
+          </div>
+          <div class="fd-empty">no new mail</div>
+          <div class="fd-mails">
+            <div class="fd-mail fd-mail-1">
+              <span class="fd-mail-av" style="background:#ff6719"></span>
+              <span class="fd-mail-lines"><span class="fd-l" style="width:70%"></span><span class="fd-l" style="width:45%"></span></span>
+            </div>
+            <div class="fd-mail fd-mail-2">
+              <span class="fd-mail-av" style="background:#1a73e8"></span>
+              <span class="fd-mail-lines"><span class="fd-l" style="width:80%"></span><span class="fd-l" style="width:50%"></span></span>
+            </div>
+            <div class="fd-mail fd-mail-3">
+              <span class="fd-mail-av" style="background:#137333"></span>
+              <span class="fd-mail-lines"><span class="fd-l" style="width:65%"></span><span class="fd-l" style="width:40%"></span></span>
+            </div>
+            <div class="fd-mail fd-mail-4">
+              <span class="fd-mail-av" style="background:#6d4aff"></span>
+              <span class="fd-mail-lines"><span class="fd-l" style="width:75%"></span><span class="fd-l" style="width:55%"></span></span>
+            </div>
+          </div>
+        </div>
+        <div class="fd-warmglow" aria-hidden="true"></div>
+      </div>
+
+      <div class="mt-6 flex items-start gap-3">
+        <span
+          class="mt-0.5 inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full"
+          style="background-color: rgba(255,185,168,0.3);"
+          aria-hidden="true"
+        >
+          <Inbox size={14} color="#c4633f" strokeWidth={2} />
+        </span>
+        <div>
+          <p class="text-xs font-medium tracking-widest text-stone-400 uppercase">
+            Staying active
+          </p>
+          <h3 class="mt-1 text-xl font-medium tracking-tight md:text-2xl">
+            Inboxes stay
+            <span
+              class="accent-word text-[1.15em]"
+              style="line-height: 1;"
+            >
+              warm
+            </span>.
+          </h3>
+          <p class="mt-2 text-sm leading-relaxed text-stone-600 md:text-[15px]">
+            Real newsletters arrive on their own schedule, so a fresh address
+            keeps receiving mail and reads as a living, trusted account.
+          </p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ───── Demo C: Status grid ───── -->
+    <article
+      class="group relative flex flex-col overflow-hidden rounded-[2rem] border border-stone-100 bg-white p-5 shadow-soft transition-transform duration-500 hover:-translate-y-1 hover:shadow-soft-lg"
+    >
+      <div class="fd-stage">
+        <div class="fd-grid">
+          <div class="fd-grid-corner"></div>
+          <div class="fd-grid-col">Brief</div>
+          <div class="fd-grid-col">Roast</div>
+          <div class="fd-grid-col">Tech5</div>
+          <div class="fd-grid-col">Weekly</div>
+
+          <!-- 3 email rows × 4 newsletters = 12 cells -->
+          <div class="fd-grid-row">a@…</div>
+          <span class="fd-cell" style="--d:0"></span>
+          <span class="fd-cell" style="--d:1"></span>
+          <span class="fd-cell" style="--d:2"></span>
+          <span class="fd-cell" style="--d:3"></span>
+
+          <div class="fd-grid-row">b@…</div>
+          <span class="fd-cell" style="--d:1"></span>
+          <span class="fd-cell fd-cell-err" style="--d:2"></span>
+          <span class="fd-cell" style="--d:3"></span>
+          <span class="fd-cell" style="--d:4"></span>
+
+          <div class="fd-grid-row">c@…</div>
+          <span class="fd-cell" style="--d:2"></span>
+          <span class="fd-cell" style="--d:3"></span>
+          <span class="fd-cell" style="--d:4"></span>
+          <span class="fd-cell" style="--d:5"></span>
+        </div>
+      </div>
+
+      <div class="mt-6 flex items-start gap-3">
+        <span
+          class="mt-0.5 inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full"
+          style="background-color: rgba(19,115,51,0.12);"
+          aria-hidden="true"
+        >
+          <LayoutGrid size={14} color="#137333" strokeWidth={2} />
+        </span>
+        <div>
+          <p class="text-xs font-medium tracking-widest text-stone-400 uppercase">
+            Status tracking
+          </p>
+          <h3 class="mt-1 text-xl font-medium tracking-tight md:text-2xl">
+            See every
+            <span
+              class="accent-word text-[1.15em]"
+              style="line-height: 1;"
+            >
+              result
+            </span>.
+          </h3>
+          <p class="mt-2 text-sm leading-relaxed text-stone-600 md:text-[15px]">
+            Every email × newsletter is recorded — pending, running, done, or
+            failed — so you always know exactly what landed and what to retry.
+          </p>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ─── Styles ─────────────────────────────────────────────────────────── -->
+<style is:global>
+  .fd-stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 1.25rem;
+    background: #fafaf9;
+    border: 1px solid #f1f3f4;
+    padding: 12px;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .fd-stage::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    width: 32px;
+    height: 6px;
+    background:
+      radial-gradient(circle at 3px 3px, #ff5f57 2.5px, transparent 2.5px),
+      radial-gradient(circle at 14px 3px, #febc2e 2.5px, transparent 2.5px),
+      radial-gradient(circle at 25px 3px, #28c840 2.5px, transparent 2.5px);
+    z-index: 3;
+  }
+
+  /* ═══ Demo A: Cookie warm-up ═══ */
+  .fd-counter {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    z-index: 4;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 9999px;
+    background: #e8f0fe;
+    color: #1a73e8;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .fd-counter-n {
+    grid-area: 1 / 1;
+  }
+  .fd-counter {
+    /* stack digits in one slot */
+  }
+  .fd-counter-n {
+    position: relative;
+    display: inline-grid;
+  }
+  .fd-counter > .fd-counter-n {
+    position: absolute;
+    right: 34px;
+    opacity: 0;
+  }
+  .fd-cn-0 { animation: fd-cn0 10s ease-in-out infinite; }
+  .fd-cn-1 { animation: fd-cn1 10s ease-in-out infinite; }
+  .fd-cn-2 { animation: fd-cn2 10s ease-in-out infinite; }
+  .fd-cn-3 { animation: fd-cn3 10s ease-in-out infinite; }
+  .fd-cn-4 { animation: fd-cn4 10s ease-in-out infinite; }
+  @keyframes fd-cn0 { 0%, 14% { opacity: 1; } 16%, 92% { opacity: 0; } 95%, 100% { opacity: 1; } }
+  @keyframes fd-cn1 { 0%, 15% { opacity: 0; } 17%, 32% { opacity: 1; } 34%, 100% { opacity: 0; } }
+  @keyframes fd-cn2 { 0%, 32% { opacity: 0; } 34%, 49% { opacity: 1; } 51%, 100% { opacity: 0; } }
+  @keyframes fd-cn3 { 0%, 49% { opacity: 0; } 51%, 66% { opacity: 1; } 68%, 100% { opacity: 0; } }
+  @keyframes fd-cn4 { 0%, 66% { opacity: 0; } 68%, 92% { opacity: 1; } 95%, 100% { opacity: 0; } }
+
+  .fd-sites {
+    position: absolute;
+    inset: 28px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .fd-site {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+    padding: 0 10px;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #f1f1ef;
+    overflow: hidden;
+  }
+  .fd-site-fav {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .fd-site-bar {
+    height: 5px;
+    border-radius: 9999px;
+    background: #e7e5e4;
+  }
+  .fd-site-check {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 800;
+    color: #137333;
+    opacity: 0;
+  }
+  .fd-sc-1 { animation: fd-check 10s ease-in-out infinite; }
+  .fd-sc-2 { animation: fd-check 10s ease-in-out infinite; animation-delay: -8.3s; }
+  .fd-sc-3 { animation: fd-check 10s ease-in-out infinite; animation-delay: -6.6s; }
+  .fd-sc-4 { animation: fd-check 10s ease-in-out infinite; animation-delay: -4.9s; }
+  @keyframes fd-check {
+    0%, 16% { opacity: 0; transform: scale(0.5); }
+    19%, 90% { opacity: 1; transform: scale(1); }
+    95%, 100% { opacity: 0; transform: scale(0.5); }
+  }
+
+  /* Cookie banner that slides up + collapses when "accepted". */
+  .fd-banner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 10px;
+    background: rgba(32, 33, 36, 0.82);
+    backdrop-filter: blur(1px);
+    border-radius: 10px;
+  }
+  .fd-accept {
+    font-size: 9px;
+    font-weight: 700;
+    color: #001d35;
+    background: #c2e7ff;
+    padding: 3px 8px;
+    border-radius: 9999px;
+  }
+  .fd-bn-1 { animation: fd-banner 10s ease-in-out infinite; }
+  .fd-bn-2 { animation: fd-banner 10s ease-in-out infinite; animation-delay: -8.3s; }
+  .fd-bn-3 { animation: fd-banner 10s ease-in-out infinite; animation-delay: -6.6s; }
+  .fd-bn-4 { animation: fd-banner 10s ease-in-out infinite; animation-delay: -4.9s; }
+  @keyframes fd-banner {
+    0%, 14% { opacity: 1; transform: translateY(0); }
+    15% { transform: translateY(0) scale(0.97); }
+    19%, 90% { opacity: 0; transform: translateY(-100%); }
+    96%, 100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ═══ Demo B: Inboxes stay warm ═══ */
+  .fd-inbox {
+    position: absolute;
+    inset: 28px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    /* cold → warm desaturate shift over the loop */
+    animation: fd-inbox-warm 10s ease-in-out infinite;
+  }
+  @keyframes fd-inbox-warm {
+    0%, 18% { filter: grayscale(0.85) brightness(0.99); }
+    55%, 90% { filter: grayscale(0) brightness(1); }
+    97%, 100% { filter: grayscale(0.85) brightness(0.99); }
+  }
+  .fd-inbox-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .fd-thermo {
+    position: relative;
+    width: 8px;
+    height: 18px;
+    border-radius: 9999px;
+    background: #e0e3e7;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .fd-thermo-fill {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 20%;
+    background: #8aa3c9;
+    animation: fd-thermo 10s ease-in-out infinite;
+  }
+  @keyframes fd-thermo {
+    0%, 16% { height: 18%; background: #8aa3c9; }
+    55%, 90% { height: 92%; background: #ffb9a8; }
+    97%, 100% { height: 18%; background: #8aa3c9; }
+  }
+  .fd-inbox-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #44403c;
+    flex: 1;
+  }
+  .fd-inbox-temp {
+    position: relative;
+    width: 34px;
+    height: 14px;
+    font-size: 9px;
+    font-weight: 600;
+  }
+  .fd-inbox-temp > span {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 7px;
+  }
+  .fd-temp-cold {
+    background: #eef2f7;
+    color: #6b7a90;
+    animation: fd-temp-cold 10s ease-in-out infinite;
+  }
+  .fd-temp-warm {
+    background: #ffece4;
+    color: #c4633f;
+    opacity: 0;
+    animation: fd-temp-warm 10s ease-in-out infinite;
+  }
+  @keyframes fd-temp-cold { 0%, 40% { opacity: 1; } 50%, 100% { opacity: 0; } 97%, 100% { opacity: 1; } }
+  @keyframes fd-temp-warm { 0%, 45% { opacity: 0; } 55%, 92% { opacity: 1; } 97%, 100% { opacity: 0; } }
+
+  .fd-empty {
+    flex: 1;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    color: #a8a29e;
+    border: 1px dashed #e0e3e7;
+    border-radius: 10px;
+    animation: fd-empty 10s ease-in-out infinite;
+  }
+  @keyframes fd-empty {
+    0%, 14% { opacity: 1; }
+    22%, 100% { opacity: 0; height: 0; flex: 0; margin: 0; }
+    97%, 100% { opacity: 1; }
+  }
+  .fd-mails {
+    position: absolute;
+    inset: 26px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    pointer-events: none;
+  }
+  .fd-mail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 8px;
+    border-radius: 9px;
+    background: #fff;
+    border: 1px solid #f1f1ef;
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  .fd-mail-av {
+    width: 18px;
+    height: 18px;
+    border-radius: 9999px;
+    flex-shrink: 0;
+  }
+  .fd-mail-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+  }
+  .fd-l {
+    height: 4px;
+    border-radius: 9999px;
+    background: #e7e5e4;
+  }
+  .fd-mail-1 { animation: fd-mail-in 10s ease-in-out infinite; animation-delay: -7.8s; }
+  .fd-mail-2 { animation: fd-mail-in 10s ease-in-out infinite; animation-delay: -7.0s; }
+  .fd-mail-3 { animation: fd-mail-in 10s ease-in-out infinite; animation-delay: -6.2s; }
+  .fd-mail-4 { animation: fd-mail-in 10s ease-in-out infinite; animation-delay: -5.4s; }
+  @keyframes fd-mail-in {
+    0%, 18% { opacity: 0; transform: translateY(8px); }
+    26%, 90% { opacity: 1; transform: translateY(0); }
+    96%, 100% { opacity: 0; transform: translateY(8px); }
+  }
+  .fd-warmglow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse 80% 55% at 50% 120%,
+      rgba(255, 185, 168, 0.5) 0%,
+      transparent 60%
+    );
+    opacity: 0;
+    animation: fd-warmglow 10s ease-in-out infinite;
+  }
+  @keyframes fd-warmglow {
+    0%, 30% { opacity: 0; }
+    55%, 90% { opacity: 1; }
+    97%, 100% { opacity: 0; }
+  }
+
+  /* ═══ Demo C: Status grid ═══ */
+  .fd-grid {
+    position: absolute;
+    inset: 28px 14px 14px;
+    display: grid;
+    grid-template-columns: 34px repeat(4, 1fr);
+    grid-auto-rows: 1fr;
+    gap: 5px;
+    align-content: stretch;
+  }
+  .fd-grid-corner {
+    background: transparent;
+  }
+  .fd-grid-col {
+    display: grid;
+    place-items: center;
+    font-size: 8px;
+    font-weight: 700;
+    color: #80868b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .fd-grid-row {
+    display: grid;
+    place-items: center;
+    font-size: 8px;
+    font-weight: 600;
+    color: #5f6368;
+  }
+  .fd-cell {
+    border-radius: 5px;
+    background: #f1f3f4;
+    animation: fd-cell 10s ease-in-out infinite;
+    /* --d is a 0..5 wave index → delay (×0.55s), kept inside the loop */
+    animation-delay: calc(var(--d) * -9.45s);
+  }
+  /* pending(gray) → running(yellow) → success(green) */
+  @keyframes fd-cell {
+    0%, 8% { background: #f1f3f4; }
+    11%, 16% { background: #feefc3; }
+    20%, 90% { background: #cbe8d4; }
+    96%, 100% { background: #f1f3f4; }
+  }
+  .fd-cell-err {
+    animation: fd-cell-err 10s ease-in-out infinite;
+    animation-delay: calc(2 * -9.45s);
+  }
+  @keyframes fd-cell-err {
+    0%, 8% { background: #f1f3f4; }
+    11%, 16% { background: #feefc3; }
+    20%, 90% { background: #f6c9c4; }
+    96%, 100% { background: #f1f3f4; }
+  }
+
+  /* ── Reduced motion: freeze each demo on its resolved state. ── */
+  @media (prefers-reduced-motion: reduce) {
+    .fd-counter-n,
+    .fd-site-check,
+    .fd-banner,
+    .fd-inbox,
+    .fd-thermo-fill,
+    .fd-temp-cold,
+    .fd-temp-warm,
+    .fd-empty,
+    .fd-mail,
+    .fd-warmglow,
+    .fd-cell,
+    .fd-cell-err {
+      animation: none !important;
+    }
+    .fd-counter-n { opacity: 0 !important; }
+    .fd-cn-4 { opacity: 1 !important; }
+    .fd-site-check { opacity: 1 !important; transform: none !important; }
+    .fd-banner { opacity: 0 !important; }
+    .fd-inbox { filter: none !important; }
+    .fd-thermo-fill { height: 92% !important; background: #ffb9a8 !important; }
+    .fd-temp-cold { opacity: 0 !important; }
+    .fd-temp-warm { opacity: 1 !important; }
+    .fd-empty { display: none !important; }
+    .fd-mail { opacity: 1 !important; transform: none !important; }
+    .fd-warmglow { opacity: 1 !important; }
+    .fd-cell { background: #cbe8d4 !important; }
+    .fd-cell-err { background: #f6c9c4 !important; }
+  }
+</style>

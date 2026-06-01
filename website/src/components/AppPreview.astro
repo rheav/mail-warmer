@@ -1,0 +1,868 @@
+---
+import { Lock, Mail, Search, RefreshCw, Play } from "@lucide/astro";
+
+/* ─── What this html-gif shows ──────────────────────────────────────────────
+ *
+ * A macOS-Chrome window docked next to the real Mail Warmer sidepanel (Gmail
+ * blue). A 12-second synchronized loop runs the core "auto-subscribe" flow:
+ *
+ *   t=0.0s  Idle. Three newsletter rows, all "pending" pills. Badge 0.
+ *   t=1.0s  "Run" (blue compose btn) presses → ripple.
+ *   t=1.3s  Page side: a signup form is detected, the email auto-types in.
+ *   t=2.6s  Row 1 pending→running→success. Badge ticks to 1.
+ *   t=4.3s  Row 2 → success. Badge 2.
+ *   t=6.0s  Row 3 → success. Badge 3. "Subscribed" stamp on the form.
+ *   t=7.0s  Hold the clean, all-green state.
+ *   t=10.5s Reset: pills fade back to pending, badge → 0.
+ *   t=12.0s Loop.
+ *
+ * Pure CSS keyframes, zero JS. Respects prefers-reduced-motion (frozen at the
+ * resolved state). All classes prefixed `.ap-` so they can't leak.
+ */
+---
+
+<section
+  id="preview"
+  class="relative overflow-x-clip px-4 py-16 md:px-6 md:py-24"
+>
+  <div
+    class="blob"
+    aria-hidden="true"
+    style="top: 20%; left: -20%; width: 380px; height: 380px; background: #e8f0fe;"
+  >
+  </div>
+
+  <div class="reveal-group mx-auto max-w-3xl text-center">
+    <span
+      class="reveal text-xs font-medium tracking-widest text-stone-400 uppercase"
+    >
+      How it works
+    </span>
+    <h2 class="reveal mt-3 text-3xl font-medium tracking-tight md:text-5xl">
+      A sidepanel that does the
+      <span
+        class="accent-word text-[1.1em] leading-none"
+      >
+        signing-up
+      </span>
+      for you.
+    </h2>
+    <p class="reveal text-muted mx-auto mt-5 max-w-xl text-base md:text-lg">
+      Pick your emails and newsletters, hit Run, and watch each signup form get
+      detected, filled, and submitted — live, one at a time.
+    </p>
+  </div>
+
+  <!-- Live badge -->
+  <div class="reveal mx-auto mt-10 flex items-center justify-center gap-2">
+    <span class="relative flex h-2 w-2">
+      <span
+        class="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
+        style="background-color: #1a73e8;"></span>
+      <span
+        class="relative inline-flex h-2 w-2 rounded-full"
+        style="background-color: #1a73e8;"></span>
+    </span>
+    <span class="text-xs tracking-widest text-stone-500 uppercase">
+      Live demo · looping
+    </span>
+  </div>
+
+  <!-- ─── The mockup ─────────────────────────────────────────────────────── -->
+  <div class="reveal mx-auto mt-10 w-full max-w-5xl" style="perspective: 1400px;">
+    <div class="ap-shell">
+      <div class="ap-window">
+        <!-- Chrome titlebar -->
+        <div class="ap-titlebar">
+          <div class="ap-traffic" aria-hidden="true">
+            <span class="ap-tl ap-tl-red"></span>
+            <span class="ap-tl ap-tl-yellow"></span>
+            <span class="ap-tl ap-tl-green"></span>
+          </div>
+          <div class="ap-tabstrip">
+            <div class="ap-tab ap-tab-active">
+              <span class="ap-tab-fav" aria-hidden="true"></span>
+              <span class="ap-tab-title">The Daily Brief — Subscribe</span>
+            </div>
+            <span class="ap-tab-plus" aria-hidden="true">+</span>
+          </div>
+        </div>
+
+        <!-- Chrome URL bar -->
+        <div class="ap-urlbar">
+          <div class="ap-urlbtn" aria-hidden="true">‹</div>
+          <div class="ap-urlbtn" aria-hidden="true">›</div>
+          <div class="ap-urlbtn" aria-hidden="true">↻</div>
+          <div class="ap-urlpill">
+            <Lock size={11} strokeWidth={2.25} class="text-stone-500" />
+            <span>thedailybrief.substack.com/subscribe</span>
+          </div>
+          <!-- Extension toolbar icon + counting badge -->
+          <div class="ap-urlright">
+            <span class="ap-ext" aria-hidden="true">
+              <Mail size={12} color="#5a4a4e" strokeWidth={2.25} />
+              <span class="ap-badge">
+                <span class="ap-badge-n ap-badge-0">0</span>
+                <span class="ap-badge-n ap-badge-1">1</span>
+                <span class="ap-badge-n ap-badge-2">2</span>
+                <span class="ap-badge-n ap-badge-3">3</span>
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Body: signup page + sidepanel split -->
+        <div class="ap-body">
+          <!-- ── Faux newsletter signup page ── -->
+          <div class="ap-page">
+            <div class="ap-page-top">
+              <div class="ap-site-mark" aria-hidden="true"></div>
+              <span class="ap-site-name">The Daily Brief</span>
+              <div class="ap-page-search">
+                <Search size={11} class="text-stone-400" strokeWidth={2} />
+              </div>
+            </div>
+
+            <div class="ap-page-body">
+              <div class="ap-page-eyebrow">Newsletter</div>
+              <div class="ap-page-h">Get the brief every morning.</div>
+              <div class="ap-page-sub">
+                <span class="ap-bar" style="width:90%"></span>
+                <span class="ap-bar" style="width:70%"></span>
+              </div>
+
+              <!-- The signup form Mail Warmer detects + fills -->
+              <div class="ap-form">
+                <div class="ap-form-label">Email address</div>
+                <div class="ap-field">
+                  <Mail size={12} class="text-stone-400" strokeWidth={2} />
+                  <span class="ap-typed-text">warm.inbox@gmail.com</span>
+                </div>
+                <div class="ap-submit">Subscribe</div>
+              </div>
+
+              <!-- Success stamp that flashes after each submit -->
+              <div class="ap-stamp" aria-hidden="true">
+                <span class="ap-stamp-check">✓</span> Subscribed
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Mail Warmer sidepanel (Gmail blue) ── -->
+          <aside class="ap-sp">
+            <div class="ap-sp-top">
+              <span class="ap-sp-logo" aria-hidden="true"></span>
+              <span class="ap-sp-brand">Mail Warmer</span>
+              <span class="ap-sp-ver">0.6.0</span>
+            </div>
+
+            <button class="ap-compose" type="button">
+              <span class="ap-compose-idle">
+                <Play size={15} strokeWidth={2.5} />
+                Run
+              </span>
+              <span class="ap-compose-running">Running…</span>
+            </button>
+
+            <div class="ap-sp-nav">
+              <span class="ap-sp-navi ap-sp-navi-active">Run</span>
+              <span class="ap-sp-navi">Emails</span>
+              <span class="ap-sp-navi">Lists</span>
+              <span class="ap-sp-navi">Log</span>
+            </div>
+
+            <div class="ap-sp-label">Newsletters · warm.inbox@gmail.com</div>
+            <ul class="ap-list">
+              <li class="ap-li">
+                <span class="ap-li-fav ap-fav-a"></span>
+                <span class="ap-li-name">The Daily Brief</span>
+                <span class="ap-pill ap-pill-1">
+                  <span class="ap-pill-pending">pending</span>
+                  <span class="ap-pill-running">running</span>
+                  <span class="ap-pill-success">✓ done</span>
+                </span>
+              </li>
+              <li class="ap-li">
+                <span class="ap-li-fav ap-fav-b"></span>
+                <span class="ap-li-name">Morning Roast</span>
+                <span class="ap-pill ap-pill-2">
+                  <span class="ap-pill-pending">pending</span>
+                  <span class="ap-pill-running">running</span>
+                  <span class="ap-pill-success">✓ done</span>
+                </span>
+              </li>
+              <li class="ap-li">
+                <span class="ap-li-fav ap-fav-c"></span>
+                <span class="ap-li-name">Tech in Five</span>
+                <span class="ap-pill ap-pill-3">
+                  <span class="ap-pill-pending">pending</span>
+                  <span class="ap-pill-running">running</span>
+                  <span class="ap-pill-success">✓ done</span>
+                </span>
+              </li>
+            </ul>
+
+            <div class="ap-sp-foot">
+              <span class="ap-progress"><span class="ap-progress-bar"></span></span>
+              <span class="ap-progress-text">3 inboxes kept warm</span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Mockup styles ───────────────────────────────────────────────────── -->
+<style is:global>
+  .ap-shell {
+    position: relative;
+    width: 100%;
+    transform: rotateX(1deg);
+    filter: drop-shadow(0 30px 60px rgba(60, 64, 67, 0.14))
+      drop-shadow(0 12px 24px rgba(60, 64, 67, 0.1));
+  }
+  .ap-window {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* ── Titlebar ── */
+  .ap-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px 0;
+    background: linear-gradient(180deg, #ededeb 0%, #e4e4e1 100%);
+    height: 36px;
+  }
+  .ap-traffic {
+    display: flex;
+    gap: 7px;
+    flex-shrink: 0;
+  }
+  .ap-tl {
+    width: 12px;
+    height: 12px;
+    border-radius: 9999px;
+    box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.15);
+  }
+  .ap-tl-red {
+    background: #ff5f57;
+  }
+  .ap-tl-yellow {
+    background: #febc2e;
+  }
+  .ap-tl-green {
+    background: #28c840;
+  }
+  .ap-tabstrip {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    margin-left: 12px;
+    flex: 1;
+    height: 100%;
+  }
+  .ap-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px 6px;
+    max-width: 230px;
+    font-size: 11px;
+    color: #52525b;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: none;
+    border-radius: 7px 7px 0 0;
+    position: relative;
+    top: 1px;
+  }
+  .ap-tab-active {
+    background: #fafaf9;
+    color: #1c1c1c;
+    font-weight: 500;
+  }
+  .ap-tab-fav {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background: #ff6719; /* substack orange */
+    flex-shrink: 0;
+  }
+  .ap-tab-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .ap-tab-plus {
+    color: #9ca3af;
+    font-size: 14px;
+    padding: 3px 8px;
+  }
+
+  /* ── URL bar ── */
+  .ap-urlbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: #fafaf9;
+    border-bottom: 1px solid #e7e5e4;
+  }
+  .ap-urlbtn {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #78716c;
+    font-size: 14px;
+  }
+  .ap-urlpill {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: #f3f3f2;
+    border-radius: 9999px;
+    font-size: 11px;
+    color: #374151;
+    min-width: 0;
+  }
+  .ap-urlpill span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ap-urlright {
+    display: flex;
+    align-items: center;
+    padding-left: 4px;
+  }
+  .ap-ext {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 9999px;
+    background: #fff1e2;
+  }
+  /* Counting badge — 4 stacked digits cross-fade in their window. */
+  .ap-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 15px;
+    height: 15px;
+    border-radius: 9999px;
+    display: grid;
+    place-items: center;
+    font-size: 9px;
+    font-weight: 700;
+    color: #fff;
+    background: #b06000; /* running orange */
+    box-shadow: 0 0 0 1.5px #fafaf9;
+    animation: ap-badge-bg 12s ease-in-out infinite;
+  }
+  .ap-badge-n {
+    grid-area: 1 / 1;
+    opacity: 0;
+  }
+  .ap-badge-0 {
+    animation: ap-b0 12s ease-in-out infinite;
+  }
+  .ap-badge-1 {
+    animation: ap-b1 12s ease-in-out infinite;
+  }
+  .ap-badge-2 {
+    animation: ap-b2 12s ease-in-out infinite;
+  }
+  .ap-badge-3 {
+    animation: ap-b3 12s ease-in-out infinite;
+  }
+  @keyframes ap-badge-bg {
+    0%, 7% { background: #b06000; }
+    8%, 49% { background: #b06000; }
+    /* turns green once all three are done */
+    52%, 87% { background: #137333; }
+    92%, 100% { background: #b06000; }
+  }
+  @keyframes ap-b0 {
+    0%, 7% { opacity: 1; }
+    9%, 100% { opacity: 0; }
+    /* reappears on reset */
+    92%, 100% { opacity: 1; }
+  }
+  @keyframes ap-b1 {
+    0%, 20% { opacity: 0; }
+    23%, 34% { opacity: 1; }
+    37%, 100% { opacity: 0; }
+  }
+  @keyframes ap-b2 {
+    0%, 34% { opacity: 0; }
+    37%, 48% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+  @keyframes ap-b3 {
+    0%, 48% { opacity: 0; }
+    51%, 88% { opacity: 1; }
+    92%, 100% { opacity: 0; }
+  }
+
+  /* ── Body split ── */
+  .ap-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 232px;
+    background: #fff;
+    min-height: 500px;
+  }
+  @media (max-width: 767px) {
+    .ap-body {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ── Signup page ── */
+  .ap-page {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #e7e5e4;
+    background: #fff;
+    min-width: 0;
+  }
+  @media (max-width: 767px) {
+    .ap-page {
+      border-right: none;
+      border-bottom: 1px solid #e7e5e4;
+    }
+  }
+  .ap-page-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-bottom: 1px solid #f1f1ef;
+  }
+  .ap-site-mark {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    background: #ff6719;
+  }
+  .ap-site-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: #1c1c1c;
+    flex: 1;
+  }
+  .ap-page-search {
+    width: 26px;
+    height: 26px;
+    border-radius: 9999px;
+    background: #fafaf9;
+    border: 1px solid #e7e5e4;
+    display: grid;
+    place-items: center;
+  }
+  .ap-page-body {
+    padding: 28px 28px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .ap-page-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #80868b;
+    font-weight: 600;
+  }
+  .ap-page-h {
+    font-size: 22px;
+    font-weight: 600;
+    color: #202124;
+    letter-spacing: -0.02em;
+  }
+  .ap-page-sub {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 70%;
+    margin-bottom: 8px;
+  }
+  .ap-bar {
+    height: 6px;
+    border-radius: 9999px;
+    background: #ececec;
+  }
+
+  /* The detected signup form */
+  .ap-form {
+    width: 100%;
+    max-width: 320px;
+    padding: 16px;
+    border: 1px solid #e7e5e4;
+    border-radius: 14px;
+    background: #fafafa;
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    /* A blue focus-ring breathes in while Mail Warmer is "working" it. */
+    animation: ap-form-focus 12s ease-in-out infinite;
+  }
+  @keyframes ap-form-focus {
+    0%, 9% { box-shadow: 0 1px 2px rgba(60, 64, 67, 0.08); }
+    13%, 50% {
+      box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.35),
+        0 1px 2px rgba(60, 64, 67, 0.08);
+    }
+    56%, 100% { box-shadow: 0 1px 2px rgba(60, 64, 67, 0.08); }
+  }
+  .ap-form-label {
+    font-size: 11px;
+    color: #5f6368;
+    font-weight: 500;
+  }
+  .ap-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    background: #fff;
+    overflow: hidden;
+  }
+  /* Email is pre-filled and always present — no typing/deleting. */
+  .ap-typed-text {
+    font-size: 13px;
+    color: #202124;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ap-submit {
+    height: 36px;
+    border-radius: 8px;
+    background: #1a73e8;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    display: grid;
+    place-items: center;
+    /* press pulse each time a submit fires */
+    animation: ap-submit-press 12s ease-in-out infinite;
+  }
+  @keyframes ap-submit-press {
+    0%, 20% { transform: scale(1); background: #1a73e8; }
+    22% { transform: scale(0.96); background: #1765cc; }
+    24%, 100% { transform: scale(1); background: #1a73e8; }
+  }
+  .ap-stamp {
+    position: absolute;
+    bottom: 28px;
+    left: 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    background: #e6f4ea;
+    color: #137333;
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+    animation: ap-stamp-in 12s ease-in-out infinite;
+  }
+  .ap-stamp-check {
+    font-weight: 800;
+  }
+  @keyframes ap-stamp-in {
+    0%, 50% { opacity: 0; transform: translateY(6px) scale(0.96); }
+    54%, 86% { opacity: 1; transform: translateY(0) scale(1); }
+    92%, 100% { opacity: 0; transform: translateY(6px) scale(0.96); }
+  }
+
+  /* ── Sidepanel ── */
+  .ap-sp {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    background: #f6f8fc;
+    border-left: 1px solid #e7e5e4;
+  }
+  @media (max-width: 767px) {
+    .ap-sp {
+      border-left: none;
+    }
+  }
+  .ap-sp-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 2px 8px;
+  }
+  .ap-sp-logo {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background: linear-gradient(160deg, #ffe0c2, #ffb9a8);
+    box-shadow: inset 0 0 0 1.5px #5a4a4e;
+  }
+  .ap-sp-brand {
+    font-size: 14px;
+    font-weight: 600;
+    color: #5f6368;
+    flex: 1;
+  }
+  .ap-sp-ver {
+    font-size: 9px;
+    color: #80868b;
+    background: #f1f3f4;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-variant-numeric: tabular-nums;
+  }
+  .ap-compose {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 44px;
+    border: none;
+    border-radius: 14px;
+    background: #c2e7ff;
+    color: #001d35;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.2);
+    animation: ap-compose-press 12s ease-in-out infinite;
+  }
+  @keyframes ap-compose-press {
+    0%, 7% { transform: scale(1); background: #c2e7ff; }
+    9% { transform: scale(0.97); background: #aaddff; }
+    11%, 49% { transform: scale(1); background: #aaddff; }
+    52%, 100% { transform: scale(1); background: #c2e7ff; }
+  }
+  .ap-compose-idle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    animation: ap-compose-label 12s ease-in-out infinite;
+  }
+  .ap-compose-running {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    animation: ap-compose-runlabel 12s ease-in-out infinite;
+  }
+  @keyframes ap-compose-label {
+    0%, 9% { opacity: 1; }
+    11%, 49% { opacity: 0; }
+    52%, 100% { opacity: 1; }
+  }
+  @keyframes ap-compose-runlabel {
+    0%, 9% { opacity: 0; }
+    12%, 49% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+  .ap-sp-nav {
+    display: flex;
+    gap: 2px;
+    background: #fff;
+    border: 1px solid #dadce0;
+    border-radius: 10px;
+    padding: 3px;
+  }
+  .ap-sp-navi {
+    flex: 1;
+    text-align: center;
+    padding: 5px 0;
+    font-size: 10px;
+    font-weight: 500;
+    color: #5f6368;
+    border-radius: 7px;
+  }
+  .ap-sp-navi-active {
+    background: #d3e3fd;
+    color: #044289;
+    font-weight: 700;
+  }
+  .ap-sp-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #5f6368;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+  .ap-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    border: 1px solid #dadce0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.08);
+  }
+  .ap-li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 12px;
+    color: #202124;
+  }
+  .ap-li:last-child {
+    border-bottom: none;
+  }
+  .ap-li-fav {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .ap-fav-a { background: #ff6719; }
+  .ap-fav-b { background: #6d4aff; }
+  .ap-fav-c { background: #00a3a3; }
+  .ap-li-name {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  /* Status pill — 3 stacked labels cross-fade pending→running→success. */
+  .ap-pill {
+    position: relative;
+    flex-shrink: 0;
+    width: 56px;
+    height: 20px;
+  }
+  .ap-pill > span {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 10px;
+    opacity: 0;
+  }
+  .ap-pill-pending {
+    background: #f1f3f4;
+    color: #80868b;
+  }
+  .ap-pill-running {
+    background: #feefc3;
+    color: #b06000;
+  }
+  .ap-pill-success {
+    background: #e6f4ea;
+    color: #137333;
+  }
+
+  /* Row 1 timing */
+  .ap-pill-1 .ap-pill-pending { animation: ap-p1-pending 12s ease-in-out infinite; }
+  .ap-pill-1 .ap-pill-running { animation: ap-p1-running 12s ease-in-out infinite; }
+  .ap-pill-1 .ap-pill-success { animation: ap-p1-success 12s ease-in-out infinite; }
+  @keyframes ap-p1-pending { 0%, 10% { opacity: 1; } 12%, 100% { opacity: 0; } 94%, 100% { opacity: 1; } }
+  @keyframes ap-p1-running { 0%, 11% { opacity: 0; } 13%, 20% { opacity: 1; } 23%, 100% { opacity: 0; } }
+  @keyframes ap-p1-success { 0%, 21% { opacity: 0; } 24%, 90% { opacity: 1; } 94%, 100% { opacity: 0; } }
+
+  /* Row 2 timing */
+  .ap-pill-2 .ap-pill-pending { animation: ap-p2-pending 12s ease-in-out infinite; }
+  .ap-pill-2 .ap-pill-running { animation: ap-p2-running 12s ease-in-out infinite; }
+  .ap-pill-2 .ap-pill-success { animation: ap-p2-success 12s ease-in-out infinite; }
+  @keyframes ap-p2-pending { 0%, 24% { opacity: 1; } 26%, 100% { opacity: 0; } 94%, 100% { opacity: 1; } }
+  @keyframes ap-p2-running { 0%, 25% { opacity: 0; } 27%, 34% { opacity: 1; } 37%, 100% { opacity: 0; } }
+  @keyframes ap-p2-success { 0%, 35% { opacity: 0; } 38%, 90% { opacity: 1; } 94%, 100% { opacity: 0; } }
+
+  /* Row 3 timing */
+  .ap-pill-3 .ap-pill-pending { animation: ap-p3-pending 12s ease-in-out infinite; }
+  .ap-pill-3 .ap-pill-running { animation: ap-p3-running 12s ease-in-out infinite; }
+  .ap-pill-3 .ap-pill-success { animation: ap-p3-success 12s ease-in-out infinite; }
+  @keyframes ap-p3-pending { 0%, 38% { opacity: 1; } 40%, 100% { opacity: 0; } 94%, 100% { opacity: 1; } }
+  @keyframes ap-p3-running { 0%, 39% { opacity: 0; } 41%, 48% { opacity: 1; } 51%, 100% { opacity: 0; } }
+  @keyframes ap-p3-success { 0%, 49% { opacity: 0; } 52%, 90% { opacity: 1; } 94%, 100% { opacity: 0; } }
+
+  .ap-sp-foot {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 8px;
+  }
+  .ap-progress {
+    display: block;
+    height: 4px;
+    border-radius: 2px;
+    background: #e0e3e7;
+    overflow: hidden;
+  }
+  .ap-progress-bar {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: #1a73e8;
+    animation: ap-progress 12s ease-in-out infinite;
+  }
+  @keyframes ap-progress {
+    0%, 9% { width: 0; background: #1a73e8; }
+    24% { width: 33%; }
+    38% { width: 66%; }
+    52%, 88% { width: 100%; background: #137333; }
+    92%, 100% { width: 0; background: #1a73e8; }
+  }
+  .ap-progress-text {
+    font-size: 10px;
+    color: #5f6368;
+    text-align: center;
+  }
+
+  /* ── Reduced motion: freeze on the resolved (all-warm) state. ── */
+  @media (prefers-reduced-motion: reduce) {
+    .ap-badge,
+    .ap-badge-n,
+    .ap-form,
+    .ap-submit,
+    .ap-stamp,
+    .ap-compose,
+    .ap-compose-idle,
+    .ap-compose-running,
+    .ap-pill > span,
+    .ap-progress-bar {
+      animation: none !important;
+    }
+    .ap-badge { background: #137333 !important; }
+    .ap-badge-3 { opacity: 1 !important; }
+    .ap-badge-0, .ap-badge-1, .ap-badge-2 { opacity: 0 !important; }
+    .ap-stamp { opacity: 1 !important; transform: none !important; }
+    .ap-compose-idle { opacity: 1 !important; }
+    .ap-compose-running { opacity: 0 !important; }
+    .ap-pill-pending, .ap-pill-running { opacity: 0 !important; }
+    .ap-pill-success { opacity: 1 !important; }
+    .ap-progress-bar { width: 100% !important; background: #137333 !important; }
+  }
+</style>

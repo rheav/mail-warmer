@@ -1,0 +1,46 @@
+---
+/**
+ * FloatingSteam — ambient rising-warmth particles.
+ *
+ * 7 fixed-position wisps that drift slowly bottom→top, each with a different
+ * duration/delay/start so the set never cycles in unison. Mail Warmer's analog
+ * to youZen's floating leaves — echoes the logo's heat waves.
+ *
+ *   - z-index 5: behind all content (z-10+), in front of the page background.
+ *   - pointer-events: none.
+ *   - opacity capped ~0.18 so it reads as atmosphere, not noise.
+ *   - reduced-motion: hidden via the global.css guard.
+ */
+const wisps = [
+  { left: "10%", size: 16, delay: 0, duration: 26, color: "#ffb9a8", opacity: 0.16 },
+  { left: "24%", size: 11, delay: 6, duration: 32, color: "#ffe0c2", opacity: 0.14 },
+  { left: "40%", size: 20, delay: 13, duration: 38, color: "#ffcdb8", opacity: 0.12 },
+  { left: "56%", size: 13, delay: 3, duration: 30, color: "#ffb9a8", opacity: 0.18 },
+  { left: "70%", size: 18, delay: 17, duration: 36, color: "#ffe0c2", opacity: 0.13 },
+  { left: "84%", size: 15, delay: 9, duration: 28, color: "#ffcdb8", opacity: 0.15 },
+  { left: "93%", size: 12, delay: 21, duration: 34, color: "#ffb9a8", opacity: 0.12 },
+];
+---
+
+<div
+  class="pointer-events-none fixed inset-0 z-[5] overflow-hidden"
+  aria-hidden="true"
+>
+  {
+    wisps.map((w) => (
+      <svg
+        class="steam-wisp absolute"
+        style={`left: ${w.left}; bottom: -30px; width: ${w.size}px; height: ${w.size * 2}px; color: ${w.color}; --steam-opacity: ${w.opacity}; animation: steam-rise ${w.duration}s linear ${w.delay}s infinite;`}
+        viewBox="0 0 12 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="3"
+        stroke-linecap="round"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* A curling wisp of warmth, like the logo's heat waves. */}
+        <path d="M6 22 C2 18 10 14 6 10 C2 6 10 4 6 1" />
+      </svg>
+    ))
+  }
+</div>
