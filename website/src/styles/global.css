@@ -221,6 +221,9 @@ p {
 .accent-word {
   font-weight: 600;
   letter-spacing: -0.025em;
+  /* Keep the highlighted word (and any punctuation hugging it) on one line —
+     never let a trailing "." orphan onto the next line. */
+  white-space: nowrap;
   background: linear-gradient(
     90deg,
     #f0594e 0%,
