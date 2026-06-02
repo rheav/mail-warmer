@@ -1,0 +1,108 @@
+Mail Warmer - Keep Every Inbox Warm & Active
+
+Mail Warmer is a free Chrome extension that keeps your email accounts alive
+and valid. It signs your addresses up to a curated list of real newsletters,
+so fresh or quiet inboxes keep receiving real mail and read as active,
+trusted accounts.
+
+Why it matters: a brand-new inbox that never gets any mail looks dormant.
+Providers flag, limit, or even suspend dormant accounts — and they're far
+more likely to block them when you sign up for social media, affiliate
+networks, or new services. Steady incoming mail keeps the account looking
+real and used, so it stays usable whenever you need it.
+
+Perfect for anyone juggling new email accounts, social and affiliate
+signups, side projects, or backup inboxes that go cold.
+
+🎯 WHAT IT DOES:
+
+  📨 Keeps Accounts Alive & Valid
+     Subscribes your email addresses to popular newsletters so they keep
+     getting real messages — so providers see a used account and don't
+     flag, limit, or block it.
+
+  📋 Curated Newsletter List
+     Comes with a hand-picked list of quality newsletters, ready to go.
+     The list updates on its own in the background — nothing to maintain.
+
+  🙋 Fills Forms For You
+     Opens each newsletter's signup page and fills it in automatically,
+     using the email and optional profile details you choose.
+
+  🍪 Cookie Warm-Up (Optional)
+     Visits a few normal websites and accepts their cookie banners first,
+     so your browser profile looks natural before any signups happen.
+
+  📊 See Exactly What Happened
+     Every signup is tracked per email, so you always know which
+     newsletters worked and which didn't.
+
+  🔒 Private By Design
+     It never reads or sends from your inbox. Your emails and profile
+     details never leave your browser. Free and open source.
+
+✅ SIMPLE TO USE:
+  1. Add your email addresses.
+  2. Pick the newsletters you want (or use the full curated list).
+  3. Hit Run — Mail Warmer does the rest.
+
+No account. No setup. No cost.
+
+---
+
+🆕 06/01/2026 - v0.6.0:
+
+NEW:
+- Toolbar icon now shows live progress — an orange running count while
+  signups happen, then a green success count (or red if something failed).
+- Cookie warm-up finishes with a green badge showing how many sites accepted.
+- Newsletter and cookie rows now show the full name on hover.
+
+IMPROVED:
+- Cleaner single logo across the side panel and toolbar.
+
+FIXED:
+- Status labels no longer get cut off in a narrow side panel.
+
+---
+
+🆕 05/16/2026 - v0.5.0:
+
+NEW:
+- Cookie warm-up now captures and shows the cookies each visit leaves behind,
+  with a per-site count you can expand.
+- Run ends with a total-cookies summary.
+
+IMPROVED:
+- Recognizes more cookie banners, waits a little longer on slow sites, and
+  uses a fresh set of well-known brand websites for the warm-up.
+
+---
+
+🆕 05/16/2026 - v0.4.0:
+
+NEW:
+- Added the Cookies tab — a one-click warm-up that builds a natural-looking
+  browser profile before newsletter signups run.
+- Live progress, a step-by-step guide, and a summary of the last warm-up.
+
+---
+
+🆕 05/15/2026 - v0.3.0:
+
+NEW:
+- Brand-new side panel with five tabs: Run, Emails, Profile, Lists, and Log.
+- Clean Gmail-style design.
+- Optional profile (name, location, and more) used to fill the extra fields
+  some newsletters ask for.
+- Smarter form detection that skips spam-trap fields and handles embedded
+  signup forms.
+- Support for newsletters on their own custom web addresses.
+
+---
+
+🆕 05/14/2026 - v0.1.0 – v0.2.0:
+
+NEW:
+- First release: side panel, email setup, and a curated newsletter list.
+- Automatic signup with an activity log and per-newsletter history.

@@ -9,7 +9,7 @@ interface Props {
 
 const {
   title = "Mail Warmer — keep every inbox warm",
-  description = "A Chrome extension that auto-subscribes your email addresses to curated newsletters, so fresh inboxes keep receiving mail and stay active. Free, open source, no account or setup.",
+  description = "A Chrome extension that auto-subscribes your email addresses to curated newsletters, so fresh inboxes stay active, trusted accounts — usable for social, affiliate, and new-service signups without getting flagged. Free, open source, no account or setup.",
 } = Astro.props;
 ---
 
@@ -33,6 +33,17 @@ const {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+
+    <!-- No-JS fallback: scroll-reveal elements start hidden, so force them
+         visible when JavaScript is unavailable. -->
+    <noscript>
+      <style>
+        .reveal {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      </style>
+    </noscript>
   </head>
   <body class="bg-canvas text-ink relative overflow-x-hidden">
     <!-- Grain overlay: fixed, z-50, mix-blend-mode overlay -->

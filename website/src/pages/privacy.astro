@@ -1,0 +1,221 @@
+---
+/**
+ * Privacy Policy — Mail Warmer.
+ *
+ * Structure mirrors the unFunnelizer privacy page, rewritten for Mail Warmer:
+ * a free, open-source extension with no account and no payments. The only
+ * data that touches the network is the read-only newsletter-list fetch and an
+ * anonymous run tally (installId + per-newsletter success/failure counts).
+ */
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+
+const lastUpdated = "Last updated: June 2, 2026";
+const repo = "https://github.com/rheav/mail-warmer";
+---
+
+<Layout
+  title="Privacy Policy — Mail Warmer"
+  description="Privacy Policy for the Mail Warmer Chrome extension. Your emails and profile never leave your browser."
+>
+  <Navbar />
+  <main class="relative z-10 min-h-screen px-4 pt-32 pb-20 md:px-6">
+    <div class="mx-auto max-w-3xl">
+      <h1 class="text-4xl font-medium tracking-tight md:text-5xl">
+        Privacy <span class="legal-accent">Policy</span>
+      </h1>
+      <p class="mt-4 text-stone-500">{lastUpdated}</p>
+
+      <div class="mt-10 space-y-6">
+        <section class="legal-card">
+          <h2 class="legal-h2">1. The short version</h2>
+          <p class="legal-p">
+            Mail Warmer is a free, open-source Chrome extension that keeps your
+            inboxes active. It never reads, opens, or sends from your inbox.
+            Your email addresses and profile details stay on your device — they
+            are only ever typed into the newsletter signup forms you choose,
+            exactly as you would do by hand. There is no account to create and
+            no payment to make.
+          </p>
+        </section>
+
+        <section class="legal-card">
+          <h2 class="legal-h2">2. What stays on your device</h2>
+          <p class="legal-p">
+            Everything you enter is stored locally in your browser, visible
+            only to the extension:
+          </p>
+          <ul class="legal-ul">
+            <li>The email addresses you add and their labels</li>
+            <li>Your optional profile (name, location, and similar fields used to fill signup forms)</li>
+            <li>Your newsletter list and any custom newsletters you add</li>
+            <li>Your signup history and activity log</li>
+            <li>The results of the optional cookie warm-up</li>
+          </ul>
+          <p class="legal-p mt-3">
+            None of this is sent to us or to anyone else.
+          </p>
+        </section>
+
+        <section class="legal-card">
+          <h2 class="legal-h2">3. The only things that touch the network</h2>
+          <p class="legal-p">
+            Two small, anonymous exchanges happen — and neither involves your
+            personal data:
+          </p>
+          <ul class="legal-ul">
+            <li>
+              <strong class="text-ink">Newsletter list</strong> — the extension
+              downloads the curated newsletter list so it stays up to date.
+              This is a read-only request; nothing about you is sent.
+            </li>
+            <li>
+              <strong class="text-ink">Anonymous run tally</strong> — after a
+              run, the extension sends a count of how many signups succeeded or
+              failed per newsletter, tied to a random installation ID. This ID
+              is not linked to you or your emails in any way.
+            </li>
+          </ul>
+        </section>
+
+        <section class="legal-card">
+          <h2 class="legal-h2">4. What we never collect</h2>
+          <p class="legal-p">We do <strong class="text-ink">not</strong> collect:</p>
+          <ul class="legal-ul">
+            <li>Your email addresses or their contents</li>
+            <li>Your profile details (name, address, phone, etc.)</li>
+            <li>Your browsing history or the pages you visit</li>
+            <li>Keystrokes, screenshots, or screen recordings</li>
+            <li>Payment or financial information (there are no payments)</li>
+            <li>Any personally identifiable information</li>
+          </ul>
+        </section>
+
+        <section class="legal-card">
+          <h2 class="legal-h2">5. How the anonymous tally is used</h2>
+          <p class="legal-p">
+            The only reason for the run tally is to understand which
+            newsletters tend to work and which break, so the curated list can
+            be kept healthy. It is aggregate, anonymous, and never sold or
+            shared with third parties.
+          </p>
+        </section>
+
+        <section class="legal-card">
+          <h2 class="legal-h2">6. Cookie warm-up</h2>
+          <p class="legal-p">
+            The optional Cookies tab visits a few well-known websites in the
+            background and accepts their cookie banners, then reads back the
+            cookies those visits left in your browser. This all happens locally
+            and is shown only to you — the captured cookies are never sent
+            anywhere.
+          </p>
+        </section>
+
+        <section class="legal-card">
+          <h2 class="legal-h2">7. Third-party services</h2>
+          <p class="legal-p">
+            When Mail Warmer subscribes you to a newsletter, you are signing up
+            with that newsletter's own provider (for example a Substack
+            publication or another email service). Those providers have their
+            own privacy policies governing the address you submit, just as they
+            would for a signup you did yourself.
+          </p>
+        </section>
+
+        <section class="legal-card">
+          <h2 class="legal-h2">8. Your control</h2>
+          <p class="legal-p">Because your data lives on your device, you can:</p>
+          <ul class="legal-ul">
+            <li>Edit or delete any email or profile field at any time</li>
+            <li>Clear your history and log</li>
+            <li>Remove the extension to erase everything it stored</li>
+          </ul>
+        </section>
+
+        <section class="legal-card">
+          <h2 class="legal-h2">9. Children's privacy</h2>
+          <p class="legal-p">
+            Mail Warmer is not intended for children under 13, and we do not
+            knowingly collect any information from them.
+          </p>
+        </section>
+
+        <section class="legal-card">
+          <h2 class="legal-h2">10. Changes to this policy</h2>
+          <p class="legal-p">
+            We may update this Privacy Policy from time to time. Any changes
+            will be posted on this page with an updated date above.
+          </p>
+        </section>
+
+        <section class="legal-card">
+          <h2 class="legal-h2">11. Contact</h2>
+          <p class="legal-p">
+            Mail Warmer is open source. Questions about privacy are best raised
+            in the open, so anyone can see the answer — please
+            <a href={`${repo}/issues/new`} class="legal-link" rel="noopener">
+              open an issue on GitHub</a
+            >.
+          </p>
+        </section>
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href="/" class="legal-link text-stone-500">← Back to home</a>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style is:global>
+  .legal-accent {
+    color: var(--color-blue);
+  }
+  .legal-card {
+    border: 1px solid rgba(224, 227, 231, 0.8);
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 1rem;
+    padding: 1.5rem 1.6rem;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+  }
+  .legal-h2 {
+    color: var(--color-ink);
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+  }
+  .legal-p {
+    color: var(--color-muted);
+    line-height: 1.7;
+  }
+  .legal-ul {
+    margin-top: 0.75rem;
+    padding-left: 1.2rem;
+    list-style: disc;
+    color: var(--color-muted);
+    line-height: 1.7;
+  }
+  .legal-ul > li + li {
+    margin-top: 0.4rem;
+  }
+  .legal-link {
+    color: var(--color-blue);
+    background-image: linear-gradient(to right, var(--color-blue), #4285f4);
+    background-repeat: no-repeat;
+    background-size: 0% 1.5px;
+    background-position: 0 100%;
+    transition:
+      color 300ms ease,
+      background-size 350ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .legal-link:hover,
+  .legal-link:focus-visible {
+    background-size: 100% 1.5px;
+    outline: none;
+  }
+</style>

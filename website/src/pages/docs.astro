@@ -1,0 +1,787 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import {
+  BookOpen,
+  Rocket,
+  Cookie,
+  Play,
+  Mail,
+  User,
+  List,
+  ScrollText,
+  Lock,
+} from "@lucide/astro";
+
+/**
+ * /docs — plain-language reference for every Mail Warmer tab and setting.
+ *
+ * Layout mirrors the youZen docs page:
+ *   - Sticky left sidebar (desktop) with section links + scroll-spy.
+ *   - Single-column main content; each section owns a stable id used by
+ *     both the anchor links and the IntersectionObserver below.
+ *
+ * The five side-panel tabs (Cookies / Run / Emails / Profile / Lists / Log)
+ * are the single source of truth in the extension. Keep this page in step
+ * with them whenever a tab or setting is added, removed, or renamed.
+ */
+
+const sidebar = [
+  { id: "quick-start", label: "Quick start", icon: Rocket },
+  { id: "cookies", label: "Cookies", icon: Cookie },
+  { id: "run", label: "Run", icon: Play },
+  { id: "emails", label: "Emails", icon: Mail },
+  { id: "profile", label: "Profile", icon: User },
+  { id: "lists", label: "Lists", icon: List },
+  { id: "log", label: "Log", icon: ScrollText },
+  { id: "privacy", label: "Privacy", icon: Lock },
+  { id: "changelog", label: "Changelog", icon: ScrollText },
+];
+
+const sections = [
+  {
+    id: "cookies",
+    tab: "Cookies",
+    icon: Cookie,
+    intro:
+      "An optional first step that makes your browser look lived-in. A brand-new profile with no cookies stands out — this quietly fixes that before any signups run.",
+    groups: [
+      {
+        id: "warm-up",
+        title: "Cookie warm-up",
+        summary:
+          "Pick the sites you want, hit start, and Mail Warmer does the rest in the background.",
+        features: [
+          {
+            id: "visit",
+            label: "Visit & accept",
+            kind: "Auto",
+            default: "On selected sites",
+            body: "For each site you pick, Mail Warmer opens it in a background tab, accepts the cookie banner, and closes the tab. It recognizes the common consent pop-ups automatically, so you do not have to click anything.",
+          },
+          {
+            id: "capture",
+            label: "Capture cookies",
+            kind: "Auto",
+            default: "On",
+            body: "After each visit it reads back the cookies that site left behind and shows a per-site count. Expand a row to see the details. Nothing here is sent anywhere — it stays in your browser.",
+          },
+          {
+            id: "site-list",
+            label: "The site list",
+            kind: "Info",
+            default: "Curated",
+            body: "A hand-picked set of well-known brand websites (luxury real-estate, automotive, and fashion). You choose which ones to include with simple checkboxes.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "run",
+    tab: "Run",
+    icon: Play,
+    intro:
+      "The main event. This is where Mail Warmer subscribes your chosen email to the newsletters you picked.",
+    groups: [
+      {
+        id: "how-run-works",
+        title: "How a run works",
+        summary:
+          "One newsletter at a time, at a calm human pace — never a burst.",
+        features: [
+          {
+            id: "sign-up",
+            label: "Automatic signup",
+            kind: "Auto",
+            default: "On",
+            body: "Mail Warmer opens each newsletter's signup page in a tab, finds the form, fills in your email (plus any profile details the form asks for), and submits it.",
+          },
+          {
+            id: "pacing",
+            label: "Human pacing",
+            kind: "Auto",
+            default: "On",
+            body: "It waits a few seconds between each signup so the activity looks natural, rather than firing off dozens of signups at once.",
+          },
+          {
+            id: "badge",
+            label: "Live progress badge",
+            kind: "Info",
+            default: "On",
+            body: "The toolbar icon shows progress as it goes: an orange running count during a run, then a green success count (or a red count if some failed) when it finishes.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "emails",
+    tab: "Emails",
+    icon: Mail,
+    intro:
+      "The list of email addresses you want to keep warm. Add as many as you like and switch between them.",
+    groups: [
+      {
+        id: "manage-emails",
+        title: "Manage addresses",
+        summary: "Add, label, and select which inbox a run subscribes.",
+        features: [
+          {
+            id: "add-email",
+            label: "Add an address",
+            kind: "Local",
+            default: "—",
+            body: "Type in any email address you want to keep active and give it an optional label so you can tell them apart.",
+          },
+          {
+            id: "active-email",
+            label: "Active email",
+            kind: "Local",
+            default: "First added",
+            body: "Pick which address the next run will use. Only the selected address is subscribed when you hit Run.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "profile",
+    tab: "Profile",
+    icon: User,
+    intro:
+      "Some newsletters ask for more than an email — a name, a city, sometimes a company. The profile fills those in for you.",
+    groups: [
+      {
+        id: "profile-fields",
+        title: "Profile details",
+        summary:
+          "A set of believable, optional details used only to complete signup forms.",
+        features: [
+          {
+            id: "auto-profile",
+            label: "Auto-filled on install",
+            kind: "Auto",
+            default: "On first install",
+            body: "Mail Warmer seeds a realistic profile (name, location, phone, company, and more) the first time you install it, so signups work out of the box. You can edit any field.",
+          },
+          {
+            id: "edit-profile",
+            label: "Edit your details",
+            kind: "Local",
+            default: "—",
+            body: "Change any of the fields to whatever you like. These details are used only to fill the extra boxes on signup forms — they never leave your browser.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "lists",
+    tab: "Lists",
+    icon: List,
+    intro:
+      "The newsletters Mail Warmer can subscribe you to. It ships with a curated list and lets you add your own.",
+    groups: [
+      {
+        id: "the-list",
+        title: "The newsletter list",
+        summary:
+          "A ready-made list that keeps itself up to date, plus anything you add.",
+        features: [
+          {
+            id: "curated",
+            label: "Curated list",
+            kind: "Auto",
+            default: "Built in",
+            body: "A hand-picked list of quality newsletters comes with the extension and refreshes on its own in the background — roughly once a day, or instantly when you restart your browser. There is no account and no server for you to run.",
+          },
+          {
+            id: "offline",
+            label: "Always works",
+            kind: "Auto",
+            default: "On",
+            body: "If the update can't be reached for any reason, Mail Warmer simply keeps using the list it already has, so signups never stop working.",
+          },
+          {
+            id: "custom",
+            label: "Add your own",
+            kind: "Local",
+            default: "—",
+            body: "Add any newsletter you like — a Substack publication or a regular signup page. Your custom additions sit alongside the built-in ones.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "log",
+    tab: "Log",
+    icon: ScrollText,
+    intro:
+      "A running record of everything Mail Warmer does, so you can always see what happened.",
+    groups: [
+      {
+        id: "history",
+        title: "Activity & history",
+        summary: "What worked, what didn't, and when.",
+        features: [
+          {
+            id: "per-result",
+            label: "Per-newsletter results",
+            kind: "Local",
+            default: "On",
+            body: "Each signup is recorded for the email and newsletter it ran on, so you can see exactly which subscriptions succeeded and which need another try.",
+          },
+          {
+            id: "activity-log",
+            label: "Activity log",
+            kind: "Local",
+            default: "On",
+            body: "A scrollable, time-stamped log of recent activity — handy if a newsletter behaves unexpectedly and you want to see why.",
+          },
+        ],
+      },
+    ],
+  },
+];
+
+const kindBadge = (kind: string) => {
+  const map: Record<string, string> = {
+    Auto: "badge-blue",
+    Local: "badge-warm",
+    Info: "badge-soft",
+    Optional: "badge-soft",
+  };
+  return map[kind] ?? "badge-soft";
+};
+---
+
+<Layout
+  title="Docs — Mail Warmer"
+  description="Every tab and setting in Mail Warmer, in plain language. Free, open source, no account — your emails and profile never leave your browser."
+>
+  <Navbar />
+
+  <div class="docs-shell relative z-10 mx-auto max-w-6xl px-4 pt-28 pb-16 md:px-6 md:pt-36">
+    <div class="docs-grid">
+      <!-- ─── Sidebar ─── -->
+      <aside class="docs-sidebar" aria-label="Docs navigation">
+        <div class="docs-sidebar-inner">
+          <a
+            href="/docs"
+            class="docs-home flex items-center gap-2 pb-5 text-base font-medium tracking-tight"
+          >
+            <BookOpen size={18} stroke-width={2} />
+            <span>Docs</span>
+          </a>
+
+          <nav>
+            <ul class="space-y-1 text-sm">
+              {
+                sidebar.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <li>
+                      <a
+                        href={`#${item.id}`}
+                        data-spy={item.id}
+                        class="docs-nav-link group flex items-center gap-2.5 rounded-lg px-3 py-2 text-stone-500 transition-colors"
+                      >
+                        <Icon size={15} stroke-width={1.8} class="docs-nav-icon shrink-0" />
+                        <span>{item.label}</span>
+                      </a>
+                    </li>
+                  );
+                })
+              }
+            </ul>
+          </nav>
+
+          <div class="mt-8 border-t border-stone-200/70 pt-5 text-xs text-stone-500">
+            <p class="leading-relaxed">
+              Every tab and setting, in plain language. No account, no setup —
+              your emails never leave your browser.
+            </p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ─── Main ─── -->
+      <article class="docs-main">
+        <!-- Hero -->
+        <header class="reveal mb-12">
+          <h1 class="text-ink text-4xl font-medium tracking-tight md:text-5xl">
+            Mail Warmer <span class="docs-accent">Docs</span>
+          </h1>
+          <p class="mt-4 max-w-2xl text-lg leading-relaxed text-stone-600">
+            One side panel and a handful of tabs. Here's what each one does and
+            what happens when you use it. Nothing is hidden and nothing is
+            remote-controlled — what's documented here is what runs in your
+            browser.
+          </p>
+        </header>
+
+        <!-- Quick start -->
+        <section
+          id="quick-start"
+          class="reveal mb-16 scroll-mt-28"
+          aria-labelledby="quick-start-title"
+        >
+          <header class="mb-6 flex items-center gap-3">
+            <span class="docs-section-icon">
+              <Rocket size={18} stroke-width={2} />
+            </span>
+            <h2
+              id="quick-start-title"
+              class="text-ink text-2xl font-medium tracking-tight md:text-3xl"
+            >
+              Quick start
+            </h2>
+          </header>
+
+          <p class="mb-5 max-w-2xl text-stone-600">
+            Mail Warmer is a Chrome extension that keeps your inboxes active.
+            Install it, add your emails, and run — there's nothing to set up
+            and nothing to pay for.
+          </p>
+
+          <div class="grid gap-4 md:grid-cols-2">
+            <div class="docs-card">
+              <h3 class="docs-card-title">Get going</h3>
+              <ol class="docs-list docs-list-ol">
+                <li>Add Mail Warmer from the Chrome Web Store.</li>
+                <li>Pin it to your toolbar so the icon stays visible.</li>
+                <li>Click the icon to open the side panel.</li>
+                <li>Add an email, pick newsletters, and hit Run.</li>
+              </ol>
+            </div>
+            <div class="docs-card">
+              <h3 class="docs-card-title">Where things live</h3>
+              <ul class="docs-list">
+                <li>
+                  <strong class="text-ink">Cookies tab</strong> — optional
+                  browser warm-up.
+                </li>
+                <li>
+                  <strong class="text-ink">Run tab</strong> — subscribe your
+                  email to newsletters.
+                </li>
+                <li>
+                  <strong class="text-ink">Emails &amp; Profile</strong> —
+                  your addresses and signup details.
+                </li>
+                <li>
+                  <strong class="text-ink">Lists &amp; Log</strong> — the
+                  newsletters and what happened.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Feature sections -->
+        {
+          sections.map((s) => {
+            const Icon = s.icon;
+            return (
+              <section
+                id={s.id}
+                class="reveal mb-20 scroll-mt-28"
+                aria-labelledby={`${s.id}-title`}
+              >
+                <header class="mb-6 flex items-center gap-3 border-b border-stone-200/70 pb-4">
+                  <span class="docs-section-icon">
+                    <Icon size={18} stroke-width={2} />
+                  </span>
+                  <h2
+                    id={`${s.id}-title`}
+                    class="text-ink text-2xl font-medium tracking-tight md:text-3xl"
+                  >
+                    {s.tab}
+                  </h2>
+                </header>
+
+                <p class="mb-8 max-w-2xl text-stone-600">{s.intro}</p>
+
+                {s.groups.map((g) => (
+                  <section
+                    id={`${s.id}-${g.id}`}
+                    class="mb-10 scroll-mt-28"
+                    aria-labelledby={`${s.id}-${g.id}-title`}
+                  >
+                    <header class="mb-4">
+                      <h3
+                        id={`${s.id}-${g.id}-title`}
+                        class="text-ink mb-1.5 text-lg font-medium tracking-tight md:text-xl"
+                      >
+                        {g.title}
+                      </h3>
+                      <p class="max-w-2xl text-sm text-stone-500">{g.summary}</p>
+                    </header>
+
+                    <ul class="space-y-3">
+                      {g.features.map((f) => (
+                        <li class="docs-card">
+                          <div class="mb-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                            <h4 class="text-ink text-base font-medium">
+                              {f.label}
+                            </h4>
+                            <span
+                              class={`docs-badge ${kindBadge(f.kind)}`}
+                            >
+                              {f.kind}
+                            </span>
+                            <span class="ml-auto text-xs text-stone-500">
+                              Default:{" "}
+                              <span class="text-stone-600">{f.default}</span>
+                            </span>
+                          </div>
+                          <p class="text-sm leading-relaxed text-stone-600">
+                            {f.body}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                ))}
+              </section>
+            );
+          })
+        }
+
+        <!-- Privacy -->
+        <section
+          id="privacy"
+          class="reveal mb-20 scroll-mt-28"
+          aria-labelledby="privacy-title"
+        >
+          <header class="mb-6 flex items-center gap-3 border-b border-stone-200/70 pb-4">
+            <span class="docs-section-icon">
+              <Lock size={18} stroke-width={2} />
+            </span>
+            <h2
+              id="privacy-title"
+              class="text-ink text-2xl font-medium tracking-tight md:text-3xl"
+            >
+              Privacy
+            </h2>
+          </header>
+
+          <div class="docs-card">
+            <h3 class="docs-card-title">Your emails never leave your browser.</h3>
+            <p class="mt-2 text-stone-600">
+              Mail Warmer never reads, opens, or sends from your inbox. Your
+              email addresses and profile details stay on your device — they
+              are only ever typed into newsletter signup forms, exactly like
+              you'd do by hand.
+            </p>
+            <p class="mt-3 text-stone-600">
+              Two small things do touch the network, and neither involves your
+              personal data: the extension downloads the curated newsletter
+              list (a read-only fetch), and after each run it sends an
+              anonymous tally — how many signups succeeded or failed per
+              newsletter, tied to a random ID with no link to you. No emails,
+              names, or profile fields are ever sent.
+            </p>
+            <p class="mt-3 text-stone-600">
+              Everything else lives in <code class="docs-code">chrome.storage.local</code>,
+              visible only to the extension. The full details are on the
+              <a href="/privacy" class="docs-link">Privacy Policy</a> page, and
+              the source is on GitHub for anyone to read.
+            </p>
+          </div>
+        </section>
+
+        <!-- Changelog -->
+        <section
+          id="changelog"
+          class="reveal mb-12 scroll-mt-28"
+          aria-labelledby="changelog-title"
+        >
+          <header class="mb-6 flex items-center gap-3 border-b border-stone-200/70 pb-4">
+            <span class="docs-section-icon">
+              <ScrollText size={18} stroke-width={2} />
+            </span>
+            <h2
+              id="changelog-title"
+              class="text-ink text-2xl font-medium tracking-tight md:text-3xl"
+            >
+              Changelog
+            </h2>
+          </header>
+
+          <div class="space-y-3">
+            <div class="docs-card">
+              <h3 class="docs-card-title">0.6.0 — Toolbar badges</h3>
+              <p class="mt-2 text-stone-600">
+                The toolbar icon now shows live progress: an orange running
+                count during a run, then a green success count (or red on
+                error). Cookie warm-up ends with a green badge of sites
+                accepted. Full names show on hover, and status labels no
+                longer get cut off in a narrow side panel.
+              </p>
+            </div>
+            <div class="docs-card">
+              <h3 class="docs-card-title">0.5.0 — Cookie capture</h3>
+              <p class="mt-2 text-stone-600">
+                Cookie warm-up now shows the cookies each visit leaves behind,
+                with a per-site count you can expand and a total summary at
+                the end. Recognizes more cookie banners and waits longer on
+                slow sites.
+              </p>
+            </div>
+            <div class="docs-card">
+              <h3 class="docs-card-title">0.4.0 — Cookies tab</h3>
+              <p class="mt-2 text-stone-600">
+                Added the optional Cookies tab — a one-click warm-up that
+                builds a natural-looking browser profile before signups run,
+                with live progress and a summary.
+              </p>
+            </div>
+            <div class="docs-card">
+              <h3 class="docs-card-title">0.3.0 — New side panel</h3>
+              <p class="mt-2 text-stone-600">
+                A clean Gmail-style side panel with Run, Emails, Profile,
+                Lists, and Log tabs. Optional profile to fill the extra fields
+                some newsletters ask for, smarter form detection, and support
+                for newsletters on custom web addresses.
+              </p>
+              <p class="mt-3 text-xs text-stone-500">
+                Found something missing or wrong?
+                <a
+                  href="https://github.com/rheav/mail-warmer/issues/new"
+                  class="docs-link"
+                  rel="noopener">Open an issue.</a
+                >
+              </p>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </div>
+
+  <Footer />
+</Layout>
+
+<style is:global>
+  /* ─── Layout ──────────────────────────────────────────────────────── */
+  .docs-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .docs-grid {
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: 4rem;
+    }
+  }
+
+  .docs-sidebar {
+    position: relative;
+  }
+
+  @media (min-width: 1024px) {
+    .docs-sidebar-inner {
+      position: sticky;
+      top: 6.5rem;
+      max-height: calc(100vh - 7rem);
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+  }
+
+  .docs-main {
+    min-width: 0;
+  }
+
+  .docs-home {
+    color: var(--color-blue);
+  }
+
+  /* ─── Accent heading word ─────────────────────────────────────────── */
+  .docs-accent {
+    color: var(--color-blue);
+  }
+
+  /* ─── Sidebar nav links ───────────────────────────────────────────── */
+  .docs-nav-link {
+    background-image: none;
+  }
+
+  .docs-nav-link:hover {
+    color: var(--color-ink);
+    background-color: rgba(26, 115, 232, 0.08);
+  }
+
+  .docs-nav-link[aria-current="true"] {
+    color: var(--color-blue);
+    background-color: rgba(26, 115, 232, 0.12);
+    font-weight: 500;
+  }
+
+  .docs-nav-link[aria-current="true"] .docs-nav-icon {
+    color: var(--color-blue);
+  }
+
+  /* ─── Section icons ──────────────────────────────────────────────── */
+  .docs-section-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    background-color: rgba(26, 115, 232, 0.12);
+    color: var(--color-blue);
+  }
+
+  /* ─── Cards ──────────────────────────────────────────────────────── */
+  .docs-card {
+    border: 1px solid rgba(224, 227, 231, 0.8);
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 1rem;
+    padding: 1.25rem 1.4rem;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+  }
+
+  .docs-card-title {
+    color: var(--color-ink);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .docs-list {
+    margin-top: 0.5rem;
+    padding-left: 1.1rem;
+    list-style: disc;
+    color: var(--color-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .docs-list-ol {
+    list-style: decimal;
+  }
+
+  .docs-list > li + li {
+    margin-top: 0.35rem;
+  }
+
+  /* ─── Badges ─────────────────────────────────────────────────────── */
+  .docs-badge {
+    border-radius: 9999px;
+    padding: 0.1rem 0.5rem;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .badge-blue {
+    background-color: var(--color-blue-bg);
+    color: var(--color-blue-hover);
+  }
+  .badge-warm {
+    background-color: var(--color-warm-mist);
+    color: var(--color-warm-ink);
+  }
+  .badge-soft {
+    background-color: var(--color-stone-100);
+    color: var(--color-muted);
+  }
+
+  /* ─── Inline code ───────────────────────────────────────────────── */
+  .docs-code {
+    border-radius: 4px;
+    background-color: var(--color-stone-100);
+    padding: 0.1rem 0.35rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    color: var(--color-ink);
+  }
+
+  /* ─── Links ─────────────────────────────────────────────────────── */
+  .docs-link {
+    position: relative;
+    color: var(--color-blue);
+    background-image: linear-gradient(to right, var(--color-blue), #4285f4);
+    background-repeat: no-repeat;
+    background-size: 0% 1.5px;
+    background-position: 0 100%;
+    transition:
+      color 300ms ease,
+      background-size 350ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .docs-link:hover,
+  .docs-link:focus-visible {
+    background-size: 100% 1.5px;
+    outline: none;
+  }
+</style>
+
+<script is:inline>
+  // ─── Scroll-spy ────────────────────────────────────────────────────
+  // Highlight the sidebar link whose section is closest to the top of
+  // the viewport, using an IntersectionObserver with a top-anchored band.
+  (function () {
+    const links = Array.from(
+      document.querySelectorAll(".docs-nav-link[data-spy]"),
+    );
+    if (!links.length) return;
+
+    const byId = new Map();
+    const ids = links
+      .map((a) => {
+        const id = a.getAttribute("data-spy");
+        const section = id ? document.getElementById(id) : null;
+        if (id && section) {
+          byId.set(id, a);
+          return id;
+        }
+        return null;
+      })
+      .filter(Boolean);
+
+    function setActive(id) {
+      for (const a of links) a.removeAttribute("aria-current");
+      const active = byId.get(id);
+      if (active) active.setAttribute("aria-current", "true");
+    }
+
+    const visible = new Set();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) visible.add(entry.target.id);
+          else visible.delete(entry.target.id);
+        }
+        for (const id of ids) {
+          if (visible.has(id)) {
+            setActive(id);
+            return;
+          }
+        }
+      },
+      {
+        rootMargin: "-15% 0px -65% 0px",
+        threshold: 0,
+      },
+    );
+
+    for (const id of ids) {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    }
+
+    requestAnimationFrame(() => {
+      if (!document.querySelector(".docs-nav-link[aria-current='true']")) {
+        setActive(ids[0]);
+      }
+    });
+  })();
+</script>

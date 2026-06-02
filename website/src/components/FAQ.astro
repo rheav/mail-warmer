@@ -7,12 +7,16 @@ const faqs = [
     a: "No. It never opens, reads, or sends from your inbox. It only fills out public newsletter signup forms with the addresses you give it. Everything runs locally in your browser; results live in chrome.storage.local. Every line is on GitHub.",
   },
   {
+    q: "Why does keeping an inbox warm matter?",
+    a: "A brand-new inbox that never receives anything looks dormant to email providers. Dormant accounts get flagged, rate-limited, or quietly suspended — and they're far more likely to be blocked when you use them to sign up for social media, affiliate networks, or new services. Steady incoming mail makes the account read as real and used, so it stays valid and ready when you need it.",
+  },
+  {
     q: "Do I need to set anything up?",
     a: "No. Install it, add your emails, and run. The curated newsletter list ships inside the extension and refreshes automatically in the background — there's no account to create and no server for you to host. If it ever can't reach the update server, it just keeps using the list it already has.",
   },
   {
     q: "How does it actually keep an inbox warm?",
-    a: "It opens each newsletter's signup page in a background tab, detects the form, fills in your email (plus optional profile fields), and submits. Those newsletters then send mail regularly — so the inbox keeps receiving real messages and looks active to mailbox providers.",
+    a: "It opens each newsletter's signup page in a background tab, detects the form, fills in your email (plus optional profile fields), and submits. Those newsletters then send mail regularly — so the inbox keeps receiving real messages and reads as an active, trusted account that providers are far less likely to flag, limit, or lock.",
   },
   {
     q: "Is it going to cost money?",
@@ -32,7 +36,7 @@ const faqs = [
 <section id="faq" class="relative px-6 py-16 md:py-24">
   <div class="reveal-group mx-auto max-w-2xl text-center">
     <span
-      class="reveal text-xs font-medium tracking-widest text-stone-400 uppercase"
+      class="reveal text-xs font-medium tracking-widest text-stone-500 uppercase"
     >
       Small questions
     </span>

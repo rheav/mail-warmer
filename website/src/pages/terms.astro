@@ -1,0 +1,176 @@
+---
+/**
+ * Terms of Service — Mail Warmer.
+ *
+ * Structure mirrors the unFunnelizer terms page, rewritten for a free,
+ * open-source extension with no paid tiers.
+ */
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+
+const lastUpdated = "Last updated: June 2, 2026";
+const repo = "https://github.com/rheav/mail-warmer";
+---
+
+<Layout
+  title="Terms of Service — Mail Warmer"
+  description="Terms of Service for the Mail Warmer Chrome extension."
+>
+  <Navbar />
+  <main class="relative z-10 min-h-screen px-4 pt-32 pb-20 md:px-6">
+    <div class="mx-auto max-w-3xl">
+      <h1 class="text-4xl font-medium tracking-tight md:text-5xl">
+        Terms of <span class="legal-accent">Service</span>
+      </h1>
+      <p class="mt-4 text-stone-500">{lastUpdated}</p>
+
+      <div class="mt-10 space-y-6">
+        <section class="legal-card">
+          <h2 class="legal-h2">1. Acceptance of terms</h2>
+          <p class="legal-p">
+            By installing or using the Mail Warmer Chrome extension (the
+            "Service"), you agree to these Terms of Service. If you do not
+            agree, please do not use the Service.
+          </p>
+        </section>
+
+        <section class="legal-card">
+          <h2 class="legal-h2">2. What Mail Warmer does</h2>
+          <p class="legal-p">
+            Mail Warmer is a free, open-source browser extension that keeps
+            email inboxes active by subscribing the addresses you provide to a
+            curated list of newsletters. It:
+          </p>
+          <ul class="legal-ul">
+            <li>
+              <strong class="text-ink">Subscribes</strong> — opens newsletter
+              signup pages and fills them in with the email and profile details
+              you choose
+            </li>
+            <li>
+              <strong class="text-ink">Curates</strong> — ships a hand-picked
+              newsletter list that updates automatically in the background
+            </li>
+            <li>
+              <strong class="text-ink">Warms up</strong> — optionally builds a
+              natural-looking cookie profile before signups run
+            </li>
+            <li>
+              <strong class="text-ink">Records</strong> — tracks the result of
+              each signup so you can see what happened
+            </li>
+          </ul>
+        </section>
+
+        <section class="legal-card">
+          <h2 class="legal-h2">3. Your responsibilities</h2>
+          <p class="legal-p">You agree to:</p>
+          <ul class="legal-ul">
+            <li>Use only email addresses you own or are authorized to use</li>
+            <li>Use the Service only for lawful purposes</li>
+            <li>Not use the Service to harass, spam, or deceive others</li>
+            <li>Respect the terms of the newsletters you subscribe to</li>
+            <li>Comply with all applicable laws and regulations</li>
+          </ul>
+        </section>
+
+        <section class="legal-card">
+          <h2 class="legal-h2">4. Free and open source</h2>
+          <p class="legal-p">
+            Mail Warmer is free to use, with no paid tiers, subscriptions, or
+            in-app purchases. The source code is publicly available on
+            <a href={repo} class="legal-link" rel="noopener">GitHub</a> under
+            its stated open-source license, which governs how you may use,
+            modify, and distribute it.
+          </p>
+        </section>
+
+        <section class="legal-card">
+          <h2 class="legal-h2">5. No warranty</h2>
+          <p class="legal-p">
+            The Service is provided "as is", without warranties of any kind.
+            Newsletter signup pages change often, so signups are not guaranteed
+            to succeed every time. We are not liable for any damages arising
+            from the use of, or inability to use, the Service.
+          </p>
+        </section>
+
+        <section class="legal-card">
+          <h2 class="legal-h2">6. Changes to the Service</h2>
+          <p class="legal-p">
+            We may update, change, or discontinue the Service or these Terms at
+            any time. Significant changes to these Terms will be posted on this
+            page. Continued use after a change means you accept the updated
+            Terms.
+          </p>
+        </section>
+
+        <section class="legal-card">
+          <h2 class="legal-h2">7. Contact</h2>
+          <p class="legal-p">
+            Questions about these Terms? Please
+            <a href={`${repo}/issues/new`} class="legal-link" rel="noopener">
+              open an issue on GitHub</a
+            >.
+          </p>
+        </section>
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href="/" class="legal-link text-stone-500">← Back to home</a>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style is:global>
+  .legal-accent {
+    color: var(--color-blue);
+  }
+  .legal-card {
+    border: 1px solid rgba(224, 227, 231, 0.8);
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 1rem;
+    padding: 1.5rem 1.6rem;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+  }
+  .legal-h2 {
+    color: var(--color-ink);
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+  }
+  .legal-p {
+    color: var(--color-muted);
+    line-height: 1.7;
+  }
+  .legal-ul {
+    margin-top: 0.75rem;
+    padding-left: 1.2rem;
+    list-style: disc;
+    color: var(--color-muted);
+    line-height: 1.7;
+  }
+  .legal-ul > li + li {
+    margin-top: 0.4rem;
+  }
+  .legal-link {
+    color: var(--color-blue);
+    background-image: linear-gradient(to right, var(--color-blue), #4285f4);
+    background-repeat: no-repeat;
+    background-size: 0% 1.5px;
+    background-position: 0 100%;
+    transition:
+      color 300ms ease,
+      background-size 350ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .legal-link:hover,
+  .legal-link:focus-visible {
+    background-size: 100% 1.5px;
+    outline: none;
+  }
+</style>
