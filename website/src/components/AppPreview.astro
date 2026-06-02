@@ -1,19 +1,20 @@
 ---
-import { Lock, Mail, Search, RefreshCw, Play } from "@lucide/astro";
+import { Lock, Mail, Search, Play } from "@lucide/astro";
 
 /* ─── What this html-gif shows ──────────────────────────────────────────────
  *
- * A macOS-Chrome window docked next to the real Mail Warmer sidepanel (Gmail
- * blue). A 12-second synchronized loop runs the core "auto-subscribe" flow:
+ * A macOS-Chrome window with a Gmail inbox docked next to the real Mail Warmer
+ * sidepanel (Gmail blue). A 12-second synchronized loop mirrors real life: as
+ * the sidepanel subscribes to each newsletter, a "Confirm your subscription"
+ * email lands at the top of the inbox.
  *
- *   t=0.0s  Idle. Three newsletter rows, all "pending" pills. Badge 0.
+ *   t=0.0s  Idle. Inbox holds one old "welcome" mail. Badge 0.
  *   t=1.0s  "Run" (blue compose btn) presses → ripple.
- *   t=1.3s  Page side: a signup form is detected, the email auto-types in.
- *   t=2.6s  Row 1 pending→running→success. Badge ticks to 1.
- *   t=4.3s  Row 2 → success. Badge 2.
- *   t=6.0s  Row 3 → success. Badge 3. "Subscribed" stamp on the form.
- *   t=7.0s  Hold the clean, all-green state.
- *   t=10.5s Reset: pills fade back to pending, badge → 0.
+ *   t=2.9s  Row 1 → success. The Daily Brief confirmation lands. Badge 1.
+ *   t=4.6s  Row 2 → success. Morning Roast confirmation lands. Badge 2.
+ *   t=6.2s  Row 3 → success. Tech in Five confirmation lands. Badge 3.
+ *   t=7.0s  Hold: three unread confirmations stacked, newest on top.
+ *   t=10.8s Reset: confirmations fade out, badge → 0.
  *   t=12.0s Loop.
  *
  * Pure CSS keyframes, zero JS. Respects prefers-reduced-motion (frozen at the
@@ -39,15 +40,15 @@ import { Lock, Mail, Search, RefreshCw, Play } from "@lucide/astro";
       How it works
     </span>
     <h2 class="reveal mt-3 text-3xl font-medium tracking-tight md:text-5xl">
-      A sidepanel that does the
+      Watch the confirmations
       <span
         class="accent-word text-[1.1em] leading-none"
-      >signing-up</span>
-      for you.
+      >land</span>.
     </h2>
     <p class="reveal text-muted mx-auto mt-5 max-w-xl text-base md:text-lg">
-      Pick your emails and newsletters, hit Run, and watch each signup form get
-      detected, filled, and submitted — live, one at a time.
+      Pick your emails and newsletters, hit Run, and each subscription drops a
+      real confirmation into the inbox — live, one at a time, just like a person
+      signing up by hand.
     </p>
   </div>
 
@@ -80,7 +81,7 @@ import { Lock, Mail, Search, RefreshCw, Play } from "@lucide/astro";
           <div class="ap-tabstrip">
             <div class="ap-tab ap-tab-active">
               <span class="ap-tab-fav" aria-hidden="true"></span>
-              <span class="ap-tab-title">The Daily Brief — Subscribe</span>
+              <span class="ap-tab-title">Inbox — warm.inbox@gmail.com</span>
             </div>
             <span class="ap-tab-plus" aria-hidden="true">+</span>
           </div>
@@ -93,9 +94,9 @@ import { Lock, Mail, Search, RefreshCw, Play } from "@lucide/astro";
           <div class="ap-urlbtn" aria-hidden="true">↻</div>
           <div class="ap-urlpill">
             <Lock size={11} strokeWidth={2.25} class="text-stone-500" />
-            <span>thedailybrief.substack.com/subscribe</span>
+            <span>mail.google.com/mail/u/0/#inbox</span>
           </div>
-          <!-- Extension toolbar icon + counting badge -->
+          <!-- Extension toolbar icon + counting badge (unread confirmations) -->
           <div class="ap-urlright">
             <span class="ap-ext" aria-hidden="true">
               <Mail size={12} color="#5a4a4e" strokeWidth={2.25} />
@@ -109,41 +110,88 @@ import { Lock, Mail, Search, RefreshCw, Play } from "@lucide/astro";
           </div>
         </div>
 
-        <!-- Body: signup page + sidepanel split -->
+        <!-- Body: Gmail inbox + sidepanel split -->
         <div class="ap-body">
-          <!-- ── Faux newsletter signup page ── -->
-          <div class="ap-page">
-            <div class="ap-page-top">
-              <div class="ap-site-mark" aria-hidden="true"></div>
-              <span class="ap-site-name">The Daily Brief</span>
-              <div class="ap-page-search">
+          <!-- ── Gmail inbox ── -->
+          <div class="ap-inbox">
+            <div class="ap-gm-top">
+              <span class="ap-gm-logo" aria-hidden="true">
+                <Mail size={14} color="#ea4335" strokeWidth={2.25} />
+              </span>
+              <span class="ap-gm-title">Inbox</span>
+              <div class="ap-gm-search">
                 <Search size={11} class="text-stone-500" strokeWidth={2} />
+                <span>Search mail</span>
               </div>
+              <span class="ap-gm-avatar" aria-hidden="true">W</span>
             </div>
 
-            <div class="ap-page-body">
-              <div class="ap-page-eyebrow">Newsletter</div>
-              <div class="ap-page-h">Get the brief every morning.</div>
-              <div class="ap-page-sub">
-                <span class="ap-bar" style="width:90%"></span>
-                <span class="ap-bar" style="width:70%"></span>
-              </div>
+            <div class="ap-gm-subbar">
+              <span class="ap-gm-tab ap-gm-tab-active">Primary</span>
+              <span class="ap-gm-tab">Promotions</span>
+              <span class="ap-gm-tab">Social</span>
+            </div>
 
-              <!-- The signup form Mail Warmer detects + fills -->
-              <div class="ap-form">
-                <div class="ap-form-label">Email address</div>
-                <div class="ap-field">
-                  <Mail size={12} class="text-stone-500" strokeWidth={2} />
-                  <span class="ap-typed-text">warm.inbox@gmail.com</span>
+            <!-- Newest on top: confirmations land above the old welcome mail. -->
+            <ul class="ap-mails">
+              <li class="ap-mail ap-mail-3">
+                <span class="ap-mail-dot" aria-hidden="true"></span>
+                <span class="ap-mail-fav" style="background:#00a3a3"></span>
+                <div class="ap-mail-text">
+                  <div class="ap-mail-line1">
+                    <span class="ap-mail-from">Tech in Five</span>
+                    <span class="ap-mail-time">now</span>
+                  </div>
+                  <div class="ap-mail-subj">Confirm your subscription</div>
+                  <div class="ap-mail-snip">
+                    One tap to start getting Tech in Five each week.
+                  </div>
                 </div>
-                <div class="ap-submit">Subscribe</div>
-              </div>
+              </li>
+              <li class="ap-mail ap-mail-2">
+                <span class="ap-mail-dot" aria-hidden="true"></span>
+                <span class="ap-mail-fav" style="background:#6d4aff"></span>
+                <div class="ap-mail-text">
+                  <div class="ap-mail-line1">
+                    <span class="ap-mail-from">Morning Roast</span>
+                    <span class="ap-mail-time">now</span>
+                  </div>
+                  <div class="ap-mail-subj">Confirm your subscription</div>
+                  <div class="ap-mail-snip">
+                    Please confirm your email to get the daily Roast.
+                  </div>
+                </div>
+              </li>
+              <li class="ap-mail ap-mail-1">
+                <span class="ap-mail-dot" aria-hidden="true"></span>
+                <span class="ap-mail-fav" style="background:#ff6719"></span>
+                <div class="ap-mail-text">
+                  <div class="ap-mail-line1">
+                    <span class="ap-mail-from">The Daily Brief</span>
+                    <span class="ap-mail-time">now</span>
+                  </div>
+                  <div class="ap-mail-subj">Confirm your subscription</div>
+                  <div class="ap-mail-snip">
+                    Tap to confirm and get the brief every morning.
+                  </div>
+                </div>
+              </li>
 
-              <!-- Success stamp that flashes after each submit -->
-              <div class="ap-stamp" aria-hidden="true">
-                <span class="ap-stamp-check">✓</span> Subscribed
-              </div>
-            </div>
+              <!-- Baseline: an old, read welcome mail — always present. -->
+              <li class="ap-mail ap-mail-base">
+                <span class="ap-mail-fav" style="background:#1a73e8"></span>
+                <div class="ap-mail-text">
+                  <div class="ap-mail-line1">
+                    <span class="ap-mail-from ap-read">Gmail Team</span>
+                    <span class="ap-mail-time ap-read">9:01</span>
+                  </div>
+                  <div class="ap-mail-subj ap-read">Welcome to your new inbox</div>
+                  <div class="ap-mail-snip">
+                    Tips for getting the most out of Gmail.
+                  </div>
+                </div>
+              </li>
+            </ul>
           </div>
 
           <!-- ── Mail Warmer sidepanel (Gmail blue) ── -->
@@ -272,7 +320,7 @@ import { Lock, Mail, Search, RefreshCw, Play } from "@lucide/astro";
     align-items: center;
     gap: 6px;
     padding: 5px 10px 6px;
-    max-width: 230px;
+    max-width: 260px;
     font-size: 11px;
     color: #52525b;
     background: rgba(255, 255, 255, 0.4);
@@ -291,7 +339,7 @@ import { Lock, Mail, Search, RefreshCw, Play } from "@lucide/astro";
     width: 10px;
     height: 10px;
     border-radius: 3px;
-    background: #ff6719; /* substack orange */
+    background: #ea4335; /* gmail red */
     flex-shrink: 0;
   }
   .ap-tab-title {
@@ -430,8 +478,8 @@ import { Lock, Mail, Search, RefreshCw, Play } from "@lucide/astro";
     }
   }
 
-  /* ── Signup page ── */
-  .ap-page {
+  /* ── Gmail inbox ── */
+  .ap-inbox {
     display: flex;
     flex-direction: column;
     border-right: 1px solid #e7e5e4;
@@ -439,161 +487,202 @@ import { Lock, Mail, Search, RefreshCw, Play } from "@lucide/astro";
     min-width: 0;
   }
   @media (max-width: 767px) {
-    .ap-page {
+    .ap-inbox {
       border-right: none;
       border-bottom: 1px solid #e7e5e4;
     }
   }
-  .ap-page-top {
+  .ap-gm-top {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     padding: 10px 16px;
     border-bottom: 1px solid #f1f1ef;
   }
-  .ap-site-mark {
-    width: 18px;
-    height: 18px;
-    border-radius: 5px;
-    background: #ff6719;
-  }
-  .ap-site-name {
-    font-weight: 600;
-    font-size: 13px;
-    color: #1c1c1c;
-    flex: 1;
-  }
-  .ap-page-search {
+  .ap-gm-logo {
+    display: grid;
+    place-items: center;
     width: 26px;
     height: 26px;
-    border-radius: 9999px;
-    background: #fafaf9;
-    border: 1px solid #e7e5e4;
-    display: grid;
-    place-items: center;
+    border-radius: 7px;
+    background: #fce8e6;
+    flex-shrink: 0;
   }
-  .ap-page-body {
-    padding: 28px 28px 24px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-  .ap-page-eyebrow {
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #80868b;
+  .ap-gm-title {
     font-weight: 600;
-  }
-  .ap-page-h {
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 13px;
     color: #202124;
-    letter-spacing: -0.02em;
   }
-  .ap-page-sub {
+  .ap-gm-search {
+    flex: 1;
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: 6px;
-    width: 70%;
-    margin-bottom: 8px;
-  }
-  .ap-bar {
-    height: 6px;
+    height: 28px;
+    padding: 0 12px;
     border-radius: 9999px;
-    background: #ececec;
-  }
-
-  /* The detected signup form */
-  .ap-form {
-    width: 100%;
-    max-width: 320px;
-    padding: 16px;
-    border: 1px solid #e7e5e4;
-    border-radius: 14px;
-    background: #fafafa;
-    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.08);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    position: relative;
-    /* A blue focus-ring breathes in while Mail Warmer is "working" it. */
-    animation: ap-form-focus 12s ease-in-out infinite;
-  }
-  @keyframes ap-form-focus {
-    0%, 9% { box-shadow: 0 1px 2px rgba(60, 64, 67, 0.08); }
-    13%, 50% {
-      box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.35),
-        0 1px 2px rgba(60, 64, 67, 0.08);
-    }
-    56%, 100% { box-shadow: 0 1px 2px rgba(60, 64, 67, 0.08); }
-  }
-  .ap-form-label {
+    background: #f1f3f4;
     font-size: 11px;
     color: #5f6368;
-    font-weight: 500;
+    min-width: 0;
   }
-  .ap-field {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    height: 38px;
-    padding: 0 12px;
-    border: 1px solid #dadce0;
-    border-radius: 8px;
-    background: #fff;
+  .ap-gm-search span {
     overflow: hidden;
-  }
-  /* Email is pre-filled and always present — no typing/deleting. */
-  .ap-typed-text {
-    font-size: 13px;
-    color: #202124;
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
   }
-  .ap-submit {
-    height: 36px;
-    border-radius: 8px;
-    background: #1a73e8;
-    color: #fff;
-    font-size: 13px;
-    font-weight: 600;
+  .ap-gm-avatar {
     display: grid;
     place-items: center;
-    /* press pulse each time a submit fires */
-    animation: ap-submit-press 12s ease-in-out infinite;
-  }
-  @keyframes ap-submit-press {
-    0%, 20% { transform: scale(1); background: #1a73e8; }
-    22% { transform: scale(0.96); background: #1765cc; }
-    24%, 100% { transform: scale(1); background: #1a73e8; }
-  }
-  .ap-stamp {
-    position: absolute;
-    bottom: 28px;
-    left: 28px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
+    width: 24px;
+    height: 24px;
     border-radius: 9999px;
-    background: #e6f4ea;
-    color: #137333;
-    font-size: 12px;
+    background: #1a73e8;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .ap-gm-subbar {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    padding: 0 16px;
+    border-bottom: 1px solid #f1f1ef;
+  }
+  .ap-gm-tab {
+    padding: 9px 14px;
+    font-size: 11px;
     font-weight: 600;
+    color: #5f6368;
+    border-bottom: 2px solid transparent;
+  }
+  .ap-gm-tab-active {
+    color: #1a73e8;
+    border-bottom-color: #1a73e8;
+  }
+
+  .ap-mails {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .ap-mail {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 11px 16px;
+    border-bottom: 1px solid #f1f1ef;
+    background: #fff;
+    overflow: hidden;
+    min-width: 0;
+  }
+  /* Unread confirmation rows: bold, with a blue dot; collapsed until they
+     "arrive" in sync with the matching sidepanel row turning ✓ done. */
+  .ap-mail-dot {
+    margin-top: 5px;
+    width: 7px;
+    height: 7px;
+    border-radius: 9999px;
+    background: #1a73e8;
+    flex-shrink: 0;
+  }
+  .ap-mail-base .ap-mail-fav {
+    margin-left: 17px; /* align with rows that have a dot */
+  }
+  .ap-mail-fav {
+    margin-top: 1px;
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .ap-mail-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .ap-mail-line1 {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .ap-mail-from {
+    font-size: 12px;
+    font-weight: 700;
+    color: #202124;
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .ap-mail-time {
+    font-size: 10px;
+    font-weight: 600;
+    color: #1a73e8;
+    flex-shrink: 0;
+  }
+  .ap-mail-subj {
+    font-size: 12px;
+    font-weight: 700;
+    color: #202124;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .ap-mail-snip {
+    font-size: 11px;
+    color: #5f6368;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  /* Read (old) mail: lighter weight, muted time. */
+  .ap-mail-from.ap-read,
+  .ap-mail-subj.ap-read {
+    font-weight: 500;
+    color: #5f6368;
+  }
+  .ap-mail-time.ap-read {
+    color: #80868b;
+    font-weight: 500;
+  }
+
+  /* Arrival animations — each confirmation expands + flashes blue when the
+     matching sidepanel row hits ✓ done, then holds, then resets. */
+  .ap-mail-1,
+  .ap-mail-2,
+  .ap-mail-3 {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
     opacity: 0;
-    transform: translateY(6px) scale(0.96);
-    animation: ap-stamp-in 12s ease-in-out infinite;
   }
-  .ap-stamp-check {
-    font-weight: 800;
+  .ap-mail-1 { animation: ap-mailin-1 12s ease-in-out infinite; }
+  .ap-mail-2 { animation: ap-mailin-2 12s ease-in-out infinite; }
+  .ap-mail-3 { animation: ap-mailin-3 12s ease-in-out infinite; }
+
+  @keyframes ap-mailin-1 {
+    0%, 22% { max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; background: #e8f0fe; }
+    26% { max-height: 80px; padding-top: 11px; padding-bottom: 11px; opacity: 1; background: #e8f0fe; }
+    32%, 90% { max-height: 80px; padding-top: 11px; padding-bottom: 11px; opacity: 1; background: #fff; }
+    94%, 100% { max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; background: #e8f0fe; }
   }
-  @keyframes ap-stamp-in {
-    0%, 50% { opacity: 0; transform: translateY(6px) scale(0.96); }
-    54%, 86% { opacity: 1; transform: translateY(0) scale(1); }
-    92%, 100% { opacity: 0; transform: translateY(6px) scale(0.96); }
+  @keyframes ap-mailin-2 {
+    0%, 36% { max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; background: #e8f0fe; }
+    40% { max-height: 80px; padding-top: 11px; padding-bottom: 11px; opacity: 1; background: #e8f0fe; }
+    46%, 90% { max-height: 80px; padding-top: 11px; padding-bottom: 11px; opacity: 1; background: #fff; }
+    94%, 100% { max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; background: #e8f0fe; }
+  }
+  @keyframes ap-mailin-3 {
+    0%, 50% { max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; background: #e8f0fe; }
+    54% { max-height: 80px; padding-top: 11px; padding-bottom: 11px; opacity: 1; background: #e8f0fe; }
+    60%, 90% { max-height: 80px; padding-top: 11px; padding-bottom: 11px; opacity: 1; background: #fff; }
+    94%, 100% { max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; background: #e8f0fe; }
   }
 
   /* ── Sidepanel ── */
@@ -839,13 +928,13 @@ import { Lock, Mail, Search, RefreshCw, Play } from "@lucide/astro";
     text-align: center;
   }
 
-  /* ── Reduced motion: freeze on the resolved (all-warm) state. ── */
+  /* ── Reduced motion: freeze on the resolved (all-confirmed) state. ── */
   @media (prefers-reduced-motion: reduce) {
     .ap-badge,
     .ap-badge-n,
-    .ap-form,
-    .ap-submit,
-    .ap-stamp,
+    .ap-mail-1,
+    .ap-mail-2,
+    .ap-mail-3,
     .ap-compose,
     .ap-compose-idle,
     .ap-compose-running,
@@ -856,7 +945,13 @@ import { Lock, Mail, Search, RefreshCw, Play } from "@lucide/astro";
     .ap-badge { background: #137333 !important; }
     .ap-badge-3 { opacity: 1 !important; }
     .ap-badge-0, .ap-badge-1, .ap-badge-2 { opacity: 0 !important; }
-    .ap-stamp { opacity: 1 !important; transform: none !important; }
+    .ap-mail-1, .ap-mail-2, .ap-mail-3 {
+      max-height: 80px !important;
+      padding-top: 11px !important;
+      padding-bottom: 11px !important;
+      opacity: 1 !important;
+      background: #fff !important;
+    }
     .ap-compose-idle { opacity: 1 !important; }
     .ap-compose-running { opacity: 0 !important; }
     .ap-pill-pending, .ap-pill-running { opacity: 0 !important; }
