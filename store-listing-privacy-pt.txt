@@ -1,0 +1,155 @@
+================================================================================
+MAIL WARMER — Respostas do formulário "Práticas de privacidade" (Chrome Web Store)
+Idioma: Português (pt-BR) · Versão da extensão: 0.6.0
+Cada campo respeita o limite de 1.000 caracteres do formulário.
+================================================================================
+
+
+--------------------------------------------------------------------------------
+DESCRIÇÃO DO ÚNICO PROPÓSITO
+--------------------------------------------------------------------------------
+O Mail Warmer tem um único propósito: manter contas de e-mail ativas e válidas
+inscrevendo os endereços do próprio usuário em uma lista selecionada de
+newsletters reais. Assim, caixas de entrada novas ou paradas continuam
+recebendo mensagens legítimas e os provedores as veem como contas usadas e
+confiáveis, em vez de dormentes. A extensão abre a página de inscrição de cada
+newsletter escolhida e preenche o formulário automaticamente com o e-mail e os
+dados de perfil opcionais que o usuário definiu. Um aquecimento de cookies
+opcional visita alguns sites conhecidos e aceita seus banners de cookies antes
+das inscrições, para que o perfil do navegador pareça natural. Todos os recursos
+servem exclusivamente a esse objetivo. A extensão nunca lê, abre nem envia nada
+da caixa de entrada do usuário.
+
+
+--------------------------------------------------------------------------------
+JUSTIFICATIVA DE storage
+--------------------------------------------------------------------------------
+Usada com chrome.storage.local para guardar, apenas no dispositivo, tudo que o
+usuário configura: os endereços de e-mail e seus rótulos, o perfil opcional
+(nome, localidade e campos semelhantes), a lista de newsletters selecionadas e
+personalizadas, o histórico de inscrições, o registro de atividade e o cache
+local da lista de newsletters. Nenhum desses dados é enviado a servidores. Sem
+essa permissão, as escolhas do usuário se perderiam a cada execução.
+
+
+--------------------------------------------------------------------------------
+JUSTIFICATIVA DE alarms
+--------------------------------------------------------------------------------
+Usada com chrome.alarms para agendar execuções recorrentes de aquecimento em
+segundo plano, de modo que as caixas de entrada continuem recebendo mensagens em
+intervalos regulares sem que o usuário precise abrir a extensão manualmente toda
+vez. O alarme apenas dispara o fluxo de inscrição que o próprio usuário já
+configurou; não coleta nem transmite nenhum dado.
+
+
+--------------------------------------------------------------------------------
+JUSTIFICATIVA DE tabs
+--------------------------------------------------------------------------------
+A extensão abre cada página de inscrição de newsletter — e os sites do
+aquecimento de cookies — em guias de segundo plano (chrome.tabs.create), detecta
+quando a página termina de carregar (chrome.tabs.onUpdated) para então preencher
+o formulário, e fecha a guia ao concluir (chrome.tabs.remove). A permissão é
+necessária para criar, acompanhar e fechar essas guias automatizadas. A extensão
+não lê o histórico de navegação nem o conteúdo de outras guias do usuário.
+
+
+--------------------------------------------------------------------------------
+JUSTIFICATIVA DE scripting
+--------------------------------------------------------------------------------
+Usada com chrome.scripting.executeScript para injetar, somente nas guias que a
+própria extensão abre, scripts empacotados no pacote da extensão: o preenchedor
+que localiza o formulário de inscrição e insere o e-mail e os campos escolhidos
+pelo usuário e, no aquecimento de cookies, o script que aceita o banner de
+cookies do site. Nenhum código remoto é injetado — apenas arquivos incluídos no
+pacote da extensão.
+
+
+--------------------------------------------------------------------------------
+JUSTIFICATIVA DE sidePanel
+--------------------------------------------------------------------------------
+Toda a interface da extensão é um painel lateral (side panel): adicionar
+e-mails, escolher newsletters, definir o perfil opcional, iniciar execuções e
+ver o histórico e o registro de atividade. A permissão sidePanel é necessária
+para abrir e exibir essa interface principal do usuário.
+
+
+--------------------------------------------------------------------------------
+JUSTIFICATIVA DE webNavigation
+--------------------------------------------------------------------------------
+Usada com chrome.webNavigation.getAllFrames para listar os frames da guia de
+inscrição que a extensão abriu e, assim, localizar o formulário de inscrição
+mesmo quando ele está dentro de um iframe incorporado (newsletters costumam
+embutir o formulário). Sem isso, formulários embutidos não seriam encontrados e a
+inscrição falharia. Não é usada para rastrear a navegação do usuário.
+
+
+--------------------------------------------------------------------------------
+JUSTIFICATIVA DE cookies
+--------------------------------------------------------------------------------
+Usada apenas com chrome.cookies.getAll, após o aquecimento de cookies opcional,
+para contar e exibir ao usuário quantos cookies cada site visitado deixou no
+navegador (mostrado na própria extensão). É uma leitura local: os cookies não são
+modificados, exportados nem enviados a lugar nenhum.
+
+
+--------------------------------------------------------------------------------
+JUSTIFICATIVA DE PERMISSÃO DO HOST (https://*/*, http://*/*)
+--------------------------------------------------------------------------------
+As newsletters da lista selecionada — e quaisquer newsletters personalizadas que
+o usuário adicione — ficam hospedadas em domínios arbitrários, assim como os
+sites usados no aquecimento de cookies. A extensão precisa abrir essas páginas e
+injetar o preenchedor de formulário em qualquer domínio para concluir as
+inscrições. Como os domínios não são conhecidos de antemão e mudam conforme a
+lista é atualizada, não é possível restringir a um conjunto fixo de hosts. O
+acesso é usado somente nas guias automatizadas que a extensão cria para inscrição
+e aquecimento; a extensão não coleta o conteúdo das páginas.
+
+
+--------------------------------------------------------------------------------
+VOCÊ ESTÁ USANDO CÓDIGO REMOTO?
+--------------------------------------------------------------------------------
+Resposta: NÃO, não estou usando código remoto.
+
+(Todo o JS é empacotado na extensão; não há tags <script> externas, módulos
+remotos nem eval(). As fontes são hospedadas localmente no pacote. As únicas
+chamadas de rede — quando um servidor está configurado — baixam a lista de
+newsletters em JSON e enviam um resumo anônimo de execução; isso são dados, não
+código executável.)
+[O campo "Justificativa" do código remoto fica desativado quando a resposta é
+"Não" — nada a preencher.]
+
+
+--------------------------------------------------------------------------------
+USO DE DADOS — QUAIS DADOS VOCÊ COLETA
+--------------------------------------------------------------------------------
+Marque: NENHUMA das categorias.
+
+Não marcar: Informações de identificação pessoal · Saúde · Financeiras/pagamento
+· Autenticação · Comunicações pessoais · Local · Histórico da Web ·
+Atividade do usuário · Conteúdo do site.
+
+Motivo: os e-mails, o perfil (nome/localidade), as listas, o histórico e os
+resultados do aquecimento de cookies ficam somente no dispositivo e nunca são
+transmitidos. Quando um servidor está configurado, os únicos dados que saem do
+navegador são: (1) o download somente-leitura da lista de newsletters (nada do
+usuário é enviado) e (2) um tally anônimo pós-execução — contagem de sucessos/
+falhas por newsletter associada a um ID de instalação aleatório, não vinculado ao
+usuário nem a seus e-mails. Esses dados são anônimos e agregados e não se
+enquadram em nenhuma das categorias acima.
+
+
+--------------------------------------------------------------------------------
+DIVULGAÇÕES OBRIGATÓRIAS (marcar as três — todas verdadeiras)
+--------------------------------------------------------------------------------
+[x] Não vendo nem transfiro dados do usuário a terceiros fora dos casos de uso
+    aprovados.
+[x] Não uso nem transfiro dados do usuário para fins não relacionados ao único
+    objetivo do item.
+[x] Não uso nem transfiro dados do usuário para determinar credibilidade ou para
+    fins de empréstimo.
+
+
+--------------------------------------------------------------------------------
+URL DA POLÍTICA DE PRIVACIDADE
+--------------------------------------------------------------------------------
+https://mailwarmer.app/privacy

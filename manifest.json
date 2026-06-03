@@ -10,7 +10,6 @@
     "tabs",
     "scripting",
     "sidePanel",
-    "activeTab",
     "webNavigation",
     "cookies"
   ],
