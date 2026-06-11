@@ -3,8 +3,9 @@
  * ChromeButton — primary "Add to browser" CTA.
  *
  * Blue gradient (Gmail accent), soft outer glow that grows on hover, a
- * diagonal shine sweep, and browser icons (Chrome/Edge/Brave) with a tiny
- * tilt. The product has exactly one CTA and it lives everywhere.
+ * diagonal shine sweep, a scale-up on hover, and browser icons
+ * (Chrome/Edge/Brave) that each spin a full turn with a staggered delay.
+ * The product has exactly one CTA and it lives everywhere.
  */
 
 interface Props {
@@ -43,7 +44,7 @@ const iconSize = size === "small" ? "h-5 w-5" : "h-7 w-7";
   <!-- Diagonal shimmer sweep: animated on hover -->
   <span class="chrome-shine" aria-hidden="true"></span>
 
-  <!-- Browser icons: gentle tilt -->
+  <!-- Browser icons: staggered full spin on hover -->
   <span
     class="chrome-icons relative z-10 flex items-center -space-x-1.5"
     aria-hidden="true"
@@ -104,7 +105,7 @@ const iconSize = size === "small" ? "h-5 w-5" : "h-7 w-7";
     isolation: isolate;
   }
   .chrome-button:hover {
-    transform: translateY(-1px);
+    transform: scale(1.05);
     box-shadow:
       0 10px 22px -8px
         color-mix(in srgb, var(--color-accent-from, #1a73e8) 40%, transparent),
@@ -113,7 +114,7 @@ const iconSize = size === "small" ? "h-5 w-5" : "h-7 w-7";
       inset 0 1px 0 rgba(255, 255, 255, 0.28);
   }
   .chrome-button:active {
-    transform: translateY(0);
+    transform: scale(1.02);
   }
 
   .chrome-glass {
@@ -163,7 +164,7 @@ const iconSize = size === "small" ? "h-5 w-5" : "h-7 w-7";
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.18));
   }
   .chrome-button:hover .chrome-icon {
-    transform: rotate(-8deg);
+    transform: rotate(360deg);
   }
 
   @media (prefers-reduced-motion: reduce) {

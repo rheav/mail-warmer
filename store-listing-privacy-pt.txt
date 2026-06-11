@@ -8,7 +8,7 @@ Cada campo respeita o limite de 1.000 caracteres do formulário.
 --------------------------------------------------------------------------------
 DESCRIÇÃO DO ÚNICO PROPÓSITO
 --------------------------------------------------------------------------------
-O Mail Warmer tem um único propósito: manter contas de e-mail ativas e válidas
+O mailWarmer tem um único propósito: manter contas de e-mail ativas e válidas
 inscrevendo os endereços do próprio usuário em uma lista selecionada de
 newsletters reais. Assim, caixas de entrada novas ou paradas continuam
 recebendo mensagens legítimas e os provedores as veem como contas usadas e

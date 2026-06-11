@@ -1,7 +1,7 @@
 {
   "name": "mail-warmer-server",
   "version": "1.0.0",
-  "description": "Serves the curated newsletter list to the Mail Warmer extension.",
+  "description": "Serves the curated newsletter list to the mailWarmer extension.",
   "type": "module",
   "main": "server.js",
   "scripts": {

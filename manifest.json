@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Mail Warmer",
-  "version": "0.6.0",
-  "version_name": "0.6.0 — Toolbar badges & status fix",
+  "name": "mailWarmer",
+  "version": "0.6.1",
+  "version_name": "0.6.1 — Rebrand display name to mailWarmer",
   "description": "Auto-subscribe configured emails to curated newsletters so inboxes stay active.",
   "permissions": [
     "storage",
@@ -24,7 +24,7 @@
     "128": "public/logo.png"
   },
   "action": {
-    "default_title": "Open Mail Warmer",
+    "default_title": "Open mailWarmer",
     "default_icon": {
       "16": "public/logo.png",
       "32": "public/logo.png",

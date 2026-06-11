@@ -1,6 +1,6 @@
-# Mail Warmer — landing page
+# mailWarmer — landing page
 
-Astro + Tailwind v4 marketing site for the Mail Warmer extension.
+Astro + Tailwind v4 marketing site for the mailWarmer extension.
 
 ```bash
 npm install
@@ -14,7 +14,7 @@ npm run preview  # serve the built site
 - **`design.md`** — the design system: palette, type, atmosphere, and specs for
   every "html gif" demo loop. Read this first.
 - **`src/components/AppPreview.astro`** — the big pure-CSS auto-subscribe demo
-  (Chrome window + Mail Warmer sidepanel, 12s synchronized loop).
+  (Chrome window + mailWarmer sidepanel, 12s synchronized loop).
 - **`src/components/FeatureDemos.astro`** — three smaller CSS demo cards: cookie
   warm-up, inboxes-staying-warm, status grid.
 - Everything is zero-JS animation (CSS keyframes) and respects

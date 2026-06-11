@@ -1,4 +1,4 @@
-# Mail Warmer — Newsletter API
+# mailWarmer — Newsletter API
 
 Tiny Express server that hosts the curated newsletter list so the extension
 can be updated without shipping a new build (which needs Google review).

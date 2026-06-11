@@ -1,7 +1,7 @@
 @import "@fontsource-variable/outfit";
 @import "tailwindcss";
 
-/* ─── Mail Warmer palette — Gmail-blue primary, warm-peach accents ───────
+/* ─── mailWarmer palette — Gmail-blue primary, warm-peach accents ───────
    Blue carries action + trust (matches the in-product sidepanel). Peach is
    reserved for warmth moments: logo, "inbox warming" demo, cursive accent,
    ambient steam. */
@@ -175,7 +175,7 @@ p {
 }
 
 /* ─── Rising warmth — ambient steam wisps drifting up the viewport ───────
- * Mail Warmer's analog to youZen's floating leaves: warm-tinted wisps that
+ * mailWarmer's analog to youZen's floating leaves: warm-tinted wisps that
  * rise slowly with gentle sway, echoing the logo's heat waves. */
 @keyframes steam-rise {
   0% {

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Mail Warmer.
+All notable changes to mailWarmer.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [SemVer](https://semver.org/): `MAJOR.MINOR.PATCH`.
@@ -12,6 +12,15 @@ Versions follow [SemVer](https://semver.org/): `MAJOR.MINOR.PATCH`.
 Bump `version` in `manifest.json` (and `version_name`) on every release.
 
 ---
+
+## [0.6.1] — 2026-06-11
+
+### Changed
+- Rebranded the display name from "Mail Warmer" to **mailWarmer** (camelCase,
+  matching socialWarmer) across the extension (manifest, sidepanel), website,
+  server, and store listings. Slugs and package names stay `mail-warmer`.
+- Website CTA button now scales up on hover while the browser icons each spin
+  a full turn with a staggered delay (matching the unFunnelizer CTA).
 
 ## [0.6.0] — 2026-06-01
 

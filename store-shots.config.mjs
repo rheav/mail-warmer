@@ -1,5 +1,5 @@
 /**
- * Chrome Web Store asset config for Mail Warmer.
+ * Chrome Web Store asset config for mailWarmer.
  *
  * Captures the REAL extension sidepanel (loaded unpacked in Playwright),
  * seeded to a finished-run state, across the Run / Cookies / Log tabs. Each
@@ -39,7 +39,7 @@ const seed = {
 
 export default {
   brand: {
-    name: "Mail Warmer",
+    name: "mailWarmer",
     // Gentle single-hue blue gradient (ray.so style): light sky → periwinkle.
     bg: "linear-gradient(125deg,#aecbf5 0%,#88abee 48%,#7791e2 100%)",
     accent: "#1a73e8",

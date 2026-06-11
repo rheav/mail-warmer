@@ -15,7 +15,7 @@ import {
 } from "@lucide/astro";
 
 /**
- * /docs — plain-language reference for every Mail Warmer tab and setting.
+ * /docs — plain-language reference for every mailWarmer tab and setting.
  *
  * Layout mirrors the youZen docs page:
  *   - Sticky left sidebar (desktop) with section links + scroll-spy.
@@ -51,14 +51,14 @@ const sections = [
         id: "warm-up",
         title: "Cookie warm-up",
         summary:
-          "Pick the sites you want, hit start, and Mail Warmer does the rest in the background.",
+          "Pick the sites you want, hit start, and mailWarmer does the rest in the background.",
         features: [
           {
             id: "visit",
             label: "Visit & accept",
             kind: "Auto",
             default: "On selected sites",
-            body: "For each site you pick, Mail Warmer opens it in a background tab, accepts the cookie banner, and closes the tab. It recognizes the common consent pop-ups automatically, so you do not have to click anything.",
+            body: "For each site you pick, mailWarmer opens it in a background tab, accepts the cookie banner, and closes the tab. It recognizes the common consent pop-ups automatically, so you do not have to click anything.",
           },
           {
             id: "capture",
@@ -83,7 +83,7 @@ const sections = [
     tab: "Run",
     icon: Play,
     intro:
-      "The main event. This is where Mail Warmer subscribes your chosen email to the newsletters you picked.",
+      "The main event. This is where mailWarmer subscribes your chosen email to the newsletters you picked.",
     groups: [
       {
         id: "how-run-works",
@@ -96,7 +96,7 @@ const sections = [
             label: "Automatic signup",
             kind: "Auto",
             default: "On",
-            body: "Mail Warmer opens each newsletter's signup page in a tab, finds the form, fills in your email (plus any profile details the form asks for), and submits it.",
+            body: "mailWarmer opens each newsletter's signup page in a tab, finds the form, fills in your email (plus any profile details the form asks for), and submits it.",
           },
           {
             id: "pacing",
@@ -164,7 +164,7 @@ const sections = [
             label: "Auto-filled on install",
             kind: "Auto",
             default: "On first install",
-            body: "Mail Warmer seeds a realistic profile (name, location, phone, company, and more) the first time you install it, so signups work out of the box. You can edit any field.",
+            body: "mailWarmer seeds a realistic profile (name, location, phone, company, and more) the first time you install it, so signups work out of the box. You can edit any field.",
           },
           {
             id: "edit-profile",
@@ -182,7 +182,7 @@ const sections = [
     tab: "Lists",
     icon: List,
     intro:
-      "The newsletters Mail Warmer can subscribe you to. It ships with a curated list and lets you add your own.",
+      "The newsletters mailWarmer can subscribe you to. It ships with a curated list and lets you add your own.",
     groups: [
       {
         id: "the-list",
@@ -202,7 +202,7 @@ const sections = [
             label: "Always works",
             kind: "Auto",
             default: "On",
-            body: "If the update can't be reached for any reason, Mail Warmer simply keeps using the list it already has, so signups never stop working.",
+            body: "If the update can't be reached for any reason, mailWarmer simply keeps using the list it already has, so signups never stop working.",
           },
           {
             id: "custom",
@@ -220,7 +220,7 @@ const sections = [
     tab: "Log",
     icon: ScrollText,
     intro:
-      "A running record of everything Mail Warmer does, so you can always see what happened.",
+      "A running record of everything mailWarmer does, so you can always see what happened.",
     groups: [
       {
         id: "history",
@@ -259,8 +259,8 @@ const kindBadge = (kind: string) => {
 ---
 
 <Layout
-  title="Docs — Mail Warmer"
-  description="Every tab and setting in Mail Warmer, in plain language. Free, open source, no account — your emails and profile never leave your browser."
+  title="Docs — mailWarmer"
+  description="Every tab and setting in mailWarmer, in plain language. Free, open source, no account — your emails and profile never leave your browser."
 >
   <Navbar />
 
@@ -313,7 +313,7 @@ const kindBadge = (kind: string) => {
         <!-- Hero -->
         <header class="reveal mb-12">
           <h1 class="text-ink text-4xl font-medium tracking-tight md:text-5xl">
-            Mail Warmer <span class="docs-accent">Docs</span>
+            mailWarmer <span class="docs-accent">Docs</span>
           </h1>
           <p class="mt-4 max-w-2xl text-lg leading-relaxed text-stone-600">
             One side panel and a handful of tabs. Here's what each one does and
@@ -342,7 +342,7 @@ const kindBadge = (kind: string) => {
           </header>
 
           <p class="mb-5 max-w-2xl text-stone-600">
-            Mail Warmer is a Chrome extension that keeps your inboxes active.
+            mailWarmer is a Chrome extension that keeps your inboxes active.
             Install it, add your emails, and run — there's nothing to set up
             and nothing to pay for.
           </p>
@@ -351,7 +351,7 @@ const kindBadge = (kind: string) => {
             <div class="docs-card">
               <h3 class="docs-card-title">Get going</h3>
               <ol class="docs-list docs-list-ol">
-                <li>Add Mail Warmer from the Chrome Web Store.</li>
+                <li>Add mailWarmer from the Chrome Web Store.</li>
                 <li>Pin it to your toolbar so the icon stays visible.</li>
                 <li>Click the icon to open the side panel.</li>
                 <li>Add an email, pick newsletters, and hit Run.</li>
@@ -472,7 +472,7 @@ const kindBadge = (kind: string) => {
           <div class="docs-card">
             <h3 class="docs-card-title">Your emails never leave your browser.</h3>
             <p class="mt-2 text-stone-600">
-              Mail Warmer never reads, opens, or sends from your inbox. Your
+              mailWarmer never reads, opens, or sends from your inbox. Your
               email addresses and profile details stay on your device — they
               are only ever typed into newsletter signup forms, exactly like
               you'd do by hand.

@@ -1,8 +1,8 @@
-# Mail Warmer — Landing Page Design System
+# mailWarmer — Landing Page Design System
 
-Design language for the Mail Warmer marketing site. Adapted from the youZen
+Design language for the mailWarmer marketing site. Adapted from the youZen
 Astro landing (soft analog atmosphere, pure-CSS "html gif" feature loops),
-re-skinned to Mail Warmer's **Gmail-blue** brand with **warm-peach** accents
+re-skinned to mailWarmer's **Gmail-blue** brand with **warm-peach** accents
 pulled from the logo.
 
 > **Core idea inherited from youZen:** nothing on this page is a video. Every
@@ -118,7 +118,7 @@ loop in the clean/resolved state. Staggered start so they never beat in unison.
 
 ### 4A. AppPreview — auto-subscribe (★ the hero demo)
 
-A macOS-Chrome window docked next to the **Mail Warmer sidepanel** (rebuild the
+A macOS-Chrome window docked next to the **mailWarmer sidepanel** (rebuild the
 real sidepanel: blue compose button, nav rail, newsletter checklist with status
 pills). 12s synchronized loop:
 

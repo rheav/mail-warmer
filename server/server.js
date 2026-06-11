@@ -257,5 +257,5 @@ app.put('/api/newsletters', (req, res) => {
 app.use(express.static(PUBLIC_DIR));
 
 app.listen(PORT, () => {
-  console.log(`Mail Warmer server listening on :${PORT}`);
+  console.log(`mailWarmer server listening on :${PORT}`);
 });

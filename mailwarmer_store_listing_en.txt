@@ -1,6 +1,6 @@
-Mail Warmer - Keep Every Inbox Warm & Active
+mailWarmer - Keep Every Inbox Warm & Active
 
-Mail Warmer is a free Chrome extension that keeps your email accounts alive
+mailWarmer is a free Chrome extension that keeps your email accounts alive
 and valid. It signs your addresses up to a curated list of real newsletters,
 so fresh or quiet inboxes keep receiving real mail and read as active,
 trusted accounts.
@@ -44,7 +44,7 @@ signups, side projects, or backup inboxes that go cold.
 ✅ SIMPLE TO USE:
   1. Add your email addresses.
   2. Pick the newsletters you want (or use the full curated list).
-  3. Hit Run — Mail Warmer does the rest.
+  3. Hit Run — mailWarmer does the rest.
 
 No account. No setup. No cost.
 

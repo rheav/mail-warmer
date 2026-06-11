@@ -1,4 +1,4 @@
-# Mail Warmer
+# mailWarmer
 
 Chrome extension (Manifest V3) that auto-subscribes a set of email addresses
 to curated newsletters, so those inboxes keep receiving mail and stay active.
@@ -121,7 +121,7 @@ H
 The first sidepanel tab builds a normal-looking cookie profile in the browser
 before any signups run — a fresh profile with no cookies looks unusual.
 
-For each selected site Mail Warmer:
+For each selected site mailWarmer:
 
 1. opens it in a background tab,
 2. does a quick scroll + a benign click to nudge lazy consent banners,
