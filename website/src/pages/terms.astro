@@ -9,8 +9,9 @@ import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 
-const lastUpdated = "Last updated: June 2, 2026";
-const repo = "https://github.com/rheav/mail-warmer";
+import { repoUrl as repo } from "../data/site";
+
+const lastUpdated = "Last updated: October 26, 2026";
 ---
 
 <Layout
@@ -50,7 +51,7 @@ const repo = "https://github.com/rheav/mail-warmer";
             </li>
             <li>
               <strong class="text-ink">Curates</strong> — ships a hand-picked
-              newsletter list that updates automatically in the background
+              newsletter list that ships with the extension and updates with it
             </li>
             <li>
               <strong class="text-ink">Warms up</strong> — optionally builds a

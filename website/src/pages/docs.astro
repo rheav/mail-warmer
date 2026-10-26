@@ -13,6 +13,8 @@ import {
   ScrollText,
   Lock,
 } from "@lucide/astro";
+import { repoUrl } from "../data/site";
+import { changelog } from "../data/changelog";
 
 /**
  * /docs — plain-language reference for every mailWarmer tab and setting.
@@ -188,21 +190,14 @@ const sections = [
         id: "the-list",
         title: "The newsletter list",
         summary:
-          "A ready-made list that keeps itself up to date, plus anything you add.",
+          "A ready-made list that comes with the extension, plus anything you add.",
         features: [
           {
             id: "curated",
             label: "Curated list",
             kind: "Auto",
             default: "Built in",
-            body: "A hand-picked list of quality newsletters comes with the extension and refreshes on its own in the background — roughly once a day, or instantly when you restart your browser. There is no account and no server for you to run.",
-          },
-          {
-            id: "offline",
-            label: "Always works",
-            kind: "Auto",
-            default: "On",
-            body: "If the update can't be reached for any reason, mailWarmer simply keeps using the list it already has, so signups never stop working.",
+            body: "A hand-picked list of quality newsletters comes with the extension and is updated with each new version of it. There is no account, and mailWarmer connects to no server.",
           },
           {
             id: "custom",
@@ -344,7 +339,8 @@ const kindBadge = (kind: string) => {
           <p class="mb-5 max-w-2xl text-stone-600">
             mailWarmer is a Chrome extension that keeps your inboxes active.
             Install it, add your emails, and run — there's nothing to set up
-            and nothing to pay for.
+            and nothing to pay for. It follows your browser's language:
+            English or Português (Brasil).
           </p>
 
           <div class="grid gap-4 md:grid-cols-2">
@@ -478,12 +474,10 @@ const kindBadge = (kind: string) => {
               you'd do by hand.
             </p>
             <p class="mt-3 text-stone-600">
-              Two small things do touch the network, and neither involves your
-              personal data: the extension downloads the curated newsletter
-              list (a read-only fetch), and after each run it sends an
-              anonymous tally — how many signups succeeded or failed per
-              newsletter, tied to a random ID with no link to you. No emails,
-              names, or profile fields are ever sent.
+              mailWarmer has no server and sends nothing to anyone: no usage
+              statistics, no tracking, no installation ID. The newsletter list
+              ships inside the extension. The only requests it makes are the
+              signups and cookie warm-up visits you start yourself.
             </p>
             <p class="mt-3 text-stone-600">
               Everything else lives in <code class="docs-code">chrome.storage.local</code>,
@@ -513,50 +507,22 @@ const kindBadge = (kind: string) => {
           </header>
 
           <div class="space-y-3">
-            <div class="docs-card">
-              <h3 class="docs-card-title">0.6.0 — Toolbar badges</h3>
-              <p class="mt-2 text-stone-600">
-                The toolbar icon now shows live progress: an orange running
-                count during a run, then a green success count (or red on
-                error). Cookie warm-up ends with a green badge of sites
-                accepted. Full names show on hover, and status labels no
-                longer get cut off in a narrow side panel.
-              </p>
-            </div>
-            <div class="docs-card">
-              <h3 class="docs-card-title">0.5.0 — Cookie capture</h3>
-              <p class="mt-2 text-stone-600">
-                Cookie warm-up now shows the cookies each visit leaves behind,
-                with a per-site count you can expand and a total summary at
-                the end. Recognizes more cookie banners and waits longer on
-                slow sites.
-              </p>
-            </div>
-            <div class="docs-card">
-              <h3 class="docs-card-title">0.4.0 — Cookies tab</h3>
-              <p class="mt-2 text-stone-600">
-                Added the optional Cookies tab — a one-click warm-up that
-                builds a natural-looking browser profile before signups run,
-                with live progress and a summary.
-              </p>
-            </div>
-            <div class="docs-card">
-              <h3 class="docs-card-title">0.3.0 — New side panel</h3>
-              <p class="mt-2 text-stone-600">
-                A clean Gmail-style side panel with Run, Emails, Profile,
-                Lists, and Log tabs. Optional profile to fill the extra fields
-                some newsletters ask for, smarter form detection, and support
-                for newsletters on custom web addresses.
-              </p>
-              <p class="mt-3 text-xs text-stone-500">
-                Found something missing or wrong?
-                <a
-                  href="https://github.com/rheav/mail-warmer/issues/new"
-                  class="docs-link"
-                  rel="noopener">Open an issue.</a
-                >
-              </p>
-            </div>
+            {
+              changelog.map((c) => (
+                <div class="docs-card">
+                  <h3 class="docs-card-title">
+                    {c.version} — {c.title}
+                  </h3>
+                  <p class="mt-2 text-stone-600">{c.body}</p>
+                </div>
+              ))
+            }
+            <p class="text-xs text-stone-500">
+              Found something missing or wrong?
+              <a href={`${repoUrl}/issues/new`} class="docs-link" rel="noopener"
+                >Open an issue.</a
+              >
+            </p>
           </div>
         </section>
       </article>

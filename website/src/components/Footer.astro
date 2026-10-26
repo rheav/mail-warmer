@@ -1,5 +1,6 @@
 ---
 import LogoMark from "./LogoMark.astro";
+import { repoUrl } from "../data/site";
 const year = new Date().getFullYear();
 ---
 
@@ -23,7 +24,7 @@ const year = new Date().getFullYear();
       <a href="/privacy" class="footer-link">Privacy</a>
       <a href="/terms" class="footer-link">Terms</a>
       <a
-        href="https://github.com/rheav/mail-warmer"
+        href={repoUrl}
         class="footer-link"
         rel="noopener">Source</a
       >

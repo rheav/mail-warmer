@@ -1,5 +1,6 @@
 ---
 import { Lock, Mail, Search, Play } from "@lucide/astro";
+import { extensionVersion } from "../data/site";
 
 /* ─── What this html-gif shows ──────────────────────────────────────────────
  *
@@ -199,7 +200,7 @@ import { Lock, Mail, Search, Play } from "@lucide/astro";
             <div class="ap-sp-top">
               <span class="ap-sp-logo" aria-hidden="true"></span>
               <span class="ap-sp-brand">mailWarmer</span>
-              <span class="ap-sp-ver">0.6.0</span>
+              <span class="ap-sp-ver">{extensionVersion}</span>
             </div>
 
             <button class="ap-compose" type="button">

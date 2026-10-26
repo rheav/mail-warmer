@@ -3,16 +3,17 @@
  * Privacy Policy — mailWarmer.
  *
  * Structure mirrors the unFunnelizer privacy page, rewritten for mailWarmer:
- * a free, open-source extension with no account and no payments. The only
- * data that touches the network is the read-only newsletter-list fetch and an
- * anonymous run tally (installId + per-newsletter success/failure counts).
+ * a free, open-source extension with no account, no payments and no server.
+ * Keep it in step with scripts/preflight.mjs, which fails the build if the
+ * extension gains any network call of its own.
  */
 import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 
-const lastUpdated = "Last updated: June 2, 2026";
-const repo = "https://github.com/rheav/mail-warmer";
+import { repoUrl as repo } from "../data/site";
+
+const lastUpdated = "Last updated: October 26, 2026";
 ---
 
 <Layout
@@ -59,24 +60,19 @@ const repo = "https://github.com/rheav/mail-warmer";
         </section>
 
         <section class="legal-card">
-          <h2 class="legal-h2">3. The only things that touch the network</h2>
+          <h2 class="legal-h2">3. No server, no statistics</h2>
           <p class="legal-p">
-            Two small, anonymous exchanges happen — and neither involves your
-            personal data:
+            mailWarmer has no server. The extension never contacts us or any
+            analytics service: no usage statistics, no installation ID, no
+            tracking. The curated newsletter list ships inside the extension
+            and only changes when the extension itself updates through the
+            Chrome Web Store.
           </p>
-          <ul class="legal-ul">
-            <li>
-              <strong class="text-ink">Newsletter list</strong> — the extension
-              downloads the curated newsletter list so it stays up to date.
-              This is a read-only request; nothing about you is sent.
-            </li>
-            <li>
-              <strong class="text-ink">Anonymous run tally</strong> — after a
-              run, the extension sends a count of how many signups succeeded or
-              failed per newsletter, tied to a random installation ID. This ID
-              is not linked to you or your emails in any way.
-            </li>
-          </ul>
+          <p class="legal-p mt-3">
+            The only requests it makes are the ones you start: the newsletter
+            signups you run (sent to each newsletter's own website) and, if
+            you use it, the cookie warm-up visits.
+          </p>
         </section>
 
         <section class="legal-card">
@@ -87,23 +83,14 @@ const repo = "https://github.com/rheav/mail-warmer";
             <li>Your profile details (name, address, phone, etc.)</li>
             <li>Your browsing history or the pages you visit</li>
             <li>Keystrokes, screenshots, or screen recordings</li>
+            <li>Usage statistics or analytics of any kind</li>
             <li>Payment or financial information (there are no payments)</li>
             <li>Any personally identifiable information</li>
           </ul>
         </section>
 
         <section class="legal-card">
-          <h2 class="legal-h2">5. How the anonymous tally is used</h2>
-          <p class="legal-p">
-            The only reason for the run tally is to understand which
-            newsletters tend to work and which break, so the curated list can
-            be kept healthy. It is aggregate, anonymous, and never sold or
-            shared with third parties.
-          </p>
-        </section>
-
-        <section class="legal-card">
-          <h2 class="legal-h2">6. Cookie warm-up</h2>
+          <h2 class="legal-h2">5. Cookie warm-up</h2>
           <p class="legal-p">
             The optional Cookies tab visits a few well-known websites in the
             background and accepts their cookie banners, then reads back the
@@ -114,7 +101,7 @@ const repo = "https://github.com/rheav/mail-warmer";
         </section>
 
         <section class="legal-card">
-          <h2 class="legal-h2">7. Third-party services</h2>
+          <h2 class="legal-h2">6. Third-party services</h2>
           <p class="legal-p">
             When mailWarmer subscribes you to a newsletter, you are signing up
             with that newsletter's own provider (for example a Substack
@@ -125,7 +112,7 @@ const repo = "https://github.com/rheav/mail-warmer";
         </section>
 
         <section class="legal-card">
-          <h2 class="legal-h2">8. Your control</h2>
+          <h2 class="legal-h2">7. Your control</h2>
           <p class="legal-p">Because your data lives on your device, you can:</p>
           <ul class="legal-ul">
             <li>Edit or delete any email or profile field at any time</li>
@@ -135,7 +122,7 @@ const repo = "https://github.com/rheav/mail-warmer";
         </section>
 
         <section class="legal-card">
-          <h2 class="legal-h2">9. Children's privacy</h2>
+          <h2 class="legal-h2">8. Children's privacy</h2>
           <p class="legal-p">
             mailWarmer is not intended for children under 13, and we do not
             knowingly collect any information from them.
@@ -143,7 +130,7 @@ const repo = "https://github.com/rheav/mail-warmer";
         </section>
 
         <section class="legal-card">
-          <h2 class="legal-h2">10. Changes to this policy</h2>
+          <h2 class="legal-h2">9. Changes to this policy</h2>
           <p class="legal-p">
             We may update this Privacy Policy from time to time. Any changes
             will be posted on this page with an updated date above.
@@ -151,7 +138,7 @@ const repo = "https://github.com/rheav/mail-warmer";
         </section>
 
         <section class="legal-card">
-          <h2 class="legal-h2">11. Contact</h2>
+          <h2 class="legal-h2">10. Contact</h2>
           <p class="legal-p">
             mailWarmer is open source. Questions about privacy are best raised
             in the open, so anyone can see the answer — please

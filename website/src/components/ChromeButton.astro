@@ -8,6 +8,8 @@
  * The product has exactly one CTA and it lives everywhere.
  */
 
+import { storeUrl } from "../data/site";
+
 interface Props {
   href?: string;
   class?: string;
@@ -15,7 +17,7 @@ interface Props {
 }
 
 const {
-  href = "https://chromewebstore.google.com/",
+  href = storeUrl,
   class: className = "",
   size = "default",
 } = Astro.props;

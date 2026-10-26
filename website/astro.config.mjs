@@ -3,7 +3,7 @@ import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://mailwarmer.app',
+  site: 'https://mail-warmer.rheav.dev',
   trailingSlash: 'never',
   integrations: [sitemap()],
   vite: {
