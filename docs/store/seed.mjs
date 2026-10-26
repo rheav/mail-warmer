@@ -41,20 +41,20 @@ const site = (id, name, status, cookieCount, cookies) => ({ id, name, status, co
 const cookieRun = {
   at: now - 2 * 60 * min,
   results: [
-    site('plumguide.com', 'Plum Guide — Nice Villas', 'success', 18),
+    site('plumguide.com', 'Plum Guide — Nice Villas', 'success', 18, [
+      { name: 'OptanonConsent', value: 'isGpcEnabled=0&datestamp=Mon+Oct+26+2026&version=202409…' },
+      { name: 'OptanonAlertBoxClosed', value: '2026-10-26T09:12:44.318Z' },
+      { name: '_ga', value: 'GA1.1.1844020571.1793006764' },
+      { name: '_gcl_au', value: '1.1.204718233.1793006764' },
+      { name: '_fbp', value: 'fb.1.1793006764512.418830562' },
+    ]),
     site('cotedazur-sothebysrealty.com', "Côte d'Azur Sotheby's Realty", 'success', 12),
     site('ibizainmotion.com', 'Ibiza in Motion', 'skipped', 6),
     site('lecollectionist.com', 'Le Collectionist — Ibiza', 'success', 21),
     site('mareterra.com', 'Mareterra Monaco', 'success', 9),
     site('greekexclusiveproperties.com', 'Greek Exclusive Properties', 'skipped', 4),
     site('santorini.villas', 'Santorini Villas', 'success', 7),
-    site('ferrari.com', 'Ferrari', 'success', 24, [
-      { name: 'OptanonConsent', value: 'isGpcEnabled=0&datestamp=Mon+Oct+26+2026&version=202409…' },
-      { name: 'OptanonAlertBoxClosed', value: '2026-10-26T09:12:44.318Z' },
-      { name: '_ga', value: 'GA1.1.1844020571.1793006764' },
-      { name: '_gcl_au', value: '1.1.204718233.1793006764' },
-      { name: 'AMCV_ferrari', value: '179643557%7CMCIDTS%7C20387%7CvVersion%7C5.5.0' },
-    ]),
+    site('ferrari.com', 'Ferrari', 'success', 24),
     site('mercedes-benz.com.br', 'Mercedes-Benz Brazil', 'success', 15),
     site('bmw.com.br', 'BMW Brazil', 'success', 19),
     site('porsche.com', 'Porsche Brazil', 'success', 13),
@@ -67,8 +67,8 @@ const cookieRun = {
 const done = Object.entries(results).filter(([, s]) => s === 'success').length;
 const log = [
   ['info', t('logCookieStart', 14), 125],
-  ['success', t('logCookieAccepted', 'Ferrari', 'selector #onetrust-accept-btn-handler'), 123],
-  ['info', t('logCookieCount', 'Ferrari', 24), 123],
+  ['success', t('logCookieAccepted', 'Plum Guide — Nice Villas', 'selector #onetrust-accept-btn-handler'), 123],
+  ['info', t('logCookieCount', 'Plum Guide — Nice Villas', 18), 123],
   ['info', t('logCookieComplete', 198, 14), 120],
   ['info', t('logRunStart', 6, 'warm.inbox@example.com'), 31],
   ['success', `[Lenny's Newsletter] ${t('status_success')} — ${t('msgSubstackOk')}`, 30],

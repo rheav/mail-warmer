@@ -31,16 +31,16 @@ const font = existsSync(fontFile)
 const COPY = {
   en: [
     ['run', 'Keep every inbox warm', 'Pick newsletters, hit Run — every signup is tracked per inbox.'],
+    ['emails', 'Step 1: add your inboxes', 'Add every address you want to keep active — as many as you need.'],
     ['cookies', 'Warm up the browser first', 'Visits well-known sites and accepts their cookie banners, so the profile looks lived-in.'],
-    ['emails', 'As many inboxes as you need', 'Add every address you want to keep active and switch with one click.'],
     ['profile', 'Fills the extra fields for you', 'Name, city, company: a believable profile for forms that ask for more than an email.'],
     ['log', 'See exactly what happened', 'A time-stamped log of every signup and every warm-up.'],
     ['lists', 'No server. No account.', 'The curated list ships inside the extension. Add your own — nothing is ever sent to us.'],
   ],
   'pt-BR': [
     ['run', 'Mantenha cada caixa aquecida', 'Escolha as newsletters, clique em Fazer inscrições e acompanhe cada uma por e-mail.'],
+    ['emails', 'Passo 1: adicione suas caixas', 'Cadastre todos os endereços que quer manter ativos — quantos precisar.'],
     ['cookies', 'Aqueça o navegador antes', 'Visita sites conhecidos e aceita os avisos de cookies para o perfil parecer de uso real.'],
-    ['emails', 'Quantas caixas você precisar', 'Adicione todos os endereços que quer manter ativos e troque com um clique.'],
     ['profile', 'Preenche os campos extras', 'Nome, cidade, empresa: um perfil crível para formulários que pedem mais que o e-mail.'],
     ['log', 'Veja exatamente o que aconteceu', 'Um registro com horário de cada inscrição e de cada aquecimento.'],
     ['lists', 'Sem servidor. Sem conta.', 'A lista selecionada vem dentro da extensão. Adicione as suas — nada é enviado para nós.'],

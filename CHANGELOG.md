@@ -9,9 +9,48 @@ Versions follow [SemVer](https://semver.org/): `MAJOR.MINOR.PATCH`.
 - **MINOR** — new features (tabs, adapters, UI surfaces).
 - **PATCH** — bug fixes, copy tweaks, default-list updates.
 
-Bump `version` in `manifest.json` (and `version_name`) on every release.
+Bump `version` in `extension/manifest.json` (and `version_name`) and the root
+`package.json` on every release — see `docs/RELEASE.md`.
 
 ---
+
+## [0.7.0] — 2026-10-26
+
+### Added
+- **Brazilian Portuguese.** Every string — side panel, dialogs, alerts, log
+  lines, form-filler reasons, manifest name/description — lives in
+  `extension/_locales/{en,pt_BR}`. The browser language picks one; a `lang`
+  storage key overrides it (`lib/i18n.js`).
+- `npm test` (node --test with a chrome.* stub), `npm run build` (zip into
+  `release/`) and `scripts/preflight.mjs`, which fails the build on any
+  network call other than packaged files or the Substack signup endpoint, a
+  version mismatch, or a missing translation.
+- Store kit in `docs/store/`: listing copy, permission and privacy answers,
+  en + pt-BR screenshots and the tools that make them.
+- Help tip on every tab (Step 1 / Step 2 / Optional), shown under the tab
+  bar on hover or keyboard focus.
+
+### Changed
+- Tab order follows the flow: Emails (step 1), Run (step 2), then Cookies,
+  Profile, Lists, Log. The panel opens on Emails while no email exists.
+- **No server code.** `lib/config.js`, `lib/remote.js` and `lib/analytics.js`
+  are gone (they were never pointed at a real server). The curated list
+  ships in `newsletters.json` and is re-synced on every update, keeping ids
+  and custom entries. Old `newslettersCache` / `installId` keys are removed
+  on update.
+- Repo layout: the extension moved into `extension/`; `sidepanel.js` split
+  into one module per tab plus `ui.js`; shared timing helpers in
+  `lib/wait.js`.
+- Permissions: `tabs` and `alarms` removed; the `newsletters.json`
+  web-accessible entry removed (pages could use it to detect the extension).
+
+### Fixed
+- A signup form that posts and reloads the page was logged as an error even
+  though the site received it; it now counts as sent.
+- The empty "0 / 0" progress bar no longer shows under the lists while idle.
+- The active email in the Run tab's "From" picker is set as soon as the
+  panel renders, so the history shown matches the selected email.
+- Clearing storage no longer crashes the Log tab render.
 
 ## [0.6.1] — 2026-06-11
 

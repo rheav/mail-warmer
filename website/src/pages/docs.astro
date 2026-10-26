@@ -24,16 +24,16 @@ import { changelog } from "../data/changelog";
  *   - Single-column main content; each section owns a stable id used by
  *     both the anchor links and the IntersectionObserver below.
  *
- * The five side-panel tabs (Cookies / Run / Emails / Profile / Lists / Log)
+ * The six side-panel tabs (Emails / Run / Cookies / Profile / Lists / Log)
  * are the single source of truth in the extension. Keep this page in step
  * with them whenever a tab or setting is added, removed, or renamed.
  */
 
 const sidebar = [
   { id: "quick-start", label: "Quick start", icon: Rocket },
-  { id: "cookies", label: "Cookies", icon: Cookie },
-  { id: "run", label: "Run", icon: Play },
   { id: "emails", label: "Emails", icon: Mail },
+  { id: "run", label: "Run", icon: Play },
+  { id: "cookies", label: "Cookies", icon: Cookie },
   { id: "profile", label: "Profile", icon: User },
   { id: "lists", label: "Lists", icon: List },
   { id: "log", label: "Log", icon: ScrollText },
@@ -43,38 +43,30 @@ const sidebar = [
 
 const sections = [
   {
-    id: "cookies",
-    tab: "Cookies",
-    icon: Cookie,
+    id: "emails",
+    tab: "Emails",
+    icon: Mail,
     intro:
-      "An optional first step that makes your browser look lived-in. A brand-new profile with no cookies stands out — this quietly fixes that before any signups run.",
+      "Step 1. The email addresses you want to keep warm — add them here first, then pick one on the Run tab.",
     groups: [
       {
-        id: "warm-up",
-        title: "Cookie warm-up",
-        summary:
-          "Pick the sites you want, hit start, and mailWarmer does the rest in the background.",
+        id: "manage-emails",
+        title: "Manage addresses",
+        summary: "Add, label, and select which inbox a run subscribes.",
         features: [
           {
-            id: "visit",
-            label: "Visit & accept",
-            kind: "Auto",
-            default: "On selected sites",
-            body: "For each site you pick, mailWarmer opens it in a background tab, accepts the cookie banner, and closes the tab. It recognizes the common consent pop-ups automatically, so you do not have to click anything.",
+            id: "add-email",
+            label: "Add an address",
+            kind: "Local",
+            default: "—",
+            body: "Type in any email address you want to keep active and give it an optional label so you can tell them apart.",
           },
           {
-            id: "capture",
-            label: "Capture cookies",
-            kind: "Auto",
-            default: "On",
-            body: "After each visit it reads back the cookies that site left behind and shows a per-site count. Expand a row to see the details. Nothing here is sent anywhere — it stays in your browser.",
-          },
-          {
-            id: "site-list",
-            label: "The site list",
-            kind: "Info",
-            default: "Curated",
-            body: "A hand-picked set of well-known brand websites (luxury real-estate, automotive, and fashion). You choose which ones to include with simple checkboxes.",
+            id: "active-email",
+            label: "Active email",
+            kind: "Local",
+            default: "First added",
+            body: "Pick which address the next run will use. Only the selected address is subscribed when you hit Run.",
           },
         ],
       },
@@ -85,7 +77,7 @@ const sections = [
     tab: "Run",
     icon: Play,
     intro:
-      "The main event. This is where mailWarmer subscribes your chosen email to the newsletters you picked.",
+      "Step 2. This is where mailWarmer subscribes your chosen email to the newsletters you picked.",
     groups: [
       {
         id: "how-run-works",
@@ -119,30 +111,38 @@ const sections = [
     ],
   },
   {
-    id: "emails",
-    tab: "Emails",
-    icon: Mail,
+    id: "cookies",
+    tab: "Cookies",
+    icon: Cookie,
     intro:
-      "The list of email addresses you want to keep warm. Add as many as you like and switch between them.",
+      "Optional, before you run signups: it makes your browser look lived-in. A brand-new profile with no cookies stands out — this quietly fixes that.",
     groups: [
       {
-        id: "manage-emails",
-        title: "Manage addresses",
-        summary: "Add, label, and select which inbox a run subscribes.",
+        id: "warm-up",
+        title: "Cookie warm-up",
+        summary:
+          "Pick the sites you want, hit start, and mailWarmer does the rest in the background.",
         features: [
           {
-            id: "add-email",
-            label: "Add an address",
-            kind: "Local",
-            default: "—",
-            body: "Type in any email address you want to keep active and give it an optional label so you can tell them apart.",
+            id: "visit",
+            label: "Visit & accept",
+            kind: "Auto",
+            default: "On selected sites",
+            body: "For each site you pick, mailWarmer opens it in a background tab, accepts the cookie banner, and closes the tab. It recognizes the common consent pop-ups automatically, so you do not have to click anything.",
           },
           {
-            id: "active-email",
-            label: "Active email",
-            kind: "Local",
-            default: "First added",
-            body: "Pick which address the next run will use. Only the selected address is subscribed when you hit Run.",
+            id: "capture",
+            label: "Capture cookies",
+            kind: "Auto",
+            default: "On",
+            body: "After each visit it reads back the cookies that site left behind and shows a per-site count. Expand a row to see the details. Nothing here is sent anywhere — it stays in your browser.",
+          },
+          {
+            id: "site-list",
+            label: "The site list",
+            kind: "Info",
+            default: "Curated",
+            body: "A hand-picked set of well-known brand websites (luxury real-estate, automotive, and fashion). You choose which ones to include with simple checkboxes.",
           },
         ],
       },
@@ -296,7 +296,8 @@ const kindBadge = (kind: string) => {
 
           <div class="mt-8 border-t border-stone-200/70 pt-5 text-xs text-stone-500">
             <p class="leading-relaxed">
-              Every tab and setting, in plain language. No account, no setup —
+              Every tab and setting, in plain language. Hover a tab in the
+              extension for a one-line hint. No account, no setup —
               your emails never leave your browser.
             </p>
           </div>
@@ -357,16 +358,16 @@ const kindBadge = (kind: string) => {
               <h3 class="docs-card-title">Where things live</h3>
               <ul class="docs-list">
                 <li>
-                  <strong class="text-ink">Cookies tab</strong> — optional
-                  browser warm-up.
+                  <strong class="text-ink">1 · Emails tab</strong> — add the
+                  addresses you want to keep warm.
                 </li>
                 <li>
-                  <strong class="text-ink">Run tab</strong> — subscribe your
+                  <strong class="text-ink">2 · Run tab</strong> — subscribe an
                   email to newsletters.
                 </li>
                 <li>
-                  <strong class="text-ink">Emails &amp; Profile</strong> —
-                  your addresses and signup details.
+                  <strong class="text-ink">Cookies &amp; Profile</strong> —
+                  optional warm-up and signup details.
                 </li>
                 <li>
                   <strong class="text-ink">Lists &amp; Log</strong> — the

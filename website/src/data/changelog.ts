@@ -4,7 +4,7 @@ export const changelog: { version: string; title: string; body: string }[] = [
   {
     version: "0.7.0",
     title: "Português and zero server",
-    body: "mailWarmer now speaks Brazilian Portuguese as well as English, following your browser's language. It no longer has any server code at all: the newsletter list ships with the extension and nothing is ever sent anywhere. It also asks for fewer permissions.",
+    body: "mailWarmer now speaks Brazilian Portuguese as well as English, following your browser's language. It no longer has any server code at all: the newsletter list ships with the extension and nothing is ever sent anywhere. The tabs now follow the flow — Emails is step 1, Run step 2 — and every tab shows a one-line hint on hover. It also asks for fewer permissions.",
   },
   {
     version: "0.6.0",

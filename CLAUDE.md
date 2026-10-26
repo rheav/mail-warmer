@@ -7,7 +7,7 @@ mailWarmer — Chrome extension (MV3, plain ES modules, no bundler) that subscri
 | Path | What | Deployed to |
 | --- | --- | --- |
 | `extension/` | The extension itself — load this folder unpacked | Chrome Web Store (zip from `npm run build`) |
-| `website/` | Astro + Tailwind landing, docs, privacy, terms (English) | https://mail-warmer.rheav.dev (Cloudflare) |
+| `website/` | Astro + Tailwind landing, docs, privacy, terms (English) | https://mail-warmer.rheav.dev — Cloudflare Pages project `mail-warmer`, builds `website/` on every push to `main`. `mailwarmer.rheav.dev` 301-redirects to it (zone redirect rule) |
 | `docs/store/` | Listing copy, permission/privacy answers, screenshots, render tools | — |
 | `server/` | Old newsletter API. **The extension must never use it.** | VPS (EasyPanel `my-projects_mail-warmer`) |
 

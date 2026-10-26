@@ -1,12 +1,12 @@
 # Chrome Web Store listing (v0.7.0)
 
-Paste into the developer dashboard. Images are in `screenshots/<lang>/`: `1–6.png` (1280×800), `promo-tile-440x280.png`, `marquee-1400x560.png`, for `en` and `pt-BR`. The store shows at most 5 screenshots: suggested set **1, 2, 4, 5, 6**. To refresh them, see "Images" at the end.
+Paste into the developer dashboard. Images are in `screenshots/<lang>/`: `1–6.png` (1280×800), `promo-tile-440x280.png`, `marquee-1400x560.png`, for `en` and `pt-BR`. The store shows at most 5 screenshots: suggested set **1, 2, 3, 5, 6**. To refresh them, see "Images" at the end.
 
 | # | Caption (en) | Caption (pt-BR) | Shows |
 | --- | --- | --- | --- |
 | 1 | Keep every inbox warm | Mantenha cada caixa aquecida | Run tab after a run: per-newsletter results |
-| 2 | Warm up the browser first | Aqueça o navegador antes | Cookies tab with a finished warm-up, one row expanded |
-| 3 | As many inboxes as you need | Quantas caixas você precisar | Emails tab with three addresses |
+| 2 | Step 1: add your inboxes | Passo 1: adicione suas caixas | Emails tab with three addresses and the Step 1 tip |
+| 3 | Warm up the browser first | Aqueça o navegador antes | Cookies tab with a finished warm-up, one row expanded |
 | 4 | Fills the extra fields for you | Preenche os campos extras | Profile tab |
 | 5 | See exactly what happened | Veja exatamente o que aconteceu | Log tab |
 | 6 | No server. No account. | Sem servidor. Sem conta. | Lists tab with a custom newsletter |
@@ -93,7 +93,7 @@ O mailWarmer tem um único propósito: manter contas de e-mail ativas e válidas
 
 ## Images
 
-1. Load `extension/` unpacked, open `chrome-extension://<id>/sidepanel/sidepanel.html` in a tab at 400×760, device scale 2.
-2. For each language, seed `chrome.storage.local` with the output of `node docs/store/seed.mjs <en|pt_BR>` (it sets `lang`), reload, open each tab and save the capture as `docs/store/raw/<lang>/<id>.png` (`run`, `cookies`, `emails`, `profile`, `log`, `lists`). The Cookies capture has the Ferrari row expanded.
+1. Load `extension/` unpacked, open `chrome-extension://<id>/sidepanel/sidepanel.html` in a tab with the viewport overridden to 400×760 at device scale 2.
+2. For each language, seed `chrome.storage.local` with the output of `node docs/store/seed.mjs <en|pt_BR>` (it sets `lang`), reload, open each tab and save the capture as `docs/store/raw/<lang>/<id>.png` (`run`, `emails`, `cookies`, `profile`, `log`, `lists`). The Emails capture shows the Step 1 tip (hover the tab); the Cookies capture has its first row expanded.
 3. `npm run store-images` frames them into `screenshots/`. Captions live in `docs/store/tools/render-images.mjs`.
 4. Restore the storage you replaced.
