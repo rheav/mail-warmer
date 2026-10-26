@@ -618,6 +618,7 @@ input[type=email], input[type=text], input[type=url], select {
   box-shadow: var(--gm-shadow-card);
 }
 
+.gm-progress[hidden],
 .cookie-step[hidden] { display: none; }
 
 .cookie-step .spin {

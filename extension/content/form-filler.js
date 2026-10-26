@@ -564,19 +564,27 @@
 
   // ---------- Post-submit observation ----------
 
+  // Also settles on pagehide: a classic form post replaces the page, and this
+  // frame must answer before it dies — pagehide fires once the server has
+  // already answered the submit.
   async function observePostSubmit(ms) {
     const start = Date.now();
     return new Promise((resolve) => {
+      const finish = (outcome) => {
+        clearInterval(timer);
+        removeEventListener('pagehide', onLeave);
+        resolve(outcome);
+      };
+      const onLeave = () => finish({ navigated: true });
+      addEventListener('pagehide', onLeave);
       const timer = setInterval(() => {
         const body = document.body?.innerText || '';
         if (/thank|success|check your (in\s*)?box|confirm|subscribed|sent you/i.test(body)) {
-          clearInterval(timer);
-          resolve({ confirmedText: true });
+          finish({ confirmedText: true });
           return;
         }
         if (Date.now() - start > ms) {
-          clearInterval(timer);
-          resolve({ confirmedText: false });
+          finish({ confirmedText: false });
         }
       }, 250);
     });
