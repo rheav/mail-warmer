@@ -9,6 +9,8 @@ import { MSG, RUN_STATUS } from '../lib/messages.js';
 import * as store from '../lib/storage.js';
 import { COOKIE_SITES, siteId } from '../lib/cookie-sites.js';
 import { setResultBadge } from '../lib/badge.js';
+import { loadLocale, t } from '../lib/i18n.js';
+import { delay, jitter, waitForTabComplete } from '../lib/wait.js';
 
 let state = {
   status: RUN_STATUS.IDLE,
@@ -28,13 +30,14 @@ export function stopCookieWarmup() {
 }
 
 export async function runCookieWarmup({ siteIds } = {}) {
+  await loadLocale();
   if (state.status === RUN_STATUS.RUNNING) {
-    throw new Error('Already running');
+    throw new Error(t('errAlreadyRunning'));
   }
 
   const wanted = new Set(siteIds || []);
   const sites = COOKIE_SITES.filter((s) => wanted.has(siteId(s)));
-  if (sites.length === 0) throw new Error('No sites selected');
+  if (sites.length === 0) throw new Error(t('errNoSites'));
 
   state = {
     status: RUN_STATUS.RUNNING,
@@ -43,11 +46,11 @@ export async function runCookieWarmup({ siteIds } = {}) {
     abort: false,
   };
   broadcastProgress();
-  await store.appendLog('info', `Cookie warm-up start: ${sites.length} sites`);
+  await store.appendLog('info', t('logCookieStart', sites.length));
 
   for (const site of sites) {
     if (state.abort) {
-      await store.appendLog('warn', 'Cookie warm-up aborted by user');
+      await store.appendLog('warn', t('logCookieAborted'));
       break;
     }
     state.progress.current = site.name;
@@ -62,8 +65,8 @@ export async function runCookieWarmup({ siteIds } = {}) {
       await store.appendLog(
         r.clicked ? 'success' : 'info',
         r.clicked
-          ? `[${site.name}] cookies accepted (${r.via})`
-          : `[${site.name}] visited — no cookie banner found`
+          ? t('logCookieAccepted', site.name, r.via)
+          : t('logCookieNoBanner', site.name)
       );
       // Read back the cookies the visit actually left in the browser.
       cookies = await readSiteCookies(site);
@@ -106,7 +109,7 @@ export async function runCookieWarmup({ siteIds } = {}) {
   );
   await store.appendLog(
     'info',
-    `Cookie warm-up complete — ${totalCookies} cookies across ${state.results.length} sites`
+    t('logCookieComplete', totalCookies, state.results.length)
   );
 
   const accepted = state.results.filter((r) => r.status === 'success').length;
@@ -132,16 +135,16 @@ async function readSiteCookies(site) {
 // in the sidepanel Log tab. Values are clipped — consent strings are long.
 async function logCookies(site, cookies) {
   if (cookies.length === 0) {
-    await store.appendLog('info', `[${site.name}] no cookies stored`);
+    await store.appendLog('info', t('logCookieNone', site.name));
     return;
   }
-  await store.appendLog('info', `[${site.name}] ${cookies.length} cookies stored`);
+  await store.appendLog('info', t('logCookieCount', site.name, cookies.length));
   const SHOWN = 8;
   for (const c of cookies.slice(0, SHOWN)) {
     await store.appendLog('info', `  ${c.name} = ${clip(c.value, 80)}`);
   }
   if (cookies.length > SHOWN) {
-    await store.appendLog('info', `  …and ${cookies.length - SHOWN} more`);
+    await store.appendLog('info', t('logCookieMore', cookies.length - SHOWN));
   }
 }
 
@@ -305,38 +308,4 @@ function broadcastProgress() {
       data: { ...state.progress, results: state.results },
     })
     .catch(() => {});
-}
-
-function waitForTabComplete(tabId, timeoutMs) {
-  return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      chrome.tabs.onUpdated.removeListener(listener);
-      reject(new Error('Tab load timeout'));
-    }, timeoutMs);
-
-    const listener = (id, info) => {
-      if (id === tabId && info.status === 'complete') {
-        clearTimeout(timeout);
-        chrome.tabs.onUpdated.removeListener(listener);
-        resolve();
-      }
-    };
-    chrome.tabs.onUpdated.addListener(listener);
-
-    chrome.tabs.get(tabId).then((t) => {
-      if (t.status === 'complete') {
-        clearTimeout(timeout);
-        chrome.tabs.onUpdated.removeListener(listener);
-        resolve();
-      }
-    });
-  });
-}
-
-function delay(ms) {
-  return new Promise((r) => setTimeout(r, ms));
-}
-
-function jitter(min, max) {
-  return Math.floor(min + Math.random() * (max - min));
 }

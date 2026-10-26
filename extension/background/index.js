@@ -1,5 +1,6 @@
-import { MSG, RUN_STATUS } from '../lib/messages.js';
+import { MSG } from '../lib/messages.js';
 import * as store from '../lib/storage.js';
+import { t } from '../lib/i18n.js';
 import { runSignups, getRunState, stopRun } from './runner.js';
 import {
   runCookieWarmup,
@@ -12,41 +13,22 @@ chrome.sidePanel
   .setPanelBehavior({ openPanelOnActionClick: true })
   .catch((err) => console.warn('sidePanel setPanelBehavior failed', err));
 
-// Refresh the curated newsletter list from the backend daily. The fetch
-// itself is 24h-cached (lib/remote.js), so the alarm just nudges a re-check;
-// network only happens when the cache is actually stale.
-const REFRESH_ALARM = 'refreshNewsletters';
-const REFRESH_PERIOD_MIN = 24 * 60;
-
-async function refreshNewsletters(force = false) {
-  try {
-    await store.refreshNewslettersFromRemote({ force });
-  } catch (err) {
-    store.appendLog('error', `Newsletter refresh failed: ${err.message}`);
-  }
-}
-
-chrome.runtime.onInstalled.addListener(async () => {
+chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   await store.ensureSeeded();
   await store.ensureProfileSeeded();
-  await refreshNewsletters();
-  chrome.alarms.create(REFRESH_ALARM, { periodInMinutes: REFRESH_PERIOD_MIN });
-});
-
-chrome.runtime.onStartup.addListener(() => {
-  // Cache may have expired while the browser was closed.
-  refreshNewsletters();
-});
-
-chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === REFRESH_ALARM) refreshNewsletters();
+  if (reason === 'update') {
+    // The curated list ships with the extension: pick up this version's list.
+    await store.syncDefaultNewsletters();
+    // Left by builds that had (unused) server code; nothing reads them now.
+    await chrome.storage.local.remove(['newslettersCache', 'installId']);
+  }
 });
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   switch (msg.type) {
     case MSG.RUN_START:
       runSignups(msg.data).catch((err) => {
-        store.appendLog('error', `Run failed: ${err.message}`);
+        store.appendLog('error', t('logRunFailed', err.message));
       });
       sendResponse({ ok: true });
       return false;
@@ -62,7 +44,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case MSG.COOKIE_START:
       runCookieWarmup(msg.data).catch((err) => {
-        store.appendLog('error', `Cookie warm-up failed: ${err.message}`);
+        store.appendLog('error', t('logCookieFailed', err.message));
       });
       sendResponse({ ok: true });
       return false;

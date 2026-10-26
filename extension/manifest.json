@@ -1,13 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "mailWarmer",
+  "name": "__MSG_extName__",
   "version": "0.6.1",
   "version_name": "0.6.1 — Rebrand display name to mailWarmer",
-  "description": "Auto-subscribe configured emails to curated newsletters so inboxes stay active.",
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
   "permissions": [
     "storage",
-    "alarms",
-    "tabs",
     "scripting",
     "sidePanel",
     "webNavigation",
@@ -24,7 +23,7 @@
     "128": "public/logo.png"
   },
   "action": {
-    "default_title": "Open mailWarmer",
+    "default_title": "__MSG_extActionTitle__",
     "default_icon": {
       "16": "public/logo.png",
       "32": "public/logo.png",
@@ -38,11 +37,5 @@
   "background": {
     "service_worker": "background/index.js",
     "type": "module"
-  },
-  "web_accessible_resources": [
-    {
-      "resources": ["newsletters.json"],
-      "matches": ["<all_urls>"]
-    }
-  ]
+  }
 }

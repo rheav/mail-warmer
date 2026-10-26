@@ -10,3 +10,4 @@ server/db/
 
 # Third-party extension kept locally for reference only — not part of this repo
 Accept-all-cookies-Chrome-Web-Store/
+release/

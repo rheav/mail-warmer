@@ -3,13 +3,15 @@
 // Body is form-encoded: { email, first_url, first_referrer, current_url, current_referrer, referral_code }
 // Successful response is JSON containing the new free subscription, or an error message.
 
+import { t } from '../../lib/i18n.js';
+
 export async function signupSubstack(email, newsletter) {
   // Many pubs migrated to custom domains (e.g. slowboring.com) and their
   // {slug}.substack.com host returns 404. Accept an optional `host` so the
   // adapter can hit the custom domain directly. The /api/v1/free endpoint
   // is still served by Substack at that origin.
   const host = newsletter.host || (newsletter.slug ? `${newsletter.slug}.substack.com` : null);
-  if (!host) throw new Error('Missing Substack host or slug');
+  if (!host) throw new Error(t('errMissingSubstack'));
 
   const origin = `https://${host}`;
   const body = new URLSearchParams({
@@ -43,7 +45,7 @@ export async function signupSubstack(email, newsletter) {
 
   // Substack returns the email_subscription object on success.
   if (data.email_subscription || data.id || data.subscription) {
-    return { status: 'success', message: 'Subscribed via Substack API' };
+    return { status: 'success', message: t('msgSubstackOk') };
   }
 
   // Some pubs require email confirmation but still return 200 with a message.
@@ -51,7 +53,7 @@ export async function signupSubstack(email, newsletter) {
     return { status: 'success', message: data.message };
   }
 
-  return { status: 'success', message: 'Subscribed (no payload)' };
+  return { status: 'success', message: t('msgSubstackNoPayload') };
 }
 
 function truncate(s, n) {

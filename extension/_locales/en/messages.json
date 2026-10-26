@@ -1,0 +1,440 @@
+{
+  "extName": {
+    "message": "mailWarmer"
+  },
+  "extDescription": {
+    "message": "Auto-subscribe your emails to curated newsletters so inboxes stay active. No server, no account."
+  },
+  "extActionTitle": {
+    "message": "Open mailWarmer"
+  },
+  "statusIdle": {
+    "message": "Idle"
+  },
+  "statusRunning": {
+    "message": "Running"
+  },
+  "statusWarming": {
+    "message": "Warming cookies"
+  },
+  "statusDone": {
+    "message": "Done"
+  },
+  "status_new": {
+    "message": "new"
+  },
+  "status_pending": {
+    "message": "pending"
+  },
+  "status_running": {
+    "message": "running"
+  },
+  "status_success": {
+    "message": "success"
+  },
+  "status_error": {
+    "message": "error"
+  },
+  "status_skipped": {
+    "message": "skipped"
+  },
+  "type_substack": {
+    "message": "substack"
+  },
+  "type_form": {
+    "message": "form"
+  },
+  "runSignups": {
+    "message": "Run signups"
+  },
+  "stop": {
+    "message": "Stop"
+  },
+  "navCookies": {
+    "message": "Cookies"
+  },
+  "navRun": {
+    "message": "Run"
+  },
+  "navEmails": {
+    "message": "Emails"
+  },
+  "navProfile": {
+    "message": "Profile"
+  },
+  "navLists": {
+    "message": "Lists"
+  },
+  "navLog": {
+    "message": "Log"
+  },
+  "selectAll": {
+    "message": "Select all"
+  },
+  "selectNone": {
+    "message": "Clear"
+  },
+  "selectUnsubbed": {
+    "message": "Un-subscribed only"
+  },
+  "selectedCount": {
+    "message": "$1 selected"
+  },
+  "add": {
+    "message": "Add"
+  },
+  "save": {
+    "message": "Save"
+  },
+  "cancel": {
+    "message": "Cancel"
+  },
+  "remove": {
+    "message": "Remove"
+  },
+  "starting": {
+    "message": "Starting…"
+  },
+  "cookiesHint": {
+    "message": "Builds a normal-looking cookie profile in this browser before you run signups. For each selected site mailWarmer:"
+  },
+  "cookiesStep1": {
+    "message": "opens it in a background tab"
+  },
+  "cookiesStep2": {
+    "message": "auto-accepts the cookie banner"
+  },
+  "cookiesStep3": {
+    "message": "closes the tab"
+  },
+  "cookiesBuild": {
+    "message": "Build cookie profile"
+  },
+  "cookiesListLabel": {
+    "message": "Websites"
+  },
+  "cookiesCount": {
+    "message": "$1 cookies"
+  },
+  "cookiesView": {
+    "message": "▸ view"
+  },
+  "cookiesHide": {
+    "message": "▾ hide"
+  },
+  "cookiesASite": {
+    "message": "a site"
+  },
+  "cookiesOpening": {
+    "message": "Opening $1…"
+  },
+  "cookiesAccepting": {
+    "message": "Accepting cookies on $1…"
+  },
+  "cookiesWarming": {
+    "message": "Warming up $1…"
+  },
+  "cookiesNoRun": {
+    "message": "No cookie profile built yet."
+  },
+  "cookiesLastRun": {
+    "message": "Last warm-up $1 — $2/$3 sites accepted cookies."
+  },
+  "cookiesPickOne": {
+    "message": "Pick at least one website."
+  },
+  "cat_realEstate": {
+    "message": "Real estate"
+  },
+  "cat_automotive": {
+    "message": "Automotive"
+  },
+  "cat_fashion": {
+    "message": "Fashion"
+  },
+  "runFrom": {
+    "message": "From"
+  },
+  "runNewsletters": {
+    "message": "Newsletters"
+  },
+  "runEmpty": {
+    "message": "No newsletters configured."
+  },
+  "runPickOne": {
+    "message": "Pick at least one newsletter."
+  },
+  "runNeedEmail": {
+    "message": "Add and select an email first."
+  },
+  "emailsHint": {
+    "message": "Add the addresses you want to keep warm. The active one above is used for new signups."
+  },
+  "emailLabelPlaceholder": {
+    "message": "Label (optional)"
+  },
+  "emailsEmpty": {
+    "message": "No emails yet. Add one above."
+  },
+  "emailsAddFirst": {
+    "message": "Add an email first"
+  },
+  "profileHint": {
+    "message": "Used to fill name, age, country, etc. when newsletters ask for more than email. A fake identity is generated on first install."
+  },
+  "profileFillBlanks": {
+    "message": "Fill blanks"
+  },
+  "profileRegenerate": {
+    "message": "Regenerate all"
+  },
+  "profileSave": {
+    "message": "Save profile"
+  },
+  "profileSaved": {
+    "message": "Saved"
+  },
+  "profileRegenerated": {
+    "message": "Regenerated"
+  },
+  "profileRegenerateConfirm": {
+    "message": "Replace the entire profile with a freshly generated fake identity?"
+  },
+  "profileNothingToFill": {
+    "message": "Nothing to fill"
+  },
+  "profileFilledOne": {
+    "message": "Filled 1 field"
+  },
+  "profileFilledMany": {
+    "message": "Filled $1 fields"
+  },
+  "fieldFirstName": {
+    "message": "First name"
+  },
+  "fieldLastName": {
+    "message": "Last name"
+  },
+  "fieldFullName": {
+    "message": "Full name"
+  },
+  "fieldAge": {
+    "message": "Age"
+  },
+  "fieldDob": {
+    "message": "Date of birth"
+  },
+  "dobPlaceholder": {
+    "message": "YYYY-MM-DD"
+  },
+  "fieldGender": {
+    "message": "Gender"
+  },
+  "genderMale": {
+    "message": "Male"
+  },
+  "genderFemale": {
+    "message": "Female"
+  },
+  "genderNonbinary": {
+    "message": "Non-binary"
+  },
+  "genderPreferNot": {
+    "message": "Prefer not to say"
+  },
+  "fieldCountry": {
+    "message": "Country"
+  },
+  "fieldState": {
+    "message": "State / Region"
+  },
+  "fieldCity": {
+    "message": "City"
+  },
+  "fieldPostalCode": {
+    "message": "Postal code"
+  },
+  "fieldPhone": {
+    "message": "Phone"
+  },
+  "fieldCompany": {
+    "message": "Company"
+  },
+  "fieldJobTitle": {
+    "message": "Job title"
+  },
+  "fieldWebsite": {
+    "message": "Website"
+  },
+  "listsAdd": {
+    "message": "Newsletter"
+  },
+  "listsReset": {
+    "message": "Reset defaults"
+  },
+  "listsEmpty": {
+    "message": "No newsletters. Reset to defaults to seed."
+  },
+  "listsResetConfirm": {
+    "message": "Reset newsletter list to defaults? Custom entries will be lost."
+  },
+  "dialogAddTitle": {
+    "message": "Add newsletter"
+  },
+  "dialogName": {
+    "message": "Name"
+  },
+  "dialogType": {
+    "message": "Type"
+  },
+  "dialogTypeSubstack": {
+    "message": "Substack (API)"
+  },
+  "dialogTypeForm": {
+    "message": "Generic form (DOM)"
+  },
+  "dialogSlug": {
+    "message": "Substack slug or custom domain"
+  },
+  "dialogSlugPlaceholder": {
+    "message": "lennysnewsletter or www.slowboring.com"
+  },
+  "dialogUrl": {
+    "message": "Signup URL"
+  },
+  "overrideTitle": {
+    "message": "Custom selectors"
+  },
+  "overrideEmail": {
+    "message": "Email input selector"
+  },
+  "overrideSubmit": {
+    "message": "Submit selector (optional)"
+  },
+  "overrideFields": {
+    "message": "Field overrides (advanced)"
+  },
+  "overrideClear": {
+    "message": "Clear overrides"
+  },
+  "overrideEmailRequired": {
+    "message": "Email selector is required (or use Clear to remove overrides)."
+  },
+  "logCount": {
+    "message": "$1 entries"
+  },
+  "logEmpty": {
+    "message": "No log entries yet."
+  },
+  "agoNever": {
+    "message": "never"
+  },
+  "agoNow": {
+    "message": "just now"
+  },
+  "agoMinutes": {
+    "message": "$1m ago"
+  },
+  "agoHours": {
+    "message": "$1h ago"
+  },
+  "agoDays": {
+    "message": "$1d ago"
+  },
+  "logRunStart": {
+    "message": "Run start: $1 newsletters for $2"
+  },
+  "logRunAborted": {
+    "message": "Run stopped by user"
+  },
+  "logRunComplete": {
+    "message": "Run complete — $1 of $2 subscribed"
+  },
+  "logRunFailed": {
+    "message": "Run failed: $1"
+  },
+  "errAlreadyRunning": {
+    "message": "Already running"
+  },
+  "errActiveEmailMissing": {
+    "message": "Active email not found"
+  },
+  "errUnknownType": {
+    "message": "Unknown newsletter type: $1"
+  },
+  "errEmailRequired": {
+    "message": "Email required"
+  },
+  "errEmailExists": {
+    "message": "Email already added"
+  },
+  "errMissingUrl": {
+    "message": "Missing signup URL"
+  },
+  "errMissingSubstack": {
+    "message": "Missing Substack host or slug"
+  },
+  "msgSubstackOk": {
+    "message": "Subscribed via Substack API"
+  },
+  "msgSubstackNoPayload": {
+    "message": "Subscribed (no payload)"
+  },
+  "msgFormSubmitted": {
+    "message": "[frame $1] Filled \"$2\" and submitted"
+  },
+  "ffNoFrame": {
+    "message": "No frame found a fillable email field"
+  },
+  "ffNoEmail": {
+    "message": "No email provided"
+  },
+  "ffNoInputs": {
+    "message": "No email-like inputs found in this frame"
+  },
+  "ffAllHidden": {
+    "message": "All email inputs were honeypots or hidden"
+  },
+  "ffLowScore": {
+    "message": "Best candidate score too low ($1)"
+  },
+  "ffNoSubmit": {
+    "message": "Filled field but found no submit control"
+  },
+  "ffOverrideNoMatch": {
+    "message": "Override email selector matched nothing: $1"
+  },
+  "ffOverrideNoSubmit": {
+    "message": "Override matched email but no submit control"
+  },
+  "logCookieStart": {
+    "message": "Cookie warm-up start: $1 sites"
+  },
+  "logCookieAborted": {
+    "message": "Cookie warm-up stopped by user"
+  },
+  "logCookieAccepted": {
+    "message": "[$1] cookies accepted ($2)"
+  },
+  "logCookieNoBanner": {
+    "message": "[$1] visited — no cookie banner found"
+  },
+  "logCookieComplete": {
+    "message": "Cookie warm-up complete — $1 cookies across $2 sites"
+  },
+  "logCookieNone": {
+    "message": "[$1] no cookies stored"
+  },
+  "logCookieCount": {
+    "message": "[$1] $2 cookies stored"
+  },
+  "logCookieMore": {
+    "message": "  …and $1 more"
+  },
+  "logCookieFailed": {
+    "message": "Cookie warm-up failed: $1"
+  },
+  "errNoSites": {
+    "message": "No sites selected"
+  }
+}

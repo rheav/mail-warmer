@@ -8,8 +8,9 @@
 //
 // Returns one of:
 //   { submitted: true,  fieldHint, frame }    — Filled + submitted
-//   { skipped: true,    reason }              — Intentionally not run
-//   { submitted: false, reason }              — Failed to find a safe field
+//   { submitted: false, reason, args? }       — Failed to find a safe field;
+//                                               reason is an i18n key the
+//                                               background translates
 //   { error: string }                         — Unexpected error
 
 (() => {
@@ -25,7 +26,7 @@
   });
 
   async function runDetectAndSubmit({ email, profile = {}, selectors = null }) {
-    if (!email) return { error: 'No email provided' };
+    if (!email) return { submitted: false, reason: 'ffNoEmail' };
 
     await waitForReady(4500, selectors);
 
@@ -39,7 +40,7 @@
     if (candidates.length === 0) {
       // Iframes often contain the real form on lazy pages; this frame may
       // have none. Surface a soft failure so other frames still answer.
-      return { submitted: false, reason: 'No email-like inputs found in this frame' };
+      return { submitted: false, reason: 'ffNoInputs' };
     }
 
     const scored = candidates
@@ -48,18 +49,12 @@
       .sort((a, b) => b.score - a.score);
 
     if (scored.length === 0) {
-      return {
-        submitted: false,
-        reason: 'All email inputs were honeypots or hidden',
-      };
+      return { submitted: false, reason: 'ffAllHidden' };
     }
 
     const target = scored[0];
     if (target.score < 4) {
-      return {
-        submitted: false,
-        reason: `Best candidate score too low (${target.score})`,
-      };
+      return { submitted: false, reason: 'ffLowScore', args: [target.score] };
     }
 
     setReactCompatibleValue(target.input, email);
@@ -70,7 +65,7 @@
 
     const submit = findSubmit(target.input);
     if (!submit) {
-      return { submitted: false, reason: 'Filled field but found no submit control' };
+      return { submitted: false, reason: 'ffNoSubmit' };
     }
 
     await sleep(400);
@@ -91,7 +86,7 @@
   async function runOverride({ email, profile, selectors }) {
     const emailEl = document.querySelector(selectors.email);
     if (!emailEl) {
-      return { submitted: false, reason: `Override email selector matched nothing: ${selectors.email}` };
+      return { submitted: false, reason: 'ffOverrideNoMatch', args: [selectors.email] };
     }
     setReactCompatibleValue(emailEl, email);
 
@@ -113,7 +108,7 @@
       : findSubmit(emailEl);
 
     if (!submit) {
-      return { submitted: false, reason: 'Override matched email but no submit control' };
+      return { submitted: false, reason: 'ffOverrideNoSubmit' };
     }
 
     await sleep(400);

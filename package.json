@@ -1,0 +1,13 @@
+{
+  "name": "mail-warmer",
+  "version": "0.6.1",
+  "private": true,
+  "type": "module",
+  "description": "mailWarmer Chrome extension, its website and store kit.",
+  "scripts": {
+    "test": "node --test tests/",
+    "preflight": "node scripts/preflight.mjs",
+    "build": "node scripts/preflight.mjs && mkdir -p release && rm -f release/mailwarmer-$npm_package_version.zip && cd extension && zip -qrX ../release/mailwarmer-$npm_package_version.zip . -x '.*' && echo \"release/mailwarmer-$npm_package_version.zip\"",
+    "store-images": "node docs/store/tools/render-images.mjs"
+  }
+}

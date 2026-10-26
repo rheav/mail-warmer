@@ -3,17 +3,20 @@
 // (top first, then children) to detect + submit. Returns the first success.
 
 import { MSG } from '../../lib/messages.js';
+import { t } from '../../lib/i18n.js';
+import { delay, waitForTabComplete } from '../../lib/wait.js';
 
 const TAB_TIMEOUT_MS = 30_000;
 const PER_FRAME_TIMEOUT_MS = 8_000;
 
 export async function signupViaForm(email, newsletter, ctx = {}) {
-  if (!newsletter.url) throw new Error('Missing signup URL');
+  if (!newsletter.url) throw new Error(t('errMissingUrl'));
 
   const tab = await chrome.tabs.create({ url: newsletter.url, active: false });
 
   try {
     await waitForTabComplete(tab.id, TAB_TIMEOUT_MS);
+    await delay(1500); // let late signup widgets mount
 
     await chrome.scripting.executeScript({
       target: { tabId: tab.id, allFrames: true },
@@ -41,24 +44,21 @@ export async function signupViaForm(email, newsletter, ctx = {}) {
       if (result.submitted) {
         return {
           status: 'success',
-          message: `[frame ${frame.frameId}] Filled "${result.fieldHint || '?'}" and submitted`,
+          message: t('msgFormSubmitted', frame.frameId, result.fieldHint || '?'),
         };
-      }
-      if (result.skipped) {
-        return { status: 'skipped', message: result.reason || 'Skipped' };
       }
       if (result.error) {
         lastSoftFail = result.error;
         continue;
       }
       if (result.reason) {
-        lastSoftFail = result.reason;
+        lastSoftFail = t(result.reason, ...(result.args || []));
       }
     }
 
     return {
       status: 'error',
-      message: lastSoftFail || 'No frame found a fillable email field',
+      message: lastSoftFail || t('ffNoFrame'),
     };
   } finally {
     chrome.tabs.remove(tab.id).catch(() => {});
@@ -101,31 +101,5 @@ function sendToFrame(tabId, frameId, message, timeoutMs) {
       clearTimeout(timer);
       resolve(null);
     }
-  });
-}
-
-function waitForTabComplete(tabId, timeoutMs) {
-  return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      chrome.tabs.onUpdated.removeListener(listener);
-      reject(new Error('Tab load timeout'));
-    }, timeoutMs);
-
-    const listener = (id, info) => {
-      if (id === tabId && info.status === 'complete') {
-        clearTimeout(timeout);
-        chrome.tabs.onUpdated.removeListener(listener);
-        setTimeout(resolve, 1500);
-      }
-    };
-    chrome.tabs.onUpdated.addListener(listener);
-
-    chrome.tabs.get(tabId).then((t) => {
-      if (t.status === 'complete') {
-        clearTimeout(timeout);
-        chrome.tabs.onUpdated.removeListener(listener);
-        setTimeout(resolve, 1500);
-      }
-    });
   });
 }

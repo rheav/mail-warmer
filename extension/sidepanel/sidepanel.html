@@ -16,7 +16,7 @@
     </div>
     <div class="gm-status" id="runStatus">
       <span class="material-symbols-outlined dot">circle</span>
-      <span class="run-text">Idle</span>
+      <span class="run-text" data-i18n="statusIdle">Idle</span>
     </div>
   </header>
 
@@ -24,9 +24,9 @@
   <div class="gm-compose-wrap">
     <button id="runBtn" class="gm-compose">
       <span class="material-symbols-outlined">send</span>
-      <span>Run signups</span>
+      <span data-i18n="runSignups">Run signups</span>
     </button>
-    <button id="stopBtn" class="gm-icon-btn" title="Stop" disabled>
+    <button id="stopBtn" class="gm-icon-btn" title="Stop" data-i18n-title="stop" disabled>
       <span class="material-symbols-outlined">stop</span>
     </button>
   </div>
@@ -35,62 +35,62 @@
   <nav class="gm-nav">
     <button class="gm-nav-item" data-tab="cookies">
       <span class="material-symbols-outlined">cookie</span>
-      <span>Cookies</span>
+      <span data-i18n="navCookies">Cookies</span>
     </button>
     <button class="gm-nav-item active" data-tab="run">
       <span class="material-symbols-outlined">inbox</span>
-      <span>Run</span>
+      <span data-i18n="navRun">Run</span>
     </button>
     <button class="gm-nav-item" data-tab="emails">
       <span class="material-symbols-outlined">alternate_email</span>
-      <span>Emails</span>
+      <span data-i18n="navEmails">Emails</span>
     </button>
     <button class="gm-nav-item" data-tab="profile">
       <span class="material-symbols-outlined">person</span>
-      <span>Profile</span>
+      <span data-i18n="navProfile">Profile</span>
     </button>
     <button class="gm-nav-item" data-tab="newsletters">
       <span class="material-symbols-outlined">mail</span>
-      <span>Lists</span>
+      <span data-i18n="navLists">Lists</span>
     </button>
     <button class="gm-nav-item" data-tab="log">
       <span class="material-symbols-outlined">history</span>
-      <span>Log</span>
+      <span data-i18n="navLog">Log</span>
     </button>
   </nav>
 
   <main class="gm-main">
     <!-- COOKIES TAB -->
     <section id="tab-cookies" class="tab-panel">
-      <p class="gm-hint">Builds a normal-looking cookie profile in this browser
+      <p class="gm-hint" data-i18n="cookiesHint">Builds a normal-looking cookie profile in this browser
         before you run signups. For each selected site mailWarmer:</p>
       <ol class="gm-steps">
-        <li><span class="step-n">1</span> opens it in a background tab</li>
-        <li><span class="step-n">2</span> auto-accepts the cookie banner</li>
-        <li><span class="step-n">3</span> closes the tab</li>
+        <li><span class="step-n">1</span> <span data-i18n="cookiesStep1">opens it in a background tab</span></li>
+        <li><span class="step-n">2</span> <span data-i18n="cookiesStep2">auto-accepts the cookie banner</span></li>
+        <li><span class="step-n">3</span> <span data-i18n="cookiesStep3">closes the tab</span></li>
       </ol>
 
       <div class="gm-toolbar spaced" style="margin-bottom: 14px;">
         <button id="cookieRunBtn" class="gm-btn-primary">
           <span class="material-symbols-outlined">cookie</span>
-          Build cookie profile
+          <span data-i18n="cookiesBuild">Build cookie profile</span>
         </button>
-        <button id="cookieStopBtn" class="gm-btn-link" disabled>Stop</button>
+        <button id="cookieStopBtn" class="gm-btn-link" data-i18n="stop" disabled>Stop</button>
       </div>
 
       <!-- Live step banner while a warm-up is running -->
       <div id="cookieStep" class="cookie-step" hidden>
         <span class="material-symbols-outlined spin">progress_activity</span>
-        <span id="cookieStepText">Starting…</span>
+        <span id="cookieStepText" data-i18n="starting">Starting…</span>
       </div>
 
       <div class="gm-toolbar">
-        <button id="cookieSelectAll" class="gm-chip">Select all</button>
-        <button id="cookieSelectNone" class="gm-chip">Clear</button>
+        <button id="cookieSelectAll" class="gm-chip" data-i18n="selectAll">Select all</button>
+        <button id="cookieSelectNone" class="gm-chip" data-i18n="selectNone">Clear</button>
       </div>
 
       <div class="gm-list-header">
-        <span class="gm-label">US websites</span>
+        <span class="gm-label" data-i18n="cookiesListLabel">Websites</span>
         <span class="gm-count" id="cookieSelCount">0 selected</span>
       </div>
       <ul id="cookieList" class="gm-list checklist"></ul>
@@ -106,7 +106,7 @@
     <!-- RUN TAB -->
     <section id="tab-run" class="tab-panel active">
       <div class="gm-section">
-        <label class="gm-label">From</label>
+        <label class="gm-label" data-i18n="runFrom">From</label>
         <div class="gm-select-wrap">
           <span class="material-symbols-outlined gm-select-icon">account_circle</span>
           <select id="activeEmail" class="gm-select"></select>
@@ -114,13 +114,13 @@
       </div>
 
       <div class="gm-toolbar">
-        <button id="selectAll" class="gm-chip">Select all</button>
-        <button id="selectNone" class="gm-chip">Clear</button>
-        <button id="selectUnsubbed" class="gm-chip">Un-subscribed only</button>
+        <button id="selectAll" class="gm-chip" data-i18n="selectAll">Select all</button>
+        <button id="selectNone" class="gm-chip" data-i18n="selectNone">Clear</button>
+        <button id="selectUnsubbed" class="gm-chip" data-i18n="selectUnsubbed">Un-subscribed only</button>
       </div>
 
       <div class="gm-list-header">
-        <span class="gm-label">Newsletters</span>
+        <span class="gm-label" data-i18n="runNewsletters">Newsletters</span>
         <span class="gm-count" id="selCount">0 selected</span>
       </div>
       <ul id="runList" class="gm-list checklist"></ul>
@@ -133,54 +133,54 @@
 
     <!-- EMAILS TAB -->
     <section id="tab-emails" class="tab-panel">
-      <p class="gm-hint">Add the addresses you want to keep warm. The active one above is used for new signups.</p>
+      <p class="gm-hint" data-i18n="emailsHint">Add the addresses you want to keep warm. The active one above is used for new signups.</p>
       <form id="addEmailForm" class="gm-inline-form">
         <input type="email" id="newEmail" class="gm-input" placeholder="you@example.com" required>
-        <input type="text" id="newEmailLabel" class="gm-input" placeholder="Label (optional)">
-        <button type="submit" class="gm-btn-primary">Add</button>
+        <input type="text" id="newEmailLabel" class="gm-input" placeholder="Label (optional)" data-i18n-placeholder="emailLabelPlaceholder">
+        <button type="submit" class="gm-btn-primary" data-i18n="add">Add</button>
       </form>
       <ul id="emailList" class="gm-list"></ul>
     </section>
 
     <!-- PROFILE TAB -->
     <section id="tab-profile" class="tab-panel">
-      <p class="gm-hint">Used to fill name, age, country, etc. when newsletters ask for more than email. A fake identity is generated on first install.</p>
+      <p class="gm-hint" data-i18n="profileHint">Used to fill name, age, country, etc. when newsletters ask for more than email. A fake identity is generated on first install.</p>
       <div class="gm-toolbar spaced" style="margin-bottom: 14px;">
         <button type="button" id="fillBlanksBtn" class="gm-btn-secondary">
           <span class="material-symbols-outlined" style="font-size:16px">auto_fix_high</span>
-          Fill blanks
+          <span data-i18n="profileFillBlanks">Fill blanks</span>
         </button>
         <button type="button" id="regenerateBtn" class="gm-btn-link">
           <span class="material-symbols-outlined" style="font-size:16px; vertical-align: -3px;">refresh</span>
-          Regenerate all
+          <span data-i18n="profileRegenerate">Regenerate all</span>
         </button>
       </div>
       <form id="profileForm" class="gm-form-grid">
-        <label>First name <input type="text" name="firstName" class="gm-input" autocomplete="off"></label>
-        <label>Last name <input type="text" name="lastName" class="gm-input" autocomplete="off"></label>
-        <label class="full-row">Full name <input type="text" name="fullName" class="gm-input" autocomplete="off"></label>
-        <label>Age <input type="text" name="age" class="gm-input" inputmode="numeric" autocomplete="off"></label>
-        <label>Date of birth <input type="text" name="dob" class="gm-input" placeholder="YYYY-MM-DD" autocomplete="off"></label>
-        <label>Gender
+        <label><span data-i18n="fieldFirstName">First name</span> <input type="text" name="firstName" class="gm-input" autocomplete="off"></label>
+        <label><span data-i18n="fieldLastName">Last name</span> <input type="text" name="lastName" class="gm-input" autocomplete="off"></label>
+        <label class="full-row"><span data-i18n="fieldFullName">Full name</span> <input type="text" name="fullName" class="gm-input" autocomplete="off"></label>
+        <label><span data-i18n="fieldAge">Age</span> <input type="text" name="age" class="gm-input" inputmode="numeric" autocomplete="off"></label>
+        <label><span data-i18n="fieldDob">Date of birth</span> <input type="text" name="dob" class="gm-input" placeholder="YYYY-MM-DD" data-i18n-placeholder="dobPlaceholder" autocomplete="off"></label>
+        <label><span data-i18n="fieldGender">Gender</span>
           <select name="gender" class="gm-input">
             <option value="">—</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="nonbinary">Non-binary</option>
-            <option value="prefer not to say">Prefer not to say</option>
+            <option value="male" data-i18n="genderMale">Male</option>
+            <option value="female" data-i18n="genderFemale">Female</option>
+            <option value="nonbinary" data-i18n="genderNonbinary">Non-binary</option>
+            <option value="prefer not to say" data-i18n="genderPreferNot">Prefer not to say</option>
           </select>
         </label>
-        <label>Country <input type="text" name="country" class="gm-input" autocomplete="off"></label>
-        <label>State / Region <input type="text" name="state" class="gm-input" autocomplete="off"></label>
-        <label>City <input type="text" name="city" class="gm-input" autocomplete="off"></label>
-        <label>Postal code <input type="text" name="postalCode" class="gm-input" autocomplete="off"></label>
-        <label>Phone <input type="text" name="phone" class="gm-input" autocomplete="off"></label>
-        <label>Company <input type="text" name="company" class="gm-input" autocomplete="off"></label>
-        <label>Job title <input type="text" name="jobTitle" class="gm-input" autocomplete="off"></label>
-        <label>Website <input type="text" name="website" class="gm-input" autocomplete="off"></label>
+        <label><span data-i18n="fieldCountry">Country</span> <input type="text" name="country" class="gm-input" autocomplete="off"></label>
+        <label><span data-i18n="fieldState">State / Region</span> <input type="text" name="state" class="gm-input" autocomplete="off"></label>
+        <label><span data-i18n="fieldCity">City</span> <input type="text" name="city" class="gm-input" autocomplete="off"></label>
+        <label><span data-i18n="fieldPostalCode">Postal code</span> <input type="text" name="postalCode" class="gm-input" autocomplete="off"></label>
+        <label><span data-i18n="fieldPhone">Phone</span> <input type="text" name="phone" class="gm-input" autocomplete="off"></label>
+        <label><span data-i18n="fieldCompany">Company</span> <input type="text" name="company" class="gm-input" autocomplete="off"></label>
+        <label><span data-i18n="fieldJobTitle">Job title</span> <input type="text" name="jobTitle" class="gm-input" autocomplete="off"></label>
+        <label><span data-i18n="fieldWebsite">Website</span> <input type="text" name="website" class="gm-input" autocomplete="off"></label>
         <div class="full-row gm-form-actions">
           <span id="profileSaveStatus" class="gm-count"></span>
-          <button type="submit" class="gm-btn-primary">Save profile</button>
+          <button type="submit" class="gm-btn-primary" data-i18n="profileSave">Save profile</button>
         </div>
       </form>
     </section>
@@ -189,9 +189,9 @@
     <section id="tab-newsletters" class="tab-panel">
       <div class="gm-toolbar spaced">
         <button id="addNewsletterBtn" class="gm-btn-primary">
-          <span class="material-symbols-outlined">add</span> Newsletter
+          <span class="material-symbols-outlined">add</span> <span data-i18n="listsAdd">Newsletter</span>
         </button>
-        <button id="resetDefaults" class="gm-btn-link">Reset defaults</button>
+        <button id="resetDefaults" class="gm-btn-link" data-i18n="listsReset">Reset defaults</button>
       </div>
       <ul id="newsletterList" class="gm-list"></ul>
     </section>
@@ -200,7 +200,7 @@
     <section id="tab-log" class="tab-panel">
       <div class="gm-toolbar spaced">
         <span class="gm-count" id="logCount">0 entries</span>
-        <button id="clearLog" class="gm-btn-link">Clear</button>
+        <button id="clearLog" class="gm-btn-link" data-i18n="selectNone">Clear</button>
       </div>
       <ul id="logList" class="gm-list gm-log"></ul>
     </section>
@@ -209,23 +209,23 @@
   <!-- Add-newsletter dialog -->
   <dialog id="newsletterDialog" class="gm-dialog">
     <form id="newsletterForm" method="dialog">
-      <h3>Add newsletter</h3>
-      <label>Name <input name="name" type="text" class="gm-input" required></label>
-      <label>Type
+      <h3 data-i18n="dialogAddTitle">Add newsletter</h3>
+      <label><span data-i18n="dialogName">Name</span> <input name="name" type="text" class="gm-input" required></label>
+      <label><span data-i18n="dialogType">Type</span>
         <select name="type" class="gm-input">
-          <option value="substack">Substack (API)</option>
-          <option value="form">Generic form (DOM)</option>
+          <option value="substack" data-i18n="dialogTypeSubstack">Substack (API)</option>
+          <option value="form" data-i18n="dialogTypeForm">Generic form (DOM)</option>
         </select>
       </label>
-      <label class="if-substack">Substack slug or custom domain
-        <input name="slugOrHost" type="text" class="gm-input" placeholder="lennysnewsletter or www.slowboring.com">
+      <label class="if-substack"><span data-i18n="dialogSlug">Substack slug or custom domain</span>
+        <input name="slugOrHost" type="text" class="gm-input" placeholder="lennysnewsletter or www.slowboring.com" data-i18n-placeholder="dialogSlugPlaceholder">
       </label>
-      <label class="if-form" hidden>Signup URL
+      <label class="if-form" hidden><span data-i18n="dialogUrl">Signup URL</span>
         <input name="url" type="url" class="gm-input" placeholder="https://example.com/subscribe">
       </label>
       <div class="dialog-actions">
-        <button type="button" id="cancelDialog" class="gm-btn-secondary">Cancel</button>
-        <button type="submit" class="gm-btn-primary">Save</button>
+        <button type="button" id="cancelDialog" class="gm-btn-secondary" data-i18n="cancel">Cancel</button>
+        <button type="submit" class="gm-btn-primary" data-i18n="save">Save</button>
       </div>
     </form>
   </dialog>
@@ -233,23 +233,23 @@
   <!-- Selector override dialog -->
   <dialog id="overrideDialog" class="gm-dialog">
     <form id="overrideForm" method="dialog">
-      <h3>Custom selectors</h3>
+      <h3 data-i18n="overrideTitle">Custom selectors</h3>
       <p class="gm-hint" id="overrideTarget"></p>
-      <label>Email input selector <input name="email" class="gm-input" type="text" placeholder="input[name=email]"></label>
-      <label>Submit selector (optional) <input name="submit" class="gm-input" type="text" placeholder="button.subscribe"></label>
+      <label><span data-i18n="overrideEmail">Email input selector</span> <input name="email" class="gm-input" type="text" placeholder="input[name=email]"></label>
+      <label><span data-i18n="overrideSubmit">Submit selector (optional)</span> <input name="submit" class="gm-input" type="text" placeholder="button.subscribe"></label>
       <details>
-        <summary>Field overrides (advanced)</summary>
-        <label>First name <input name="fields.firstName" class="gm-input" type="text"></label>
-        <label>Last name <input name="fields.lastName" class="gm-input" type="text"></label>
-        <label>Full name <input name="fields.fullName" class="gm-input" type="text"></label>
-        <label>Age <input name="fields.age" class="gm-input" type="text"></label>
-        <label>Country <input name="fields.country" class="gm-input" type="text"></label>
-        <label>Postal code <input name="fields.postalCode" class="gm-input" type="text"></label>
+        <summary data-i18n="overrideFields">Field overrides (advanced)</summary>
+        <label><span data-i18n="fieldFirstName">First name</span> <input name="fields.firstName" class="gm-input" type="text"></label>
+        <label><span data-i18n="fieldLastName">Last name</span> <input name="fields.lastName" class="gm-input" type="text"></label>
+        <label><span data-i18n="fieldFullName">Full name</span> <input name="fields.fullName" class="gm-input" type="text"></label>
+        <label><span data-i18n="fieldAge">Age</span> <input name="fields.age" class="gm-input" type="text"></label>
+        <label><span data-i18n="fieldCountry">Country</span> <input name="fields.country" class="gm-input" type="text"></label>
+        <label><span data-i18n="fieldPostalCode">Postal code</span> <input name="fields.postalCode" class="gm-input" type="text"></label>
       </details>
       <div class="dialog-actions">
-        <button type="button" id="clearOverride" class="gm-btn-link">Clear overrides</button>
-        <button type="button" id="cancelOverride" class="gm-btn-secondary">Cancel</button>
-        <button type="submit" class="gm-btn-primary">Save</button>
+        <button type="button" id="clearOverride" class="gm-btn-link" data-i18n="overrideClear">Clear overrides</button>
+        <button type="button" id="cancelOverride" class="gm-btn-secondary" data-i18n="cancel">Cancel</button>
+        <button type="submit" class="gm-btn-primary" data-i18n="save">Save</button>
       </div>
     </form>
   </dialog>

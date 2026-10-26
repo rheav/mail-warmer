@@ -7,9 +7,10 @@
 //   log:           [{ at, level, message }]   (capped, newest last)
 //   profile:       { firstName, lastName, fullName, age, dob, gender, country, ... }
 //   cookieRun:     { at, results: [{ id, name, status }] } | null
+//   lang:          'en' | 'pt_BR' | unset (see lib/i18n.js)
 
 import { generateFakeProfile, fillBlanksWithFake } from './fake-profile.js';
-import { fetchNewsletters } from './remote.js';
+import { t } from './i18n.js';
 
 const DEFAULTS = {
   emails: [],
@@ -67,9 +68,9 @@ export function onChange(cb) {
 export async function addEmail(address, label = '') {
   const { emails, activeEmailId } = await get('emails', 'activeEmailId');
   const trimmed = address.trim().toLowerCase();
-  if (!trimmed) throw new Error('Email required');
+  if (!trimmed) throw new Error(t('errEmailRequired'));
   if (emails.some((e) => e.address === trimmed)) {
-    throw new Error('Email already added');
+    throw new Error(t('errEmailExists'));
   }
   const newEmail = {
     id: cryptoId(),
@@ -170,12 +171,17 @@ export async function updateNewsletter(id, patch) {
   await set({ newsletters: next });
 }
 
-// Pulls the default list from the backend (24h cached, with offline
-// fallback — see lib/remote.js) and replaces the 'default' newsletters.
+// The curated list ships inside the extension (newsletters.json) and only
+// changes with an extension update — mailWarmer talks to no server.
+async function readBundledNewsletters() {
+  const res = await fetch(chrome.runtime.getURL('newsletters.json'));
+  return res.json();
+}
+
+// Replaces the 'default' newsletters with the bundled list.
 // User-added 'custom' newsletters are preserved.
-// Pass { force: true } to bypass the cache and hit the API now.
-export async function resetNewslettersToDefaults({ force = false } = {}) {
-  const defaults = await fetchNewsletters({ force });
+export async function resetNewslettersToDefaults() {
+  const defaults = await readBundledNewsletters();
   const seeded = defaults.map((n) => ({
     ...n,
     id: cryptoId(),
@@ -194,12 +200,13 @@ function newsletterKey(n) {
   return n.slug || n.host || n.url || n.name;
 }
 
-// Silent 24h refresh: syncs the 'default' newsletters with the backend
-// without disturbing 'custom' entries or losing history. Existing ids are
-// reused for unchanged entries (matched by slug/host/url/name) so history
-// keys stay valid; removed entries drop, new ones get a fresh id.
-export async function refreshNewslettersFromRemote({ force = false } = {}) {
-  const remote = await fetchNewsletters({ force });
+// After an extension update: syncs the 'default' newsletters with the
+// bundled list without disturbing 'custom' entries or losing history.
+// Existing ids are reused for unchanged entries (matched by
+// slug/host/url/name) so history keys stay valid; removed entries drop,
+// new ones get a fresh id.
+export async function syncDefaultNewsletters() {
+  const remote = await readBundledNewsletters();
   const { newsletters } = await get('newsletters');
 
   const existingByKey = new Map(
