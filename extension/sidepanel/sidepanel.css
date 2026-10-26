@@ -195,6 +195,7 @@ body {
 
 /* ── Nav rail (horizontal in narrow sidepanel) ─────────────── */
 .gm-nav {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 2px;
@@ -234,6 +235,34 @@ body {
 
 .gm-nav-item .material-symbols-outlined {
   font-size: 22px;
+}
+
+/* Step help: a tab's data-tip shows under the nav on hover or keyboard focus.
+   Anchored to .gm-nav (not the tab) so it never overflows a narrow panel. */
+.gm-nav-item[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  top: calc(100% - 6px);
+  left: 12px;
+  right: 12px;
+  z-index: 20;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #3c4043;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.45;
+  text-align: left;
+  box-shadow: 0 2px 8px rgba(60, 64, 67, .3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .12s ease;
+}
+.gm-nav-item[data-tip]:hover::after,
+.gm-nav-item[data-tip]:focus-visible::after {
+  opacity: 1;
+  transition-delay: .25s;
 }
 
 /* ── Main content ──────────────────────────────────────────── */

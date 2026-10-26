@@ -15,13 +15,18 @@ export const cache = {
 };
 
 // Static text in sidepanel.html: data-i18n (text), data-i18n-placeholder,
-// data-i18n-title. The English inline text is only the pre-load fallback.
+// data-i18n-title, data-i18n-tip (help tooltip, see .gm-nav-item[data-tip]).
+// The English inline text is only the pre-load fallback.
 export function applyI18n(root = document) {
   $$('[data-i18n]', root).forEach((el) => (el.textContent = t(el.dataset.i18n)));
   $$('[data-i18n-placeholder]', root).forEach(
     (el) => (el.placeholder = t(el.dataset.i18nPlaceholder))
   );
   $$('[data-i18n-title]', root).forEach((el) => (el.title = t(el.dataset.i18nTitle)));
+  $$('[data-i18n-tip]', root).forEach((el) => {
+    el.dataset.tip = t(el.dataset.i18nTip);
+    el.setAttribute('aria-description', el.dataset.tip);
+  });
 }
 
 // Top-bar pill: state is 'idle' | 'running' | 'done'.

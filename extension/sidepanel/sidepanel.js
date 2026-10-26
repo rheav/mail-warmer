@@ -37,6 +37,8 @@ async function init() {
   bindMessages();
 
   await refreshAll();
+  // Step 1 first: a panel with no email yet opens on the Emails tab.
+  if (cache.emails.length === 0) showTab('emails');
   await loadProfile();
   await queryRunStatus();
   await queryCookieStatus();
@@ -44,14 +46,13 @@ async function init() {
 
 function bindTabs() {
   $$('.gm-nav-item').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      $$('.gm-nav-item').forEach((b) => b.classList.toggle('active', b === btn));
-      const id = btn.dataset.tab;
-      $$('.tab-panel').forEach((p) => {
-        p.classList.toggle('active', p.id === `tab-${id}`);
-      });
-    });
+    btn.addEventListener('click', () => showTab(btn.dataset.tab));
   });
+}
+
+function showTab(id) {
+  $$('.gm-nav-item').forEach((b) => b.classList.toggle('active', b.dataset.tab === id));
+  $$('.tab-panel').forEach((p) => p.classList.toggle('active', p.id === `tab-${id}`));
 }
 
 async function refreshAll() {
@@ -87,7 +88,7 @@ function bindStorageChanges() {
       renderRunList();
     }
     if (changes.log) {
-      renderLog(changes.log.newValue);
+      renderLog(changes.log.newValue || []);
     }
     if (changes.profile) {
       await loadProfile();

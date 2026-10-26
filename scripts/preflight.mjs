@@ -68,7 +68,7 @@ for (const k of Object.keys(pt)) if (!(k in en)) fail('i18n', `en is missing "${
 const used = new Set();
 for (const f of files) {
   const text = read(f);
-  for (const m of text.matchAll(/data-i18n(?:-placeholder|-title)?="([\w]+)"/g)) used.add(m[1]);
+  for (const m of text.matchAll(/data-i18n(?:-placeholder|-title|-tip)?="([\w]+)"/g)) used.add(m[1]);
   for (const m of text.matchAll(/\bt\(\s*'([\w]+)'/g)) used.add(m[1]);
   for (const m of text.matchAll(/\breason: '([\w]+)'/g)) used.add(m[1]);
   for (const m of text.matchAll(/__MSG_(\w+)__/g)) used.add(m[1]);

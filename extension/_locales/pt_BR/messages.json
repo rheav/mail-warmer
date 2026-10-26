@@ -436,5 +436,23 @@
   },
   "errNoSites": {
     "message": "Nenhum site marcado"
+  },
+  "tipEmails": {
+    "message": "Passo 1 · Adicione os e-mails que você quer manter ativos."
+  },
+  "tipRun": {
+    "message": "Passo 2 · Escolha o e-mail e as newsletters, depois clique em Fazer inscrições."
+  },
+  "tipCookies": {
+    "message": "Opcional · Aqueça o navegador antes de rodar: visita sites e aceita os avisos de cookies."
+  },
+  "tipProfile": {
+    "message": "Opcional · Nome, cidade e outros dados usados quando o formulário pede mais que o e-mail."
+  },
+  "tipLists": {
+    "message": "Opcional · Veja a lista de newsletters ou adicione as suas."
+  },
+  "tipLog": {
+    "message": "Veja o que aconteceu em cada inscrição e aquecimento."
   }
 }

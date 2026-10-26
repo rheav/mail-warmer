@@ -436,5 +436,23 @@
   },
   "errNoSites": {
     "message": "No sites selected"
+  },
+  "tipEmails": {
+    "message": "Step 1 · Add the email addresses you want to keep active."
+  },
+  "tipRun": {
+    "message": "Step 2 · Pick an email and the newsletters, then hit Run signups."
+  },
+  "tipCookies": {
+    "message": "Optional · Warm up the browser before running: visits sites and accepts their cookie banners."
+  },
+  "tipProfile": {
+    "message": "Optional · Name, city and other details used when a form asks for more than an email."
+  },
+  "tipLists": {
+    "message": "Optional · See the newsletter list or add your own."
+  },
+  "tipLog": {
+    "message": "See what happened in every signup and warm-up."
   }
 }
