@@ -1,0 +1,123 @@
+---
+/**
+ * Docs page shell: sidebar, page body, prev/next.
+ * Content: src/content/docs/<lang>/<slug>.md (slug "index" is /docs).
+ */
+import { getCollection, render } from "astro:content";
+import {
+  BookOpen, ChevronLeft, ChevronRight, Cookie, LifeBuoy, List, Mail, Play, Rocket, ScrollText, User,
+} from "@lucide/astro";
+import Layout from "../layouts/Layout.astro";
+import Navbar from "./Navbar.astro";
+import Footer from "./Footer.astro";
+import { getLang, localize } from "../i18n";
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const lang = getLang(Astro.url);
+const c = {
+  en: { docs: "Docs", prev: "Previous", next: "Next", changelog: "Changelog", pages: "Docs pages", edit: "Something missing or wrong?", issue: "Open an issue." },
+  "pt-br": { docs: "Docs", prev: "Anterior", next: "Próxima", changelog: "Novidades", pages: "Páginas da documentação", edit: "Faltou algo ou tem um erro?", issue: "Abra uma issue." },
+}[lang];
+
+const icons: Record<string, typeof Rocket> = {
+  index: Rocket, emails: Mail, run: Play, cookies: Cookie, profile: User, lists: List, log: ScrollText, troubleshooting: LifeBuoy,
+};
+
+const pages = (await getCollection("docs", (e) => e.id.split("/")[0] === lang)).sort((a, b) => a.data.order - b.data.order);
+const slugOf = (id: string) => id.split("/")[1] ?? "index"; // glob ids drop "/index"
+const pathOf = (s: string) => localize(lang, s === "index" ? "/docs" : `/docs/${s}`);
+const index = pages.findIndex((p) => slugOf(p.id) === slug);
+if (index < 0) throw new Error(`Missing docs page ${lang}/${slug}`);
+const entry = pages[index];
+const prev = pages[index - 1];
+const next = pages[index + 1];
+const { Content } = await render(entry);
+---
+
+<Layout title={`${entry.data.title} — mailWarmer ${c.docs}`} description={entry.data.description}>
+  <Navbar />
+  <div class="relative z-10 mx-auto max-w-6xl px-4 pt-28 pb-16 md:px-6 md:pt-36">
+    <div class="docs-grid">
+      <aside aria-label={c.pages}>
+        <nav class="docs-sidebar-inner">
+          <a href={pathOf("index")} class="docs-home flex items-center gap-2 pb-5 text-base font-medium tracking-tight">
+            <BookOpen size={18} stroke-width={2} />
+            <span>{c.docs}</span>
+          </a>
+          <ul class="space-y-1 text-sm">
+            {
+              pages.map((p) => {
+                const s = slugOf(p.id);
+                const Icon = icons[s] ?? BookOpen;
+                return (
+                  <li>
+                    <a
+                      href={pathOf(s)}
+                      aria-current={p.id === entry.id ? "page" : undefined}
+                      class="docs-nav-link flex items-center gap-2.5 rounded-lg px-3 py-2 text-stone-500 transition-colors"
+                    >
+                      <Icon size={15} stroke-width={1.8} class="docs-nav-icon shrink-0" />
+                      <span>{p.data.nav}</span>
+                    </a>
+                  </li>
+                );
+              })
+            }
+          </ul>
+          <a
+            href={localize(lang, "/changelog")}
+            class="docs-nav-link mt-6 flex items-center gap-2.5 rounded-lg border-t border-stone-200/70 px-3 pt-5 pb-2 text-sm text-stone-500"
+          >
+            {c.changelog} →
+          </a>
+        </nav>
+      </aside>
+
+      <article class="min-w-0">
+        <header class="mb-10">
+          <h1 class="text-ink text-4xl font-medium tracking-tight md:text-5xl">{entry.data.title}</h1>
+          <p class="mt-4 max-w-2xl text-lg leading-relaxed text-stone-600">{entry.data.description}</p>
+        </header>
+
+        <div class="md-content">
+          <Content />
+        </div>
+
+        <nav class="mt-16 grid gap-4 sm:grid-cols-2" aria-label={c.pages}>
+          {
+            prev ? (
+              <a href={pathOf(slugOf(prev.id))} class="docs-pager">
+                <span class="flex items-center gap-1 text-xs text-stone-500">
+                  <ChevronLeft size={14} /> {c.prev}
+                </span>
+                <span class="text-ink mt-1 block font-medium">{prev.data.nav}</span>
+              </a>
+            ) : (
+              <span />
+            )
+          }
+          {
+            next && (
+              <a href={pathOf(slugOf(next.id))} class="docs-pager text-right">
+                <span class="flex items-center justify-end gap-1 text-xs text-stone-500">
+                  {c.next} <ChevronRight size={14} />
+                </span>
+                <span class="text-ink mt-1 block font-medium">{next.data.nav}</span>
+              </a>
+            )
+          }
+        </nav>
+
+        <p class="mt-8 text-xs text-stone-500">
+          {c.edit}
+          <a href="https://github.com/rheav/mail-warmer/issues/new" class="docs-link" rel="noopener">{c.issue}</a>
+        </p>
+      </article>
+    </div>
+  </div>
+  <Footer />
+</Layout>

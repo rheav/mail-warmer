@@ -1,0 +1,11 @@
+---
+// /docs and /pt-br/docs. Text: src/content/docs/<lang>/index.md
+import DocsPage from "../../../components/DocsPage.astro";
+import { localeStaticPaths } from "../../../i18n";
+
+export function getStaticPaths() {
+  return localeStaticPaths();
+}
+---
+
+<DocsPage slug="index" />

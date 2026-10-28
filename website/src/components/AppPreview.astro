@@ -1,6 +1,34 @@
 ---
 import { Lock, Mail, Search, Play } from "@lucide/astro";
 import { extensionVersion } from "../data/site";
+import { getLang } from "../i18n";
+
+const c = {
+  en: {
+    kicker: "How it works", h2a: "Watch the confirmations", accent: "land", h2b: ".",
+    body: "Pick your emails and newsletters, hit Run, and each subscription drops a real confirmation into the inbox — live, one at a time, just like a person signing up by hand.",
+    live: "Live demo · looping", inbox: "Inbox", search: "Search mail",
+    tabs: ["Primary", "Promotions", "Social"], now: "now", confirm: "Confirm your subscription",
+    snip3: "One tap to start getting Tech in Five each week.",
+    snip2: "Please confirm your email to get the daily Roast.",
+    snip1: "Tap to confirm and get the brief every morning.",
+    team: "Gmail Team", welcome: "Welcome to your new inbox", tips: "Tips for getting the most out of Gmail.",
+    run: "Run", running: "Running…", nav: ["Emails", "Run", "Lists", "Log"], newsletters: "Newsletters",
+    pending: "pending", runningPill: "running", done: "✓ done", foot: "3 inboxes kept warm",
+  },
+  "pt-br": {
+    kicker: "Como funciona", h2a: "Veja as confirmações", accent: "chegando", h2b: ".",
+    body: "Escolha seus e-mails e newsletters, clique em Rodar e cada inscrição deixa uma confirmação de verdade na caixa — ao vivo, uma por vez, como uma pessoa se inscrevendo à mão.",
+    live: "Demo ao vivo · em loop", inbox: "Caixa de entrada", search: "Pesquisar e-mail",
+    tabs: ["Principal", "Promoções", "Social"], now: "agora", confirm: "Confirme sua inscrição",
+    snip3: "Um toque para começar a receber o Tech in Five toda semana.",
+    snip2: "Confirme seu e-mail para receber o Roast todo dia.",
+    snip1: "Toque para confirmar e receber o resumo toda manhã.",
+    team: "Equipe do Gmail", welcome: "Boas-vindas à sua nova caixa", tips: "Dicas para aproveitar melhor o Gmail.",
+    run: "Rodar", running: "Rodando…", nav: ["E-mails", "Rodar", "Listas", "Log"], newsletters: "Newsletters",
+    pending: "pendente", runningPill: "rodando", done: "✓ feito", foot: "3 caixas aquecidas",
+  },
+}[getLang(Astro.url)];
 
 /* ─── What this html-gif shows ──────────────────────────────────────────────
  *
@@ -38,18 +66,16 @@ import { extensionVersion } from "../data/site";
     <span
       class="reveal text-xs font-medium tracking-widest text-stone-500 uppercase"
     >
-      How it works
+      {c.kicker}
     </span>
     <h2 class="reveal mt-3 text-3xl font-medium tracking-tight md:text-5xl">
-      Watch the confirmations
+      {c.h2a}
       <span
         class="accent-word text-[1.1em] leading-none"
-      >land</span>.
+      >{c.accent}</span>{c.h2b}
     </h2>
     <p class="reveal text-muted mx-auto mt-5 max-w-xl text-base md:text-lg">
-      Pick your emails and newsletters, hit Run, and each subscription drops a
-      real confirmation into the inbox — live, one at a time, just like a person
-      signing up by hand.
+      {c.body}
     </p>
   </div>
 
@@ -64,7 +90,7 @@ import { extensionVersion } from "../data/site";
         style="background-color: #1a73e8;"></span>
     </span>
     <span class="text-xs tracking-widest text-stone-500 uppercase">
-      Live demo · looping
+      {c.live}
     </span>
   </div>
 
@@ -82,7 +108,7 @@ import { extensionVersion } from "../data/site";
           <div class="ap-tabstrip">
             <div class="ap-tab ap-tab-active">
               <span class="ap-tab-fav" aria-hidden="true"></span>
-              <span class="ap-tab-title">Inbox — warm.inbox@gmail.com</span>
+              <span class="ap-tab-title">{c.inbox} — warm.inbox@gmail.com</span>
             </div>
             <span class="ap-tab-plus" aria-hidden="true">+</span>
           </div>
@@ -119,18 +145,18 @@ import { extensionVersion } from "../data/site";
               <span class="ap-gm-logo" aria-hidden="true">
                 <Mail size={14} color="#ea4335" strokeWidth={2.25} />
               </span>
-              <span class="ap-gm-title">Inbox</span>
+              <span class="ap-gm-title">{c.inbox}</span>
               <div class="ap-gm-search">
                 <Search size={11} class="text-stone-500" strokeWidth={2} />
-                <span>Search mail</span>
+                <span>{c.search}</span>
               </div>
               <span class="ap-gm-avatar" aria-hidden="true">W</span>
             </div>
 
             <div class="ap-gm-subbar">
-              <span class="ap-gm-tab ap-gm-tab-active">Primary</span>
-              <span class="ap-gm-tab">Promotions</span>
-              <span class="ap-gm-tab">Social</span>
+              <span class="ap-gm-tab ap-gm-tab-active">{c.tabs[0]}</span>
+              <span class="ap-gm-tab">{c.tabs[1]}</span>
+              <span class="ap-gm-tab">{c.tabs[2]}</span>
             </div>
 
             <!-- Newest on top: confirmations land above the old welcome mail. -->
@@ -141,11 +167,11 @@ import { extensionVersion } from "../data/site";
                 <div class="ap-mail-text">
                   <div class="ap-mail-line1">
                     <span class="ap-mail-from">Tech in Five</span>
-                    <span class="ap-mail-time">now</span>
+                    <span class="ap-mail-time">{c.now}</span>
                   </div>
-                  <div class="ap-mail-subj">Confirm your subscription</div>
+                  <div class="ap-mail-subj">{c.confirm}</div>
                   <div class="ap-mail-snip">
-                    One tap to start getting Tech in Five each week.
+                    {c.snip3}
                   </div>
                 </div>
               </li>
@@ -155,11 +181,11 @@ import { extensionVersion } from "../data/site";
                 <div class="ap-mail-text">
                   <div class="ap-mail-line1">
                     <span class="ap-mail-from">Morning Roast</span>
-                    <span class="ap-mail-time">now</span>
+                    <span class="ap-mail-time">{c.now}</span>
                   </div>
-                  <div class="ap-mail-subj">Confirm your subscription</div>
+                  <div class="ap-mail-subj">{c.confirm}</div>
                   <div class="ap-mail-snip">
-                    Please confirm your email to get the daily Roast.
+                    {c.snip2}
                   </div>
                 </div>
               </li>
@@ -169,11 +195,11 @@ import { extensionVersion } from "../data/site";
                 <div class="ap-mail-text">
                   <div class="ap-mail-line1">
                     <span class="ap-mail-from">The Daily Brief</span>
-                    <span class="ap-mail-time">now</span>
+                    <span class="ap-mail-time">{c.now}</span>
                   </div>
-                  <div class="ap-mail-subj">Confirm your subscription</div>
+                  <div class="ap-mail-subj">{c.confirm}</div>
                   <div class="ap-mail-snip">
-                    Tap to confirm and get the brief every morning.
+                    {c.snip1}
                   </div>
                 </div>
               </li>
@@ -183,12 +209,12 @@ import { extensionVersion } from "../data/site";
                 <span class="ap-mail-fav" style="background:#1a73e8"></span>
                 <div class="ap-mail-text">
                   <div class="ap-mail-line1">
-                    <span class="ap-mail-from ap-read">Gmail Team</span>
+                    <span class="ap-mail-from ap-read">{c.team}</span>
                     <span class="ap-mail-time ap-read">9:01</span>
                   </div>
-                  <div class="ap-mail-subj ap-read">Welcome to your new inbox</div>
+                  <div class="ap-mail-subj ap-read">{c.welcome}</div>
                   <div class="ap-mail-snip">
-                    Tips for getting the most out of Gmail.
+                    {c.tips}
                   </div>
                 </div>
               </li>
@@ -206,52 +232,52 @@ import { extensionVersion } from "../data/site";
             <button class="ap-compose" type="button">
               <span class="ap-compose-idle">
                 <Play size={15} strokeWidth={2.5} />
-                Run
+                {c.run}
               </span>
-              <span class="ap-compose-running">Running…</span>
+              <span class="ap-compose-running">{c.running}</span>
             </button>
 
             <div class="ap-sp-nav">
-              <span class="ap-sp-navi">Emails</span>
-              <span class="ap-sp-navi ap-sp-navi-active">Run</span>
-              <span class="ap-sp-navi">Lists</span>
-              <span class="ap-sp-navi">Log</span>
+              <span class="ap-sp-navi">{c.nav[0]}</span>
+              <span class="ap-sp-navi ap-sp-navi-active">{c.nav[1]}</span>
+              <span class="ap-sp-navi">{c.nav[2]}</span>
+              <span class="ap-sp-navi">{c.nav[3]}</span>
             </div>
 
-            <div class="ap-sp-label">Newsletters · warm.inbox@gmail.com</div>
+            <div class="ap-sp-label">{c.newsletters} · warm.inbox@gmail.com</div>
             <ul class="ap-list">
               <li class="ap-li">
                 <span class="ap-li-fav ap-fav-a"></span>
                 <span class="ap-li-name">The Daily Brief</span>
                 <span class="ap-pill ap-pill-1">
-                  <span class="ap-pill-pending">pending</span>
-                  <span class="ap-pill-running">running</span>
-                  <span class="ap-pill-success">✓ done</span>
+                  <span class="ap-pill-pending">{c.pending}</span>
+                  <span class="ap-pill-running">{c.runningPill}</span>
+                  <span class="ap-pill-success">{c.done}</span>
                 </span>
               </li>
               <li class="ap-li">
                 <span class="ap-li-fav ap-fav-b"></span>
                 <span class="ap-li-name">Morning Roast</span>
                 <span class="ap-pill ap-pill-2">
-                  <span class="ap-pill-pending">pending</span>
-                  <span class="ap-pill-running">running</span>
-                  <span class="ap-pill-success">✓ done</span>
+                  <span class="ap-pill-pending">{c.pending}</span>
+                  <span class="ap-pill-running">{c.runningPill}</span>
+                  <span class="ap-pill-success">{c.done}</span>
                 </span>
               </li>
               <li class="ap-li">
                 <span class="ap-li-fav ap-fav-c"></span>
                 <span class="ap-li-name">Tech in Five</span>
                 <span class="ap-pill ap-pill-3">
-                  <span class="ap-pill-pending">pending</span>
-                  <span class="ap-pill-running">running</span>
-                  <span class="ap-pill-success">✓ done</span>
+                  <span class="ap-pill-pending">{c.pending}</span>
+                  <span class="ap-pill-running">{c.runningPill}</span>
+                  <span class="ap-pill-success">{c.done}</span>
                 </span>
               </li>
             </ul>
 
             <div class="ap-sp-foot">
               <span class="ap-progress"><span class="ap-progress-bar"></span></span>
-              <span class="ap-progress-text">3 inboxes kept warm</span>
+              <span class="ap-progress-text">{c.foot}</span>
             </div>
           </aside>
         </div>

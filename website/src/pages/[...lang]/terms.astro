@@ -1,0 +1,11 @@
+---
+// /terms and /pt-br/terms. Text: src/content/legal/<lang>/terms.md
+import LegalPage from "../../components/LegalPage.astro";
+import { localeStaticPaths } from "../../i18n";
+
+export function getStaticPaths() {
+  return localeStaticPaths();
+}
+---
+
+<LegalPage slug="terms" />

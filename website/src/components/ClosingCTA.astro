@@ -5,6 +5,28 @@
  */
 import ChromeButton from "./ChromeButton.astro";
 import { Flame } from "@lucide/astro";
+import { getLang } from "../i18n";
+
+const c = {
+  en: {
+    badge: "Ready when you are",
+    h2a: "Keep them",
+    accent: "warm",
+    h2b: "Set it once, walk away.",
+    body: "Install mailWarmer, add your emails, pick your newsletters — and your inboxes keep themselves active. No account, no setup. That's the whole deal.",
+    cta: "Add to your browser",
+    fine: "Free · no account · no inbox access · open source",
+  },
+  "pt-br": {
+    badge: "Pronto quando você estiver",
+    h2a: "Mantenha-as",
+    accent: "aquecidas",
+    h2b: "Configure uma vez e pronto.",
+    body: "Instale o mailWarmer, adicione seus e-mails, escolha as newsletters — e suas caixas se mantêm ativas sozinhas. Sem conta, sem configuração. É só isso.",
+    cta: "Adicionar ao navegador",
+    fine: "Grátis · sem conta · sem acesso à sua caixa · código aberto",
+  },
+}[getLang(Astro.url)];
 ---
 
 <section id="install" class="relative overflow-x-clip px-6 py-16 md:py-24">
@@ -28,34 +50,32 @@ import { Flame } from "@lucide/astro";
       class="reveal mb-6 inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white/60 px-3 py-1 text-xs font-medium text-stone-500 shadow-soft backdrop-blur-sm"
     >
       <Flame size={12} color="#ffb9a8" stroke-width={2.2} />
-      Ready when you are
+      {c.badge}
     </span>
 
     <h2
       class="reveal text-ink text-4xl leading-[1.05] font-medium tracking-tight md:text-5xl lg:text-6xl"
     >
-      Keep them
+      {c.h2a}
       <span
         class="accent-word sway inline-block text-[1.2em] leading-none"
-      >warm</span>.
+      >{c.accent}</span>.
       <br class="hidden md:block" />
-      Set it once, walk away.
+      {c.h2b}
     </h2>
 
     <p
       class="reveal text-muted mx-auto mt-6 max-w-[480px] text-base md:text-lg"
     >
-      Install mailWarmer, add your emails, pick your newsletters — and your
-      inboxes keep themselves active. No account, no setup. That's the whole
-      deal.
+      {c.body}
     </p>
 
     <div class="reveal mt-9">
-      <ChromeButton>Add to your browser</ChromeButton>
+      <ChromeButton>{c.cta}</ChromeButton>
     </div>
 
     <p class="reveal mt-6 text-xs text-stone-500">
-      Free · no account · no inbox access · open source
+      {c.fine}
     </p>
   </div>
 </section>

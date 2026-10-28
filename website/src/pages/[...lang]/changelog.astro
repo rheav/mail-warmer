@@ -1,0 +1,55 @@
+---
+// /changelog and /pt-br/changelog. Notes: src/data/changelog.ts
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import Footer from "../../components/Footer.astro";
+import { changelog } from "../../data/changelog";
+import { getLang, localeStaticPaths, localize } from "../../i18n";
+
+export function getStaticPaths() {
+  return localeStaticPaths();
+}
+
+const lang = getLang(Astro.url);
+const c = {
+  en: {
+    title: "What's", accent: "new",
+    description: "Every mailWarmer release, in plain language.",
+    docs: "← Back to the docs",
+  },
+  "pt-br": {
+    title: "O que há de", accent: "novo",
+    description: "Cada versão do mailWarmer, em linguagem simples.",
+    docs: "← Voltar à documentação",
+  },
+}[lang];
+---
+
+<Layout title={`${c.title} ${c.accent} — mailWarmer`} description={c.description}>
+  <Navbar />
+  <main class="relative z-10 min-h-screen px-4 pt-32 pb-20 md:px-6">
+    <div class="mx-auto max-w-3xl">
+      <h1 class="text-4xl font-medium tracking-tight md:text-5xl">
+        {c.title} <span class="legal-accent">{c.accent}</span>
+      </h1>
+      <p class="mt-4 text-stone-500">{c.description}</p>
+
+      <ol class="mt-10 space-y-4">
+        {
+          changelog.map((v) => (
+            <li class="legal-card">
+              <p class="text-xs font-medium tracking-widest text-stone-500 uppercase">v{v.version}</p>
+              <h2 class="text-ink mt-1 text-xl font-medium tracking-tight">{v[lang].title}</h2>
+              <p class="mt-2 leading-relaxed text-stone-600">{v[lang].body}</p>
+            </li>
+          ))
+        }
+      </ol>
+
+      <div class="mt-12 text-center">
+        <a href={localize(lang, "/docs")} class="legal-link text-stone-500">{c.docs}</a>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>

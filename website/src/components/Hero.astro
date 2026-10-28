@@ -1,6 +1,30 @@
 ---
 import { Play } from "@lucide/astro";
 import ChromeButton from "./ChromeButton.astro";
+import { getLang } from "../i18n";
+
+const c = {
+  en: {
+    badge: "Keep every inbox alive",
+    h1a: "An inbox that stays",
+    accent: "warm",
+    h1b: "— never forgotten.",
+    body: "mailWarmer auto-subscribes your email addresses to curated newsletters, so fresh inboxes keep receiving real mail and read as active, trusted accounts — ready to sign up for social, affiliate, and new services without getting flagged or blocked.",
+    cta: "Add to your browser",
+    see: "See it work",
+    fine: "Free · no account · no inbox access · open source",
+  },
+  "pt-br": {
+    badge: "Mantenha cada caixa viva",
+    h1a: "Uma caixa de entrada sempre",
+    accent: "aquecida",
+    h1b: "— nunca esquecida.",
+    body: "O mailWarmer inscreve seus e-mails em newsletters selecionadas, para que caixas novas continuem recebendo e-mails de verdade e pareçam contas ativas e confiáveis — prontas para cadastros em redes sociais, programas de afiliados e novos serviços sem serem sinalizadas ou bloqueadas.",
+    cta: "Adicionar ao navegador",
+    see: "Ver funcionando",
+    fine: "Grátis · sem conta · sem acesso à sua caixa · código aberto",
+  },
+}[getLang(Astro.url)];
 ---
 
 <section
@@ -29,41 +53,38 @@ import ChromeButton from "./ChromeButton.astro";
       <span
         class="block h-1.5 w-1.5 rounded-full"
         style="background-color: #1a73e8;"></span>
-      Keep every inbox alive
+      {c.badge}
     </span>
 
     <h1
       class="reveal text-ink text-5xl leading-[1.04] font-medium tracking-tight md:text-6xl lg:text-[72px]"
     >
-      An inbox that stays
+      {c.h1a}
       <span
         class="accent-word sway mt-1 block text-[1.2em] leading-none"
-      >warm</span>
-      — never forgotten.
+      >{c.accent}</span>
+      {c.h1b}
     </h1>
 
     <p
       class="reveal text-muted mx-auto mt-7 max-w-[520px] text-base md:text-lg"
     >
-      mailWarmer auto-subscribes your email addresses to curated newsletters,
-      so fresh inboxes keep receiving real mail and read as active, trusted
-      accounts — ready to sign up for social, affiliate, and new services
-      without getting flagged or blocked.
+      {c.body}
     </p>
 
     <div class="reveal mt-9 flex flex-col items-center gap-3 sm:flex-row">
-      <ChromeButton>Add to your browser</ChromeButton>
+      <ChromeButton>{c.cta}</ChromeButton>
       <a
         href="#preview"
         class="secondary-cta inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white/70 px-6 py-3 text-sm font-medium text-ink backdrop-blur-sm transition-all hover:border-stone-300 hover:bg-white"
       >
         <Play size={14} class="secondary-cta-icon" />
-        See it work
+        {c.see}
       </a>
     </div>
 
     <p class="reveal mt-8 text-xs text-stone-500">
-      Free · no account · no inbox access · open source
+      {c.fine}
     </p>
   </div>
 </section>

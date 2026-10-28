@@ -1,5 +1,33 @@
 ---
 import { Cookie, Inbox, LayoutGrid } from "@lucide/astro";
+import { getLang } from "../i18n";
+
+const c = {
+  en: {
+    kicker: "Three things it does", h2a: "Quiet work that keeps inboxes", accent: "alive",
+    body: "Each demo below loops live — nothing is a video. They're the real states the extension moves through, staged on a mock.",
+    warmed: "warmed", accept: "Accept",
+    aKicker: "Cookie warm-up", aH: "Warm up the", aAccent: "browser",
+    aBody: "Opens a set of sites in the background, accepts their cookie banners, and closes them — so the profile looks lived-in before any signup.",
+    inbox: "Inbox", cold: "cold", warm: "warm", empty: "no new mail",
+    bKicker: "Staying active", bH: "Inboxes stay", bAccent: "warm",
+    bBody: "Real newsletters arrive on their own schedule, so a fresh address reads as a living, trusted account — and stays usable for every signup you throw at it.",
+    cKicker: "Status tracking", cH: "See every", cAccent: "result",
+    cBody: "Every email × newsletter is recorded — pending, running, done, or failed — so you always know exactly what landed and what to retry.",
+  },
+  "pt-br": {
+    kicker: "Três coisas que ele faz", h2a: "Trabalho silencioso que mantém caixas", accent: "vivas",
+    body: "Cada demo abaixo roda ao vivo — nada é vídeo. São os estados reais pelos quais a extensão passa, encenados num mock.",
+    warmed: "aquecidos", accept: "Aceitar",
+    aKicker: "Aquecimento de cookies", aH: "Aqueça o", aAccent: "navegador",
+    aBody: "Abre um conjunto de sites em segundo plano, aceita os avisos de cookies e fecha as abas — para o perfil parecer de uso real antes de qualquer inscrição.",
+    inbox: "Caixa", cold: "fria", warm: "quente", empty: "nenhum e-mail novo",
+    bKicker: "Sempre ativa", bH: "Caixas sempre", bAccent: "aquecidas",
+    bBody: "Newsletters de verdade chegam no ritmo delas, então um endereço novo parece uma conta viva e confiável — e continua utilizável em qualquer cadastro.",
+    cKicker: "Acompanhamento", cH: "Veja cada", cAccent: "resultado",
+    cBody: "Cada e-mail × newsletter fica registrado — pendente, rodando, feito ou com erro — para você saber exatamente o que entrou e o que tentar de novo.",
+  },
+}[getLang(Astro.url)];
 
 /* ─── Three compact html-gifs (pure CSS, zero JS) ───────────────────────────
  *
@@ -28,17 +56,16 @@ import { Cookie, Inbox, LayoutGrid } from "@lucide/astro";
     <span
       class="reveal text-xs font-medium tracking-widest text-stone-500 uppercase"
     >
-      Three things it does
+      {c.kicker}
     </span>
     <h2 class="reveal mt-3 text-3xl font-medium tracking-tight md:text-5xl">
-      Quiet work that keeps inboxes
+      {c.h2a}
       <span
         class="accent-word text-[1.1em] leading-none"
-      >alive</span>.
+      >{c.accent}</span>.
     </h2>
     <p class="reveal text-muted mx-auto mt-5 max-w-xl text-base md:text-lg">
-      Each demo below loops live — nothing is a video. They're the real states
-      the extension moves through, staged on a mock.
+      {c.body}
     </p>
   </div>
 
@@ -54,32 +81,32 @@ import { Cookie, Inbox, LayoutGrid } from "@lucide/astro";
           <span class="fd-counter-n fd-cn-2">2</span>
           <span class="fd-counter-n fd-cn-3">3</span>
           <span class="fd-counter-n fd-cn-4">4</span>
-          <span class="fd-counter-label">warmed</span>
+          <span class="fd-counter-label">{c.warmed}</span>
         </span>
         <div class="fd-sites">
           <div class="fd-site">
             <span class="fd-site-fav" style="background:#ff6719"></span>
             <span class="fd-site-bar" style="width:60%"></span>
             <span class="fd-site-check fd-sc-1">✓</span>
-            <span class="fd-banner fd-bn-1"><span class="fd-accept">Accept</span></span>
+            <span class="fd-banner fd-bn-1"><span class="fd-accept">{c.accept}</span></span>
           </div>
           <div class="fd-site">
             <span class="fd-site-fav" style="background:#1a73e8"></span>
             <span class="fd-site-bar" style="width:75%"></span>
             <span class="fd-site-check fd-sc-2">✓</span>
-            <span class="fd-banner fd-bn-2"><span class="fd-accept">Accept</span></span>
+            <span class="fd-banner fd-bn-2"><span class="fd-accept">{c.accept}</span></span>
           </div>
           <div class="fd-site">
             <span class="fd-site-fav" style="background:#137333"></span>
             <span class="fd-site-bar" style="width:50%"></span>
             <span class="fd-site-check fd-sc-3">✓</span>
-            <span class="fd-banner fd-bn-3"><span class="fd-accept">Accept</span></span>
+            <span class="fd-banner fd-bn-3"><span class="fd-accept">{c.accept}</span></span>
           </div>
           <div class="fd-site">
             <span class="fd-site-fav" style="background:#6d4aff"></span>
             <span class="fd-site-bar" style="width:68%"></span>
             <span class="fd-site-check fd-sc-4">✓</span>
-            <span class="fd-banner fd-bn-4"><span class="fd-accept">Accept</span></span>
+            <span class="fd-banner fd-bn-4"><span class="fd-accept">{c.accept}</span></span>
           </div>
         </div>
       </div>
@@ -94,19 +121,17 @@ import { Cookie, Inbox, LayoutGrid } from "@lucide/astro";
         </span>
         <div>
           <p class="text-xs font-medium tracking-widest text-stone-500 uppercase">
-            Cookie warm-up
+            {c.aKicker}
           </p>
           <h3 class="mt-1 text-xl font-medium tracking-tight md:text-2xl">
-            Warm up the
+            {c.aH}
             <span
               class="accent-word text-[1.15em]"
               style="line-height: 1;"
-            >browser</span>.
+            >{c.aAccent}</span>.
           </h3>
           <p class="mt-2 text-sm leading-relaxed text-stone-600 md:text-[15px]">
-            Opens a set of sites in the background, accepts their cookie
-            banners, and closes them — so the profile looks lived-in before
-            any signup.
+            {c.aBody}
           </p>
         </div>
       </div>
@@ -122,13 +147,13 @@ import { Cookie, Inbox, LayoutGrid } from "@lucide/astro";
             <span class="fd-thermo" aria-hidden="true">
               <span class="fd-thermo-fill"></span>
             </span>
-            <span class="fd-inbox-title">Inbox</span>
+            <span class="fd-inbox-title">{c.inbox}</span>
             <span class="fd-inbox-temp">
-              <span class="fd-temp-cold">cold</span>
-              <span class="fd-temp-warm">warm</span>
+              <span class="fd-temp-cold">{c.cold}</span>
+              <span class="fd-temp-warm">{c.warm}</span>
             </span>
           </div>
-          <div class="fd-empty">no new mail</div>
+          <div class="fd-empty">{c.empty}</div>
           <div class="fd-mails">
             <div class="fd-mail fd-mail-1">
               <span class="fd-mail-av" style="background:#ff6719"></span>
@@ -161,19 +186,17 @@ import { Cookie, Inbox, LayoutGrid } from "@lucide/astro";
         </span>
         <div>
           <p class="text-xs font-medium tracking-widest text-stone-500 uppercase">
-            Staying active
+            {c.bKicker}
           </p>
           <h3 class="mt-1 text-xl font-medium tracking-tight md:text-2xl">
-            Inboxes stay
+            {c.bH}
             <span
               class="accent-word text-[1.15em]"
               style="line-height: 1;"
-            >warm</span>.
+            >{c.bAccent}</span>.
           </h3>
           <p class="mt-2 text-sm leading-relaxed text-stone-600 md:text-[15px]">
-            Real newsletters arrive on their own schedule, so a fresh address
-            reads as a living, trusted account — and stays usable for every
-            signup you throw at it.
+            {c.bBody}
           </p>
         </div>
       </div>
@@ -222,18 +245,17 @@ import { Cookie, Inbox, LayoutGrid } from "@lucide/astro";
         </span>
         <div>
           <p class="text-xs font-medium tracking-widest text-stone-500 uppercase">
-            Status tracking
+            {c.cKicker}
           </p>
           <h3 class="mt-1 text-xl font-medium tracking-tight md:text-2xl">
-            See every
+            {c.cH}
             <span
               class="accent-word text-[1.15em]"
               style="line-height: 1;"
-            >result</span>.
+            >{c.cAccent}</span>.
           </h3>
           <p class="mt-2 text-sm leading-relaxed text-stone-600 md:text-[15px]">
-            Every email × newsletter is recorded — pending, running, done, or
-            failed — so you always know exactly what landed and what to retry.
+            {c.cBody}
           </p>
         </div>
       </div>

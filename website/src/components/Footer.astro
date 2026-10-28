@@ -1,7 +1,13 @@
 ---
 import LogoMark from "./LogoMark.astro";
 import { repoUrl } from "../data/site";
+import { getLang, localize } from "../i18n";
 const year = new Date().getFullYear();
+const lang = getLang(Astro.url);
+const c = {
+  en: { install: "Install", docs: "Docs", faq: "FAQ", changelog: "Changelog", privacy: "Privacy", terms: "Terms", source: "Source", tagline: "Made to keep things warm." },
+  "pt-br": { install: "Instalar", docs: "Docs", faq: "Dúvidas", changelog: "Novidades", privacy: "Privacidade", terms: "Termos", source: "Código", tagline: "Feito para manter tudo aquecido." },
+}[lang];
 ---
 
 <footer class="relative px-6 pt-16 pb-10 text-sm text-stone-500">
@@ -18,21 +24,22 @@ const year = new Date().getFullYear();
     <nav
       class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs tracking-widest text-stone-500 uppercase"
     >
-      <a href="/#install" class="footer-link">Install</a>
-      <a href="/docs" class="footer-link">Docs</a>
-      <a href="/#faq" class="footer-link">FAQ</a>
-      <a href="/privacy" class="footer-link">Privacy</a>
-      <a href="/terms" class="footer-link">Terms</a>
+      <a href={localize(lang, "/#install")} class="footer-link">{c.install}</a>
+      <a href={localize(lang, "/docs")} class="footer-link">{c.docs}</a>
+      <a href={localize(lang, "/#faq")} class="footer-link">{c.faq}</a>
+      <a href={localize(lang, "/changelog")} class="footer-link">{c.changelog}</a>
+      <a href={localize(lang, "/privacy")} class="footer-link">{c.privacy}</a>
+      <a href={localize(lang, "/terms")} class="footer-link">{c.terms}</a>
       <a
         href={repoUrl}
         class="footer-link"
-        rel="noopener">Source</a
+        rel="noopener">{c.source}</a
       >
     </nav>
   </div>
 
   <p class="mx-auto mt-8 max-w-5xl text-xs text-stone-500">
-    Made to keep things warm.
+    {c.tagline}
   </p>
 </footer>
 

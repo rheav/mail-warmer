@@ -1,0 +1,19 @@
+---
+// /docs/<slug> and /pt-br/docs/<slug>. Text: src/content/docs/<lang>/<slug>.md
+import { getCollection } from "astro:content";
+import DocsPage from "../../../components/DocsPage.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("docs");
+  return entries
+    .map((e) => {
+      const [lang, slug = "index"] = e.id.split("/"); // glob ids drop "/index"
+      return { params: { lang: lang === "en" ? undefined : lang, slug } };
+    })
+    .filter((p) => p.params.slug !== "index");
+}
+
+const { slug } = Astro.params;
+---
+
+<DocsPage slug={slug} />

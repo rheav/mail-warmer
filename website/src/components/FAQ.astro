@@ -1,36 +1,83 @@
 ---
 import { Plus } from "@lucide/astro";
 
-const faqs = [
-  {
-    q: "Does mailWarmer read my email?",
-    a: "No. It never opens, reads, or sends from your inbox. It only fills out public newsletter signup forms with the addresses you give it. Everything runs locally in your browser; results live in chrome.storage.local. Every line is on GitHub.",
+import { getLang } from "../i18n";
+
+const c = {
+  en: {
+    kicker: "Small questions",
+    h2a: "The things people",
+    accent: "usually",
+    h2b: "ask.",
+    faqs: [
+      {
+        q: "Does mailWarmer read my email?",
+        a: "No. It never opens, reads, or sends from your inbox. It only fills out public newsletter signup forms with the addresses you give it. Everything runs locally in your browser; results live in chrome.storage.local. Every line is on GitHub.",
+      },
+      {
+        q: "Why does keeping an inbox warm matter?",
+        a: "A brand-new inbox that never receives anything looks dormant to email providers. Dormant accounts get flagged, rate-limited, or quietly suspended — and they're far more likely to be blocked when you use them to sign up for social media, affiliate networks, or new services. Steady incoming mail makes the account read as real and used, so it stays valid and ready when you need it.",
+      },
+      {
+        q: "Do I need to set anything up?",
+        a: "No. Install it, add your emails, and run. The curated newsletter list ships inside the extension and updates with it — there's no account to create, and mailWarmer connects to no server of ours. It follows your browser's language: English or Português (Brasil).",
+      },
+      {
+        q: "How does it actually keep an inbox warm?",
+        a: "It opens each newsletter's signup page in a background tab, detects the form, fills in your email (plus optional profile fields), and submits. Those newsletters then send mail regularly — so the inbox keeps receiving real messages and reads as an active, trusted account that providers are far less likely to flag, limit, or lock.",
+      },
+      {
+        q: "Is it going to cost money?",
+        a: "It's free and open source — no paywalls, no pro tier, nothing to host.",
+      },
+      {
+        q: "Which sites does it support?",
+        a: "Substack newsletters and generic HTML signup forms out of the box, via per-source adapters. The curated list ships with the extension, and we keep it updated for you.",
+      },
+      {
+        q: "Won't the signups look like spam?",
+        a: "It subscribes at a human pace, one newsletter at a time, and records the result per email × newsletter so you can see exactly what happened. It's opt-in subscribing to legitimate lists — not bulk or deceptive sending.",
+      },
+    ],
   },
-  {
-    q: "Why does keeping an inbox warm matter?",
-    a: "A brand-new inbox that never receives anything looks dormant to email providers. Dormant accounts get flagged, rate-limited, or quietly suspended — and they're far more likely to be blocked when you use them to sign up for social media, affiliate networks, or new services. Steady incoming mail makes the account read as real and used, so it stays valid and ready when you need it.",
+  "pt-br": {
+    kicker: "Pequenas dúvidas",
+    h2a: "O que as pessoas",
+    accent: "costumam",
+    h2b: "perguntar.",
+    faqs: [
+      {
+        q: "O mailWarmer lê meus e-mails?",
+        a: "Não. Ele nunca abre, lê ou envia nada da sua caixa. Só preenche formulários públicos de inscrição em newsletters com os endereços que você cadastrar. Tudo roda localmente no seu navegador; os resultados ficam em chrome.storage.local. Todo o código está no GitHub.",
+      },
+      {
+        q: "Por que manter uma caixa aquecida importa?",
+        a: "Uma caixa nova que nunca recebe nada parece inativa para os provedores de e-mail. Contas inativas são sinalizadas, limitadas ou suspensas sem aviso — e têm muito mais chance de serem bloqueadas quando você as usa para se cadastrar em redes sociais, programas de afiliados ou serviços novos. Receber e-mails com regularidade faz a conta parecer real e usada, então ela continua válida e pronta quando você precisa.",
+      },
+      {
+        q: "Preciso configurar alguma coisa?",
+        a: "Não. Instale, adicione seus e-mails e rode. A lista de newsletters vem dentro da extensão e é atualizada junto com ela — não há conta para criar, e o mailWarmer não se conecta a nenhum servidor nosso. Ele segue o idioma do seu navegador: inglês ou português (Brasil).",
+      },
+      {
+        q: "Como ele mantém a caixa aquecida, na prática?",
+        a: "Ele abre a página de inscrição de cada newsletter numa aba em segundo plano, encontra o formulário, preenche seu e-mail (e os campos opcionais do perfil) e envia. Essas newsletters passam a mandar e-mails com frequência — então a caixa continua recebendo mensagens reais e parece uma conta ativa e confiável, que os provedores dificilmente sinalizam, limitam ou travam.",
+      },
+      {
+        q: "Vai custar alguma coisa?",
+        a: "É grátis e de código aberto — sem paywall, sem plano pro, nada para hospedar.",
+      },
+      {
+        q: "Quais sites ele suporta?",
+        a: "Newsletters do Substack e formulários de inscrição HTML comuns, com um adaptador para cada tipo. A lista selecionada vem com a extensão, e nós a mantemos atualizada.",
+      },
+      {
+        q: "As inscrições não vão parecer spam?",
+        a: "Ele se inscreve em ritmo humano, uma newsletter por vez, e registra o resultado de cada e-mail × newsletter para você ver exatamente o que aconteceu. São inscrições em listas legítimas que você escolheu — não envio em massa nem enganoso.",
+      },
+    ],
   },
-  {
-    q: "Do I need to set anything up?",
-    a: "No. Install it, add your emails, and run. The curated newsletter list ships inside the extension and updates with it — there's no account to create, and mailWarmer connects to no server of ours. It follows your browser's language: English or Português (Brasil).",
-  },
-  {
-    q: "How does it actually keep an inbox warm?",
-    a: "It opens each newsletter's signup page in a background tab, detects the form, fills in your email (plus optional profile fields), and submits. Those newsletters then send mail regularly — so the inbox keeps receiving real messages and reads as an active, trusted account that providers are far less likely to flag, limit, or lock.",
-  },
-  {
-    q: "Is it going to cost money?",
-    a: "It's free and open source — no paywalls, no pro tier, nothing to host.",
-  },
-  {
-    q: "Which sites does it support?",
-    a: "Substack newsletters and generic HTML signup forms out of the box, via per-source adapters. The curated list ships with the extension, and we keep it updated for you.",
-  },
-  {
-    q: "Won't the signups look like spam?",
-    a: "It subscribes at a human pace, one newsletter at a time, and records the result per email × newsletter so you can see exactly what happened. It's opt-in subscribing to legitimate lists — not bulk or deceptive sending.",
-  },
-];
+}[getLang(Astro.url)];
+const faqs = c.faqs;
 ---
 
 <section id="faq" class="relative px-6 py-16 md:py-24">
@@ -38,14 +85,14 @@ const faqs = [
     <span
       class="reveal text-xs font-medium tracking-widest text-stone-500 uppercase"
     >
-      Small questions
+      {c.kicker}
     </span>
     <h2 class="reveal mt-3 text-3xl font-medium tracking-tight md:text-5xl">
-      The things people
+      {c.h2a}
       <span
         class="accent-word text-[1.1em] leading-none"
-      >usually</span>
-      ask.
+      >{c.accent}</span>
+      {c.h2b}
     </h2>
   </div>
 

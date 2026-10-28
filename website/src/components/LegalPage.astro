@@ -1,0 +1,42 @@
+---
+/**
+ * Shared layout for the legal pages. Content: src/content/legal/<lang>/<slug>.md
+ */
+import { getEntry, render } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import Navbar from "./Navbar.astro";
+import Footer from "./Footer.astro";
+import { getLang, localize } from "../i18n";
+
+interface Props {
+  slug: "privacy" | "terms";
+}
+
+const { slug } = Astro.props;
+const lang = getLang(Astro.url);
+const back = { en: "← Back to home", "pt-br": "← Voltar ao início" }[lang];
+const entry = await getEntry("legal", `${lang}/${slug}`);
+if (!entry) throw new Error(`Missing legal page ${lang}/${slug}`);
+const { Content } = await render(entry);
+---
+
+<Layout title={`${entry.data.title} ${entry.data.accent} — mailWarmer`} description={entry.data.description}>
+  <Navbar />
+  <main class="relative z-10 min-h-screen px-4 pt-32 pb-20 md:px-6">
+    <div class="mx-auto max-w-3xl">
+      <h1 class="text-4xl font-medium tracking-tight md:text-5xl">
+        {entry.data.title} <span class="legal-accent">{entry.data.accent}</span>
+      </h1>
+      <p class="mt-4 text-stone-500">{entry.data.updated}</p>
+
+      <div class="legal mt-10 space-y-6">
+        <Content />
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href={localize(lang, "/")} class="legal-link text-stone-500">{back}</a>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>

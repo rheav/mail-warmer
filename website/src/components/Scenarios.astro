@@ -1,14 +1,44 @@
 ---
 /* The cold-inbox story — a quiet timeline of an account going dormant.
    Accent dots ramp cool→warm to foreshadow the fix. */
-const scenarios = [
-  { time: "Day 0", text: "You spin up a fresh inbox for a new project.", accent: "#80868b" },
-  { time: "Day 9", text: "It sits empty. No mail in, no mail out.", accent: "#a3b3c9" },
-  { time: "Day 21", text: "Providers start flagging it as dormant.", accent: "#c9b4a8" },
-  { time: "Day 34", text: "You sign up somewhere with it — and get blocked.", accent: "#ffcdb8" },
-  { time: "Day 48", text: "The account gets limited, then quietly suspended.", accent: "#ffb9a8" },
-  { time: "Tomorrow", text: "It could just stay active on its own.", accent: "#1a73e8" },
-];
+import { getLang } from "../i18n";
+
+const accents = ["#80868b", "#a3b3c9", "#c9b4a8", "#ffcdb8", "#ffb9a8", "#1a73e8"];
+const c = {
+  en: {
+    steps: [
+      ["Day 0", "You spin up a fresh inbox for a new project."],
+      ["Day 9", "It sits empty. No mail in, no mail out."],
+      ["Day 21", "Providers start flagging it as dormant."],
+      ["Day 34", "You sign up somewhere with it — and get blocked."],
+      ["Day 48", "The account gets limited, then quietly suspended."],
+      ["Tomorrow", "It could just stay active on its own."],
+    ],
+    kicker: "Why inboxes go cold",
+    h2a: "A quiet inbox is a",
+    accent: "dying",
+    h2b: " inbox.",
+    body: "Providers trust accounts that look used. A silent inbox gets flagged as dormant and risks being limited or locked — right when you need it to sign up for social, affiliate, or a new account.",
+    coda: "— let's keep it warm.",
+  },
+  "pt-br": {
+    steps: [
+      ["Dia 0", "Você cria uma caixa nova para um projeto."],
+      ["Dia 9", "Ela fica vazia. Nada entra, nada sai."],
+      ["Dia 21", "Os provedores começam a marcá-la como inativa."],
+      ["Dia 34", "Você usa ela num cadastro — e é bloqueado."],
+      ["Dia 48", "A conta é limitada e depois suspensa sem aviso."],
+      ["Amanhã", "Ela poderia continuar ativa sozinha."],
+    ],
+    kicker: "Por que caixas esfriam",
+    h2a: "Caixa parada é caixa",
+    accent: "morrendo",
+    h2b: ".",
+    body: "Provedores confiam em contas que parecem usadas. Uma caixa silenciosa é marcada como inativa e corre o risco de ser limitada ou travada — justo quando você precisa dela para um cadastro em rede social, afiliados ou um serviço novo.",
+    coda: "— vamos mantê-la aquecida.",
+  },
+}[getLang(Astro.url)];
+const scenarios = c.steps.map(([time, text], i) => ({ time, text, accent: accents[i] }));
 ---
 
 <section id="scenarios" class="relative overflow-x-clip px-6 py-14 md:py-20">
@@ -50,25 +80,22 @@ const scenarios = [
       <span
         class="reveal text-xs font-medium tracking-widest text-stone-500 uppercase"
       >
-        Why inboxes go cold
+        {c.kicker}
       </span>
       <h2 class="reveal mt-3 text-3xl font-medium tracking-tight md:text-5xl">
-        A quiet inbox is a
+        {c.h2a}
         <span
           class="accent-word text-[1.1em] leading-none"
-        >dying</span>
-        inbox.
+        >{c.accent}</span>{c.h2b}
       </h2>
       <p class="reveal text-muted mt-5 max-w-md text-base md:text-lg">
-        Providers trust accounts that look used. A silent inbox gets flagged as
-        dormant and risks being limited or locked — right when you need it to
-        sign up for social, affiliate, or a new account.
+        {c.body}
       </p>
 
       <p
         class="reveal mt-10 hidden text-2xl leading-none font-medium text-stone-500 italic md:block"
       >
-        — let's keep it warm.
+        {c.coda}
       </p>
     </div>
   </div>

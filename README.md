@@ -9,7 +9,7 @@ to curated newsletters, so those inboxes keep receiving mail and stay active.
   (`scripts/preflight.mjs`).
 - **English and Português (Brasil)**, following the browser language.
 - Free and open source. [Chrome Web Store](https://chromewebstore.google.com/detail/mail-warmer/ikibedkcbfcilgignjobgdlioninmige) ·
-  [mail-warmer.rheav.dev](https://mail-warmer.rheav.dev)
+  [mailwarmer.rheav.dev](https://mailwarmer.rheav.dev)
 
 ---
 
@@ -36,7 +36,7 @@ extension/                 The extension (load this folder unpacked)
 scripts/preflight.mjs      Build guard (network, version, translations)
 tests/                     node --test unit tests (chrome.* stub)
 docs/store/                Store listing, screenshots and the tools that make them
-website/                   Astro landing site (mail-warmer.rheav.dev)
+website/                   Astro landing site (mailwarmer.rheav.dev)
 server/                    Old newsletter API — not used by the extension
 ```
 

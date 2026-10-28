@@ -312,3 +312,244 @@ p {
     scroll-behavior: auto;
   }
 }
+
+/* ─── Legal pages + changelog (content: src/content/legal) ─── */
+.legal-accent {
+  color: var(--color-blue);
+}
+.legal-card {
+  border: 1px solid rgba(224, 227, 231, 0.8);
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 1rem;
+  padding: 1.5rem 1.6rem;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+}
+.legal h2 {
+  color: var(--color-ink);
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+}
+.legal p {
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+.legal p + p,
+.legal ul + p {
+  margin-top: 0.75rem;
+}
+.legal ul {
+  margin-top: 0.75rem;
+  padding-left: 1.2rem;
+  list-style: disc;
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+.legal li + li {
+  margin-top: 0.4rem;
+}
+.legal strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+.legal a,
+.legal-link,
+.docs-link,
+.md-content a {
+  color: var(--color-blue);
+  background-image: linear-gradient(to right, var(--color-blue), #4285f4);
+  background-repeat: no-repeat;
+  background-size: 0% 1.5px;
+  background-position: 0 100%;
+  transition:
+    color 300ms ease,
+    background-size 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.legal a:hover,
+.legal-link:hover,
+.docs-link:hover,
+.md-content a:hover {
+  background-size: 100% 1.5px;
+}
+
+/* ─── Docs (content: src/content/docs) ─── */
+.docs-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+@media (min-width: 1024px) {
+  .docs-grid {
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 4rem;
+  }
+  .docs-sidebar-inner {
+    position: sticky;
+    top: 6.5rem;
+  }
+}
+.docs-home {
+  color: var(--color-blue);
+}
+.docs-nav-link:hover {
+  color: var(--color-ink);
+  background-color: rgba(26, 115, 232, 0.08);
+}
+.docs-nav-link[aria-current="page"] {
+  color: var(--color-blue);
+  background-color: rgba(26, 115, 232, 0.12);
+  font-weight: 500;
+}
+.docs-pager {
+  display: block;
+  padding: 1rem 1.2rem;
+  border: 1px solid rgba(224, 227, 231, 0.9);
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.7);
+  transition: border-color 250ms ease;
+}
+.docs-pager:hover {
+  border-color: var(--color-blue);
+}
+
+.md-content {
+  display: flow-root; /* contain the floated screenshots */
+  max-width: 46rem;
+  color: var(--color-muted);
+  font-size: 1.02rem;
+  line-height: 1.75;
+}
+.md-content h2 {
+  margin: 2.75rem 0 0.9rem;
+  color: var(--color-ink);
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+.md-content h3 {
+  margin: 1.8rem 0 0.5rem;
+  color: var(--color-ink);
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+.md-content > :first-child {
+  margin-top: 0;
+}
+.md-content > * + * {
+  margin-top: 0.9rem;
+}
+.md-content ul,
+.md-content ol {
+  padding-left: 1.3rem;
+}
+.md-content ul {
+  list-style: disc;
+}
+.md-content ol {
+  list-style: decimal;
+}
+.md-content li + li {
+  margin-top: 0.35rem;
+}
+.md-content li::marker {
+  color: var(--color-blue);
+  font-weight: 600;
+}
+.md-content strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+.md-content code {
+  border-radius: 5px;
+  background-color: var(--color-stone-100);
+  padding: 0.1rem 0.35rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  color: var(--color-ink);
+}
+.md-content blockquote {
+  display: flow-root; /* sit beside a floated screenshot, not under it */
+  border: 1px solid var(--color-blue-soft);
+  border-radius: 0.9rem;
+  background-color: var(--color-blue-bg);
+  padding: 0.85rem 1.1rem;
+  color: #174ea6;
+}
+.md-content blockquote strong {
+  color: #174ea6;
+}
+.md-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.md-content th,
+.md-content td {
+  border-bottom: 1px solid var(--color-stone-200);
+  padding: 0.55rem 0.6rem 0.55rem 0;
+  text-align: left;
+  vertical-align: top;
+}
+.md-content th {
+  color: var(--color-ink);
+  font-weight: 500;
+}
+
+/* Side-panel screenshot, floated beside the text it illustrates. */
+.md-content .shot {
+  margin: 0.5rem auto 1.5rem;
+  max-width: 300px;
+}
+@media (min-width: 768px) {
+  .md-content .shot {
+    float: right;
+    clear: right;
+    width: 280px;
+    margin: 0.4rem 0 1.5rem 2.25rem;
+  }
+}
+.md-content .shot img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--color-stone-200);
+  border-radius: 18px;
+  box-shadow: 0 12px 32px -12px rgba(60, 64, 67, 0.28);
+}
+.md-content .shot figcaption {
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  text-align: center;
+  color: var(--color-faint);
+}
+
+/* Status pills, drawn like the side panel's. */
+.md-content .pill {
+  display: inline-block;
+  border-radius: 9999px;
+  padding: 0 0.55rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.6;
+  background-color: var(--color-stone-100);
+  color: var(--color-muted);
+}
+.md-content .pill.ok {
+  background-color: var(--color-green-bg);
+  color: var(--color-green);
+}
+.md-content .pill.err {
+  background-color: var(--color-red-bg);
+  color: var(--color-red);
+}
+.md-content .pill.run {
+  background-color: var(--color-yellow-bg);
+  color: var(--color-yellow);
+}
+.md-content .pill.blue {
+  background-color: var(--color-blue-bg);
+  color: var(--color-blue-hover);
+}

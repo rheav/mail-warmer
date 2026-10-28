@@ -7,7 +7,7 @@ mailWarmer — Chrome extension (MV3, plain ES modules, no bundler) that subscri
 | Path | What | Deployed to |
 | --- | --- | --- |
 | `extension/` | The extension itself — load this folder unpacked | Chrome Web Store (zip from `npm run build`) |
-| `website/` | Astro + Tailwind landing, docs, privacy, terms (English) | https://mail-warmer.rheav.dev — Cloudflare Pages project `mail-warmer`, builds `website/` on every push to `main`. `mailwarmer.rheav.dev` 301-redirects to it (zone redirect rule) |
+| `website/` | Astro + Tailwind landing, docs, changelog, privacy, terms — English at `/`, Português at `/pt-br` | https://mailwarmer.rheav.dev — Cloudflare Pages project `mail-warmer`, builds `website/` on every push to `main`. `mail-warmer.rheav.dev` is also attached and serves the same build (canonical tags point to mailwarmer) |
 | `docs/store/` | Listing copy, permission/privacy answers, screenshots, render tools | — |
 | `server/` | Old newsletter API. **The extension must never use it.** | VPS (EasyPanel `my-projects_mail-warmer`) |
 
@@ -35,4 +35,4 @@ Every user-visible string — HTML, JS, log lines — is in `extension/_locales/
 
 ## Releases
 
-`docs/RELEASE.md`. Version lives in `extension/manifest.json` (`version` + `version_name`) and the root `package.json`; the preflight fails if they differ. The website reads the version from the manifest (`website/src/data/site.ts`); public notes are `website/src/data/changelog.ts`, developer notes `CHANGELOG.md`.
+`docs/RELEASE.md`. Version lives in `extension/manifest.json` (`version` + `version_name`) and the root `package.json`; the preflight fails if they differ. Site copy: each component holds `{ en, "pt-br" }` strings (`src/i18n.ts` has the helpers); docs and legal pages are markdown in `website/src/content/{docs,legal}/<lang>/`, screenshots in `website/public/images/docs/<lang>/`. The website reads the version from the manifest (`website/src/data/site.ts`); public notes are `website/src/data/changelog.ts`, developer notes `CHANGELOG.md`.

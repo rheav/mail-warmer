@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://mail-warmer.rheav.dev/sitemap-index.xml
+Sitemap: https://mailwarmer.rheav.dev/sitemap-index.xml

@@ -15,9 +15,9 @@ Paste into the developer dashboard. Images are in `screenshots/<lang>/`: `1–6.
 
 - **Category:** Tools
 - **Languages:** English (default) and Português (Brasil). The short description comes from `extension/_locales/<lang>/messages.json` (`extDescription`).
-- **Website:** https://mail-warmer.rheav.dev
-- **Support URL:** https://mail-warmer.rheav.dev/docs
-- **Privacy policy URL:** https://mail-warmer.rheav.dev/privacy
+- **Website:** https://mailwarmer.rheav.dev
+- **Support URL:** https://mailwarmer.rheav.dev/docs
+- **Privacy policy URL:** https://mailwarmer.rheav.dev/privacy
 
 ## Description
 
@@ -89,7 +89,7 @@ O mailWarmer tem um único propósito: manter contas de e-mail ativas e válidas
 
 - **Dados coletados:** nenhuma categoria. A extensão não tem servidor e não envia nada: e-mails, perfil, listas, histórico e resultados do aquecimento ficam só no dispositivo. As únicas requisições são as inscrições que o usuário roda (para o site de cada newsletter) e as visitas do aquecimento de cookies.
 - **Certificações (marcar as três):** não vendo nem transfiro dados a terceiros; não uso para fins fora do propósito único; não uso para crédito ou empréstimo.
-- **Privacy policy URL:** https://mail-warmer.rheav.dev/privacy
+- **Privacy policy URL:** https://mailwarmer.rheav.dev/privacy
 
 ## Images
 

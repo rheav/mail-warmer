@@ -1,20 +1,32 @@
 ---
 import "../styles/global.css";
 import FloatingSteam from "../components/FloatingSteam.astro";
+import { absoluteUrl, getLang, langs, langTag } from "../i18n";
 
 interface Props {
   title?: string;
   description?: string;
 }
 
-const {
-  title = "mailWarmer — keep every inbox warm",
-  description = "A Chrome extension that auto-subscribes your email addresses to curated newsletters, so fresh inboxes stay active, trusted accounts — usable for social, affiliate, and new-service signups without getting flagged. Free, open source, no account or setup.",
-} = Astro.props;
+const lang = getLang(Astro.url);
+const defaults = {
+  en: {
+    title: "mailWarmer — keep every inbox warm",
+    description:
+      "A Chrome extension that auto-subscribes your email addresses to curated newsletters, so fresh inboxes stay active, trusted accounts — usable for social, affiliate, and new-service signups without getting flagged. Free, open source, no account or setup.",
+  },
+  "pt-br": {
+    title: "mailWarmer — mantenha cada caixa de entrada aquecida",
+    description:
+      "Extensão do Chrome que inscreve seus e-mails em newsletters selecionadas, para que caixas novas continuem ativas e confiáveis — prontas para cadastros em redes sociais, afiliados e novos serviços sem serem bloqueadas. Grátis, código aberto, sem conta.",
+  },
+}[lang];
+const { title = defaults.title, description = defaults.description } = Astro.props;
+const canonical = absoluteUrl(lang, Astro.url.pathname);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={langTag[lang]}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -22,12 +34,20 @@ const {
     <meta name="theme-color" content="#f6f8fc" />
     <link rel="icon" type="image/png" href="/logo.png" />
     <title>{title}</title>
+    <link rel="canonical" href={canonical} />
+    {
+      langs.map((l) => (
+        <link rel="alternate" hreflang={langTag[l]} href={absoluteUrl(l, Astro.url.pathname)} />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={absoluteUrl("en", Astro.url.pathname)} />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={langTag[lang].replace("-", "_")} />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
